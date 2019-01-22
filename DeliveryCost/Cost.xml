@@ -1,0 +1,14 @@
+<?xml version = "1.0"?>
+<parcel>
+    <сargo weight = "10">
+      <cost>0.4</cost>
+    </сargo>
+
+    <сargo weight = "20">
+        <cost>0.3</cost>
+    </сargo>
+
+    <сargo weight = "40">
+        <cost>0.2</cost>
+    </сargo>
+</parcel>
