@@ -22,7 +22,7 @@ public class DeliveryCost {
 
 //        parse XML prise from "Cost.xml"
         try {
-            File inputFile = new File("Cost.xml");
+            File inputFile = new File(FilePatch.getPatch("Cost.xml"));
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             CostParser costHandler = new CostParser();
@@ -38,7 +38,7 @@ public class DeliveryCost {
             weight = new BigDecimal(reader.readLine());
             System.out.printf("Enter the distance (km): ");
             distance = new BigDecimal(reader.readLine());
-            System.out.println("Shipping cost: " + new getTotalCost().calcTotalCost(price, weight, distance) + "$");
+            System.out.printf("Shipping cost: %.2f$", new getTotalCost().calcTotalCost(price, weight, distance));
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error in input! Please restart.");
         }
