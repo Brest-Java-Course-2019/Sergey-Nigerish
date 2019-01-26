@@ -1,8 +1,8 @@
 
 package com.epam.brest.cources;
 
-import com.epam.brest.cources.files.FileReader;
-import com.epam.brest.cources.files.XMLFileReader;
+import com.epam.brest.cources.files.FilesReader;
+import com.epam.brest.cources.files.XMLFilesReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,24 +25,10 @@ public class DeliveryCost {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        FileReader fileReader = new XMLFileReader();
+        FilesReader filesReader = new XMLFilesReader();
         String[] file = {"Price.xml"};
-        List<Map<Integer, BigDecimal>> prices = fileReader.readData(file);
-//        System.out.println(prices.get(1));
+        List<Map<Integer, BigDecimal>> prices = filesReader.readData(file);
 
-
-//        parse XML prise from "Cost.xml"
-//        try {
-//            File inputFile = new File(FilePatch.getPatch("Cost.xml"));
-//            SAXParserFactory factory = SAXParserFactory.newInstance();
-//            SAXParser saxParser = factory.newSAXParser();
-//            CostParser costHandler = new CostParser();
-//            saxParser.parse(inputFile, costHandler);
-//            price = costHandler.price;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        parse XML prise from "Cost.xml"
 
         try {
             System.out.printf("Enter the weight of cargo (t): ");

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class XMLFileReader implements FileReader {
+public class XMLFilesReader implements FilesReader {
     private static Map<Integer, BigDecimal> priceWeight = new TreeMap<>();
     private static Map<Integer, BigDecimal> priceDistance = new TreeMap<>();
     private static List<Map<Integer, BigDecimal>> price = new ArrayList<>();
@@ -23,8 +23,8 @@ public class XMLFileReader implements FileReader {
     public List<Map<Integer, BigDecimal>> readData(String[] filePaths) throws Exception {
 
         Ends = false;
-        File inputFile = new File(FileReader.getPatch(filePaths[0]));
-        System.out.println(FileReader.getPatch(filePaths[0]));
+        File inputFile = new File(FilesReader.getPatch(filePaths[0]));
+        System.out.println(FilesReader.getPatch(filePaths[0]));
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         XMLHandler handler = new XMLHandler();

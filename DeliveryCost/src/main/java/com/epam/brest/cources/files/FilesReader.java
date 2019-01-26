@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public interface FileReader {
+public interface FilesReader {
 
     List<Map<Integer, BigDecimal>> readData(final String[] filePaths) throws Exception;
 
     static String getPatch(String filePath) {
-        String paths = Objects.requireNonNull(FileReader.class.getClassLoader().getResource(filePath)).getPath();
+        String paths = Objects.requireNonNull(FilesReader.class.getClassLoader().getResource(filePath)).getPath();
         return paths;
     }
 
