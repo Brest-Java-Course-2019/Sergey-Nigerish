@@ -4,22 +4,22 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 public class getTotalCost {
-    private Map<Byte, BigDecimal> price;
+    private Map<Integer, BigDecimal> price;
     private BigDecimal weight;
     private BigDecimal distance;
     private int size;
 
-    public BigDecimal calcTotalCost(Map<Byte, BigDecimal> price, BigDecimal weight, BigDecimal distance) {
+    public BigDecimal calcTotalCost(Map<Integer, BigDecimal> price, BigDecimal weight, BigDecimal distance) {
         this.price = price;
         this.weight = weight;
         this.distance = distance;
         this.size = price.size();
-        byte[] list = new byte[size];
+        int[] list = new int[size];
         int i = size;
 
         BigDecimal TotalCost = new BigDecimal("0");
 
-        for (Byte aByte : price.keySet()) {
+        for (Integer aByte : price.keySet()) {
             i--;
             list[i] = aByte;
         }

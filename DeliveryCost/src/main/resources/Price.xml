@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<company name="LAS-trans">
+    <prices>
+        <weight>
+            <cargo_weight value="10" cost="0.4"/>
+            <cargo_weight value="20" cost="0.3"/>
+            <cargo_weight value="40" cost="0.2"/>
+        </weight>
+        <distance>
+            <cargo_distance value="100" cost="1"/>
+            <cargo_distance value="300" cost="0.8"/>
+            <cargo_distance value="1000" cost="0.6"/>
+        </distance>
+    </prices>
+</company>

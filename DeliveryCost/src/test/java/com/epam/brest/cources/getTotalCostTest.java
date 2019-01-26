@@ -10,15 +10,15 @@ import java.util.TreeMap;
 
 class getTotalCostTest {
 
-    private static Map<Byte, BigDecimal> price;
+    private static Map<Integer, BigDecimal> price;
     private static BigDecimal data;
 
     @BeforeAll
     public static void init(){
         price = new TreeMap<>();
-        price.put((byte) 10, new BigDecimal("0.4"));
-        price.put((byte) 20, new BigDecimal("0.3"));
-        price.put((byte) 40, new BigDecimal("0.2"));
+        price.put(10, new BigDecimal("0.4"));
+        price.put(20, new BigDecimal("0.3"));
+        price.put(40, new BigDecimal("0.2"));
     }
 
     @Test
