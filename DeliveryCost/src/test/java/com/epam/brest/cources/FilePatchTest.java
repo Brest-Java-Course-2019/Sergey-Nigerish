@@ -9,7 +9,7 @@ class FilePatchTest {
     @Test
     void getPatchTest() {
         //write something?
-        String filePatch = FilesReader.getPatch("Cost.xml");
-        Assertions.assertTrue(filePatch.endsWith("target/classes/Cost.xml"));
+        String filePatch = FilesReader.getPatch("Price.xml");
+        Assertions.assertTrue(filePatch.endsWith("target/classes/Price.xml"));
     }
 }

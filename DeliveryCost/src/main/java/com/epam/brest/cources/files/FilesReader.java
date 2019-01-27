@@ -14,8 +14,4 @@ public interface FilesReader {
         String paths = Objects.requireNonNull(FilesReader.class.getClassLoader().getResource(filePath)).getPath();
         return paths;
     }
-
-//    List<Map<String,Integer>> maps = new ArrayList<Map<String,Integer>>();
-//...
-//        maps.add(new HashMap<String,Integer>());
 }

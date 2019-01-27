@@ -24,7 +24,6 @@ public class XMLFilesReader implements FilesReader {
 
         Ends = false;
         File inputFile = new File(FilesReader.getPatch(filePaths[0]));
-        System.out.println(FilesReader.getPatch(filePaths[0]));
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         XMLHandler handler = new XMLHandler();
