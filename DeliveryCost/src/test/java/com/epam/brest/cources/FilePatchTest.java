@@ -8,7 +8,7 @@ class FilePatchTest {
 
     @Test
     void getPatchTest() {
-        String filePatch = FilesReader.getPatch("Price.xml");
+        String filePatch = FilesReader.getFullPath("Price.xml");
         System.out.println(filePatch);
         Assertions.assertTrue(filePatch.endsWith("/Price.xml"));
     }

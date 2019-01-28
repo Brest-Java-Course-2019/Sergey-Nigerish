@@ -16,22 +16,23 @@ import java.util.TreeMap;
 public class XMLFilesReader implements FilesReader {
 
     @Override
-    public List<Map<Integer, BigDecimal>> readData(String[] filePaths) throws Exception {
+    public List<Map<Integer, BigDecimal>> readData(String[] fileNames) throws Exception {
 
-        File inputFile = new File(FilesReader.getPatch(filePaths[0]));
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser saxParser = factory.newSAXParser();
-        XMLHandler handler = new XMLHandler();
-        saxParser.parse(inputFile, handler);
-        return handler.getResult();
+        File inputFile = new File(FilesReader.getFullPath(fileNames[0]));
+        SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+        SAXParser saxParser = saxFactory.newSAXParser();
+        XMLHandler xmlHandler = new XMLHandler();
+        saxParser.parse(inputFile, xmlHandler);
+        return xmlHandler.getPriceFromXML();
     }
 
     private static class XMLHandler extends DefaultHandler {
+        private static final String[] LAYOUT = {"cargo_weight", "cargo_distance", "value", "cost"};
         private List<Map<Integer, BigDecimal>> price = new ArrayList<>();
         private Map<Integer, BigDecimal> priceWeight = new TreeMap<>();
         private Map<Integer, BigDecimal> priceDistance = new TreeMap<>();
 
-        public List<Map<Integer, BigDecimal>> getResult() {
+        public List<Map<Integer, BigDecimal>> getPriceFromXML() {
             price.add(priceWeight);
             price.add(priceDistance);
             return price;
@@ -40,15 +41,15 @@ public class XMLFilesReader implements FilesReader {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atr) throws SAXException {
 
-            if (qName.equalsIgnoreCase("cargo_weight")) {
-                priceWeight.put(Integer.parseInt(data(atr)[0]), new BigDecimal(data(atr)[1]));
-            } else if (qName.equalsIgnoreCase("cargo_distance")) {
-                priceDistance.put(Integer.parseInt(data(atr)[0]), new BigDecimal(data(atr)[1]));
+            if (qName.equalsIgnoreCase(LAYOUT[0])) {
+                priceWeight.put(Integer.parseInt(getValues(atr)[0]), new BigDecimal(getValues(atr)[1]));
+            } else if (qName.equalsIgnoreCase(LAYOUT[1])) {
+                priceDistance.put(Integer.parseInt(getValues(atr)[0]), new BigDecimal(getValues(atr)[1]));
             }
         }
 
-        private String[] data(Attributes atr) {
-            String[] val = {atr.getValue("value"), atr.getValue("cost")};
+        private String[] getValues(Attributes attributes) {
+            String[] val = {attributes.getValue(LAYOUT[2]), attributes.getValue(LAYOUT[3])};
             return  val;
         }
     }

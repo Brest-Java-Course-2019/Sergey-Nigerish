@@ -1,7 +1,7 @@
 
 package com.epam.brest.cources;
 
-import com.epam.brest.cources.calculation.СalculationImpl;
+import com.epam.brest.cources.calculation.CalculationImpl;
 import com.epam.brest.cources.files.FilesReader;
 import com.epam.brest.cources.files.XMLFilesReader;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 public class DeliveryCost {
-    private static BigDecimal[] data = new BigDecimal[2];
+    private static final String[] MESSAGES = {"$", "Enter the", "weight of cargo (t)", "distance (km)", "Data input",
+            "Shipping cost", "Error in input! Please restart."};
+    private static final BigDecimal[] INPUT_VALUES = new BigDecimal[2];
     private static final Logger LOGGER = LogManager.getLogger();
     private static String[] file = {"Price.xml"};
 
@@ -35,16 +37,16 @@ public class DeliveryCost {
 
 
         try {
-            System.out.printf("Enter the weight of cargo (t): ");
-            data[0] = new BigDecimal(reader.readLine());
-            System.out.printf("Enter the distance (km): ");
-            data[1] = new BigDecimal(reader.readLine());
-            BigDecimal cost = new СalculationImpl().calculate(prices, data);
-            LOGGER.debug("Data item: {} {}", data[0], data[1]);
-            System.out.printf("Shipping cost: %.2f$%n", cost);
-            LOGGER.debug("Shipping cost: {}$", String.format("%.2f", cost));
+            System.out.printf("%s %s: ", MESSAGES[1], MESSAGES[2]);
+            INPUT_VALUES[0] = new BigDecimal(reader.readLine());
+            System.out.printf("%s %s: ", MESSAGES[1], MESSAGES[3]);
+            INPUT_VALUES[1] = new BigDecimal(reader.readLine());
+            BigDecimal cost = new CalculationImpl().calculateCost(prices, INPUT_VALUES);
+            LOGGER.debug("{}: {} {}", MESSAGES[4], INPUT_VALUES[0], INPUT_VALUES[1]);
+            System.out.printf("%s: %.2f%s%n", MESSAGES[5], cost, MESSAGES[0]);
+            LOGGER.debug("{}: {}{}", MESSAGES[5], String.format("%.2f", cost), MESSAGES[0]);
         } catch (IOException | NumberFormatException e) {
-            System.out.println("Error in input! Please restart.");
+            System.out.println(MESSAGES[6]);
         }
 
 

@@ -1,6 +1,6 @@
 package com.epam.brest.cources;
 
-import com.epam.brest.cources.calculation.СalculationImpl;
+import com.epam.brest.cources.calculation.CalculationImpl;
 import com.epam.brest.cources.files.FilesReader;
 import com.epam.brest.cources.files.XMLFilesReader;
 import org.junit.jupiter.api.Assertions;
@@ -37,7 +37,7 @@ class CalculationImplTest {
     void calcTotalCost1() {
         values[0] = new BigDecimal("89");
         values[1] = new BigDecimal("10");
-        data = new СalculationImpl().calculate(prices, values);
+        data = new CalculationImpl().calculateCost(prices, values);
         Assertions.assertEquals(data, new BigDecimal("196.0"));
     }
 
@@ -45,7 +45,7 @@ class CalculationImplTest {
     void calcTotalCost2() {
         values[0] = new BigDecimal("90");
         values[1] = new BigDecimal("10");
-        data = new СalculationImpl().calculate(prices, values);
+        data = new CalculationImpl().calculateCost(prices, values);
         Assertions.assertEquals(data, new BigDecimal("200.0"));
     }
 
@@ -53,7 +53,7 @@ class CalculationImplTest {
     void calcTotalCost3() {
         values[0] = new BigDecimal("91");
         values[1] = new BigDecimal("10");
-        data = new СalculationImpl().calculate(prices, values);
+        data = new CalculationImpl().calculateCost(prices, values);
         Assertions.assertEquals(data, new BigDecimal("193.0"));
     }
 
@@ -61,7 +61,7 @@ class CalculationImplTest {
     void calcTotalCost4() {
         values[0] = new BigDecimal("21");
         values[1] = new BigDecimal("9");
-        data = new СalculationImpl().calculate(prices, values);
+        data = new CalculationImpl().calculateCost(prices, values);
         Assertions.assertEquals(data, new BigDecimal("37.8"));
     }
 

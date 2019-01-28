@@ -8,10 +8,10 @@ import java.util.Objects;
 
 public interface FilesReader {
 
-    List<Map<Integer, BigDecimal>> readData(final String[] filePaths) throws Exception;
+    List<Map<Integer, BigDecimal>> readData(final String[] fileNames) throws Exception;
 
-    static String getPatch(String filePath) {
-        String paths = Objects.requireNonNull(FilesReader.class.getClassLoader().getResource(filePath)).getPath();
+    static String getFullPath(String fileName) {
+        String paths = Objects.requireNonNull(FilesReader.class.getClassLoader().getResource(fileName)).getPath();
         return paths;
     }
 }
