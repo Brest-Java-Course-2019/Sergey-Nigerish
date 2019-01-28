@@ -9,10 +9,10 @@
         </File>
     </Appenders>
     <Loggers>
-        <Root level="DEBUG">
+        <Root level="INFO">
             <appender-ref ref="Console"/>
         </Root>
-        <Logger name="com.epam" level="DEBUG">
+        <Logger name="com.epam" level="INFO">
 
 
         </Logger>

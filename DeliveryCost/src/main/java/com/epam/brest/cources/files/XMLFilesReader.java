@@ -14,29 +14,29 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class XMLFilesReader implements FilesReader {
-    private static Map<Integer, BigDecimal> priceWeight = new TreeMap<>();
-    private static Map<Integer, BigDecimal> priceDistance = new TreeMap<>();
-    private static List<Map<Integer, BigDecimal>> price = new ArrayList<>();
-    private static Boolean Ends;
 
     @Override
     public List<Map<Integer, BigDecimal>> readData(String[] filePaths) throws Exception {
 
-        Ends = false;
         File inputFile = new File(FilesReader.getPatch(filePaths[0]));
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         XMLHandler handler = new XMLHandler();
         saxParser.parse(inputFile, handler);
-        while (!Ends) {
-            Thread.sleep(100);
-        }
-        price.add(priceWeight);
-        price.add(priceDistance);
-        return price;
+        return handler.getResult();
     }
 
     private static class XMLHandler extends DefaultHandler {
+        private List<Map<Integer, BigDecimal>> price = new ArrayList<>();
+        private Map<Integer, BigDecimal> priceWeight = new TreeMap<>();
+        private Map<Integer, BigDecimal> priceDistance = new TreeMap<>();
+
+        public List<Map<Integer, BigDecimal>> getResult() {
+            price.add(priceWeight);
+            price.add(priceDistance);
+            return price;
+        }
+
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atr) throws SAXException {
 
@@ -47,12 +47,7 @@ public class XMLFilesReader implements FilesReader {
             }
         }
 
-        @Override
-        public void endDocument() throws SAXException {
-            Ends = true;
-        }
-
-        private static String[] data(Attributes atr) {
+        private String[] data(Attributes atr) {
             String[] val = {atr.getValue("value"), atr.getValue("cost")};
             return  val;
         }

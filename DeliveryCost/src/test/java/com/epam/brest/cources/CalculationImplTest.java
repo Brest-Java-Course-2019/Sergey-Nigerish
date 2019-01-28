@@ -1,6 +1,8 @@
 package com.epam.brest.cources;
 
 import com.epam.brest.cources.calculation.СalculationImpl;
+import com.epam.brest.cources.files.FilesReader;
+import com.epam.brest.cources.files.XMLFilesReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -61,5 +63,13 @@ class CalculationImplTest {
         values[1] = new BigDecimal("9");
         data = new СalculationImpl().calculate(prices, values);
         Assertions.assertEquals(data, new BigDecimal("37.8"));
+    }
+
+    @Test
+    void XMLFilesReaderTest() throws Exception {
+        FilesReader filesReader = new XMLFilesReader();
+        String[] file = {"Price.xml"};
+        List<Map<Integer, BigDecimal>> testPrices = filesReader.readData(file);
+        Assertions.assertEquals(testPrices, prices);
     }
 }

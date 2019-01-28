@@ -7,7 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class СalculationImpl implements Сalculation {
-    private BigDecimal TotalCost = new BigDecimal("0");
+    private BigDecimal totalCost = BigDecimal.ZERO;
     private BigDecimal distance;
     private BigDecimal distanceCost;
 
@@ -16,7 +16,7 @@ public class СalculationImpl implements Сalculation {
         distanceCost = priceCost(price.get(1), data[1]);
         distance = data[1];
         priceCost(price.get(0), data[0], true);
-        return TotalCost;
+        return totalCost;
     }
 
     private BigDecimal priceCost(Map<Integer, BigDecimal> price, BigDecimal value, boolean difference) {
@@ -27,7 +27,7 @@ public class СalculationImpl implements Сalculation {
             Integer valueMax = sortedKeys.last();
             BigDecimal decMax = BigDecimal.valueOf(valueMax);
             while (value.doubleValue() > valueMax) {
-                TotalCost = TotalCost.add(multyFour(decMax, price.get(valueMax), distance, distanceCost));
+                totalCost = totalCost.add(multyFour(decMax, price.get(valueMax), distance, distanceCost));
                 value = value.subtract(decMax);
             }
         }
@@ -40,8 +40,8 @@ public class СalculationImpl implements Сalculation {
         }
 
         if (difference) {
-            TotalCost = TotalCost.add(multyFour(value, price.get(valueMin), distance, distanceCost));
-            return TotalCost;
+            totalCost = totalCost.add(multyFour(value, price.get(valueMin), distance, distanceCost));
+            return totalCost;
         } else {
             return price.get(valueMin);
         }

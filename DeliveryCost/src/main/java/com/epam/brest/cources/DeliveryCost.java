@@ -16,15 +16,21 @@ import java.util.Map;
 
 public class DeliveryCost {
     private static BigDecimal[] data = new BigDecimal[2];
-
     private static final Logger LOGGER = LogManager.getLogger();
+    private static String[] file = {"Price.xml"};
 
     public static void main(String[] args) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        if (args.length != 0) {
+            file = new String[args.length];
+            int i = 0;
+            for (String arg : args) {
+                file[i++] = arg;
+            }
+        }
 
         FilesReader filesReader = new XMLFilesReader();
-        String[] file = {"Price.xml"};
         List<Map<Integer, BigDecimal>> prices = filesReader.readData(file);
 
 
@@ -35,11 +41,13 @@ public class DeliveryCost {
             data[1] = new BigDecimal(reader.readLine());
             BigDecimal cost = new СalculationImpl().calculate(prices, data);
             LOGGER.debug("Data item: {} {}", data[0], data[1]);
-            System.out.printf("Shipping cost: %.2f$\n", cost);
+            System.out.printf("Shipping cost: %.2f$%n", cost);
             LOGGER.debug("Shipping cost: {}$", String.format("%.2f", cost));
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error in input! Please restart.");
         }
+
+
     }
 
 }

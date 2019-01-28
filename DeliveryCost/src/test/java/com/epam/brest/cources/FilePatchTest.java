@@ -8,8 +8,8 @@ class FilePatchTest {
 
     @Test
     void getPatchTest() {
-        //write something?
         String filePatch = FilesReader.getPatch("Price.xml");
-        Assertions.assertTrue(filePatch.endsWith("target/classes/Price.xml"));
+        System.out.println(filePatch);
+        Assertions.assertTrue(filePatch.endsWith("/Price.xml"));
     }
 }
