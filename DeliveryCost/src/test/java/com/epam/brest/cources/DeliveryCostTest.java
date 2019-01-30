@@ -39,7 +39,7 @@ class DeliveryCostTest {
         while ((str = reader.readLine())!= null) {
             System.out.println(str);
         }
-        String sout = "Enter the weight of cargo (t): Enter the distance (km): Shipping cost: 40,00$\n";
+        String sout = "Enter the weight of cargo (t): Enter the distance (km): Shipping cost: 40.00$\n";
 
         Assertions.assertEquals(sout, outContent.toString());
     }
