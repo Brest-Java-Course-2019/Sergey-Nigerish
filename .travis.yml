@@ -1,3 +1,4 @@
+before_script: cd DeliveryCost/
 language: java
 jdk:
   - oraclejdk8
