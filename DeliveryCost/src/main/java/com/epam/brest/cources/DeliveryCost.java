@@ -24,16 +24,17 @@ public class DeliveryCost {
     public static void main(String[] args) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 
-        if (args.length != 0) {
-            file = new String[args.length];
-            int i = 0;
-            for (String arg : args) {
-                file[i++] = arg;
-            }
-        }
+//        if (args.length != 0) {
+//            file = new String[args.length];
+//            int i = 0;
+//            for (String arg : args) {
+//                file[i++] = arg;
+//            }
+//        }
 
         FilesReader filesReader = new XMLFilesReader();
         List<Map<Integer, BigDecimal>> prices = filesReader.readData(file);
+        System.out.println(prices.get(0));
 
 
         try {
