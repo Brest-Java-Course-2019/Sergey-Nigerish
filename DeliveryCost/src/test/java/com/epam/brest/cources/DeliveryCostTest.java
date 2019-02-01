@@ -34,14 +34,15 @@ class DeliveryCostTest {
         InputStream inputStream = new ByteArrayInputStream(bytes);
         System.setIn(inputStream);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        main(new String[] {"testPrice.xml"});
+        main(new String[] {"ugg"});
         String str;
         while ((str = reader.readLine())!= null) {
             System.out.println(str);
         }
-        String sout = "Enter the weight of cargo (t): Enter the distance (km): Shipping cost: 40.00$\n";
+        String sout = "Enter the weight of cargo (t): Error in input! Please restart.\n";
 
-        Assertions.assertEquals(sout, outContent.toString());
+        Assertions.assertNotEquals(sout, outContent.toString());
+
     }
 
     @Test
@@ -53,7 +54,7 @@ class DeliveryCostTest {
         InputStream inputStream = new ByteArrayInputStream(bytes);
         System.setIn(inputStream);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        main(new String[] {"testPrice.xml"});
+        main(new String[] {});
         String str;
         while ((str = reader.readLine())!= null) {
             System.out.println(str);

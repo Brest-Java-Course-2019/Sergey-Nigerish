@@ -22,7 +22,7 @@ public class DeliveryCost {
     private static String[] file = {"Price.xml"};
 
     public static void main(String[] args) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 
 //        if (args.length != 0) {
 //            file = new String[args.length];
@@ -34,14 +34,12 @@ public class DeliveryCost {
 
         FilesReader filesReader = new XMLFilesReader();
         List<Map<Integer, BigDecimal>> prices = filesReader.readData(file);
-        System.out.println(prices.get(0));
-
 
         try {
             System.out.printf("%s %s: ", MESSAGES[1], MESSAGES[2]);
-            INPUT_VALUES[0] = new BigDecimal(reader.readLine());
+            INPUT_VALUES[0] = new BigDecimal(bufferedReader.readLine());
             System.out.printf("%s %s: ", MESSAGES[1], MESSAGES[3]);
-            INPUT_VALUES[1] = new BigDecimal(reader.readLine());
+            INPUT_VALUES[1] = new BigDecimal(bufferedReader.readLine());
             BigDecimal cost = new CalculationImpl().calculateCost(prices, INPUT_VALUES);
             LOGGER.debug("{}: {} {}", MESSAGES[4], INPUT_VALUES[0], INPUT_VALUES[1]);
             System.out.printf("%s: %.2f%s%n", MESSAGES[5], cost, MESSAGES[0]);
