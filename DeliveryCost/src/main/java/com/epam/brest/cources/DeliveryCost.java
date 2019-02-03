@@ -11,29 +11,58 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-public class DeliveryCost {
-    private static final String[] MESSAGES = {"$", "Enter the", "weight of cargo (t)", "distance (km)", "Data input",
-            "Shipping cost", "Error in input! Please restart."};
+/**
+ * <h1>DeliveryCost</h1>
+ * The DeliveryCost program based on the data entered and the
+ * price list calculates the cost of shipping.
+ *
+ * @author  Sergey Nigerish
+ * @version 1.0
+ * @since   2019-02-01
+ * */
+final class DeliveryCost {
+
+    /**
+     * @param MESSAGES array of output messages.
+     */
+    private static final String[] MESSAGES = {"$",                                      //0
+                                                "Enter the",                            //1
+                                                "weight of cargo (t)",                  //2
+                                                "distance (km)",                        //3
+                                                "Data input",                           //4
+                                                "Shipping cost",                        //5
+                                                "Error in input! Please restart."};     //6
+
+    /**
+     * @param INPUT_VALUES array in which the input data is stored.
+     */
     private static final BigDecimal[] INPUT_VALUES = new BigDecimal[2];
+
+    /**
+     * @param LOGGER process log variable.
+     */
     private static final Logger LOGGER = LogManager.getLogger();
-    private static String[] file = {"Price.xml"};
 
-    public static void main(String[] args) throws Exception {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
+    /**
+     * @param FILES price list file names array.
+     */
+    private static final String[] FILES = {"Price.xml"};
 
-//        if (args.length != 0) {
-//            file = new String[args.length];
-//            int i = 0;
-//            for (String arg : args) {
-//                file[i++] = arg;
-//            }
-//        }
+    /**
+     * The application's entry point.
+     *
+     * @param args not used
+     */
+    public static void main(final String[] args) throws Exception {
+        BufferedReader bufferedReader = new BufferedReader(
+                                        new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
         FilesReader filesReader = new XMLFilesReader();
-        List<Map<Integer, BigDecimal>> prices = filesReader.readData(file);
+        List<Map<Integer, BigDecimal>> prices = filesReader.readData(FILES);
 
         try {
             System.out.printf("%s %s: ", MESSAGES[1], MESSAGES[2]);
@@ -47,10 +76,7 @@ public class DeliveryCost {
         } catch (IOException | NumberFormatException e) {
             System.out.println(MESSAGES[6]);
         }
-
-
     }
-
 }
 
 

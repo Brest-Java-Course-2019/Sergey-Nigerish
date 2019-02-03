@@ -1,7 +1,6 @@
 package com.epam.brest.cources.files;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParser;
@@ -27,30 +26,62 @@ public class XMLFilesReader implements FilesReader {
     }
 
     private static class XMLHandler extends DefaultHandler {
-        private static final String[] LAYOUT = {"cargo_weight", "cargo_distance", "value", "cost"};
-        private List<Map<Integer, BigDecimal>> price = new ArrayList<>();
-        private Map<Integer, BigDecimal> priceWeight = new TreeMap<>();
-        private Map<Integer, BigDecimal> priceDistance = new TreeMap<>();
 
-        public List<Map<Integer, BigDecimal>> getPriceFromXML() {
-            price.add(priceWeight);
-            price.add(priceDistance);
-            return price;
+        /**
+         * @param LAYOUT array for parsing XML file.
+         */
+        private static final String[] LAYOUT = {"cargo_weight",         //0
+                                                "cargo_distance",       //1
+                                                "value",                //2
+                                                "cost"};                //3
+
+        /**
+         * @param priceList the list of price lists.
+         */
+        private final List<Map<Integer, BigDecimal>> priceList = new ArrayList<>();
+
+        /**
+         * @param priceWeight price list for weight.
+         */
+        private final Map<Integer, BigDecimal> priceWeight = new TreeMap<>();
+
+        private final Map<Integer, BigDecimal> priceDistance = new TreeMap<>();
+
+        /**
+         * Adds the received price lists to the list of price lists.
+         *
+         * @return list of read data arrays.
+         */
+        List<Map<Integer, BigDecimal>> getPriceFromXML() {
+            priceList.add(priceWeight);
+            priceList.add(priceDistance);
+            return priceList;
         }
 
         @Override
-        public void startElement(String uri, String localName, String qName, Attributes atr) throws SAXException {
+        public void startElement(final String uri,
+                                 final String localName,
+                                 final String qName,
+                                 final Attributes atr) {
 
             if (qName.equalsIgnoreCase(LAYOUT[0])) {
-                priceWeight.put(Integer.parseInt(getValues(atr)[0]), new BigDecimal(getValues(atr)[1]));
+                priceWeight.put(Integer.parseInt(getValues(atr)[0]),
+                                    new BigDecimal(getValues(atr)[1]));
             } else if (qName.equalsIgnoreCase(LAYOUT[1])) {
-                priceDistance.put(Integer.parseInt(getValues(atr)[0]), new BigDecimal(getValues(atr)[1]));
+                priceDistance.put(Integer.parseInt(getValues(atr)[0]),
+                                    new BigDecimal(getValues(atr)[1]));
             }
         }
 
-        private String[] getValues(Attributes attributes) {
-            String[] val = {attributes.getValue(LAYOUT[2]), attributes.getValue(LAYOUT[3])};
-            return  val;
+        /**
+         * Receive an array of values from necessary attributes.
+         *
+         * @param attributes attributes from XML file.
+         * @return array of values from necessary attributes.
+         */
+        private String[] getValues(final Attributes attributes) {
+            return new String[]{attributes.getValue(LAYOUT[2]),
+                                attributes.getValue(LAYOUT[3])};
         }
     }
 }

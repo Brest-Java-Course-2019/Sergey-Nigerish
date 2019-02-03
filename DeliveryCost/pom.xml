@@ -56,6 +56,11 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>2.0.1</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -135,6 +140,16 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>3.0.0</version>
+                    <!--<configuration>-->
+                        <!--<configLocation>checkstyle.xml</configLocation>-->
+                        <!--<consoleOutput>true</consoleOutput>-->
+                    <!--</configuration>-->
+                    <!--<executions>-->
+                        <!--<execution>-->
+                            <!--<phase>package</phase>-->
+                            <!--<goals><goal>check</goal></goals>-->
+                        <!--</execution>-->
+                    <!--</executions>-->
                 </plugin>
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
@@ -173,6 +188,34 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>de.shadowhunt.maven.plugins</groupId>
+                    <artifactId>package-info-maven-plugin</artifactId>
+                    <version>2.0.0</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>package-info</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <packages>
+                            <package regex="net.example.database">
+                                <annotations>
+                                    <annotation>@de.shadowhunt.annotation.ReturnValuesAreNonnullByDefault</annotation>
+                                </annotations>
+                            </package>
+                            <package><!-- all other packages -->
+                                <annotations>
+                                    <annotation>@de.shadowhunt.annotation.ReturnValuesAreNonnullByDefault</annotation>
+                                    <annotation>@javax.annotation.ParametersAreNonnullByDefault</annotation>
+                                </annotations>
+                            </package>
+                        </packages>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

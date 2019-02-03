@@ -6,29 +6,71 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/**
+ * CalculationImpl this is implementation Calculation interface to calculate the
+ * cost of shipping.
+ *
+ * The cost of transportation is calculated:
+ * 1. On the distance depends on the <tt>discount rate by distance</tt>,
+ *      which is taken from the price.
+ * 2. From the price is taken the maximum capacity and the load is divided by cars.
+ *
+ * Simplified formula:
+ * <tt>Total shipping cost</tt> = <tt>distance</tt>
+ *                                  * <tt>discount rate by distance</tt>
+ *                                  * <tt>weight</tt>
+ *                                  * <tt>discount rate by weight</tt>
+ *
+ * @author  Sergey Nigerish
+ * @version 1.0
+ * @since   2019-02-01
+ * */
 public class CalculationImpl implements Calculation {
+    /**
+     * @param totalCost variable in which the total cost of the freight is recorded.
+     * @param distance distance shipping.
+     * @param distanceRatio discount rate by distance.
+     */
     private BigDecimal totalCost = BigDecimal.ZERO;
     private BigDecimal distance;
     private BigDecimal distanceRatio;
 
     @Override
-    public BigDecimal calculateCost(List<Map<Integer, BigDecimal>> price, BigDecimal[] inputValues) {
+    public BigDecimal calculateCost(final List<Map<Integer, BigDecimal>> price,
+                                    final BigDecimal[] inputValues) {
         distanceRatio = calculateRatioAndCost(price.get(1), inputValues[1]);
         distance = inputValues[1];
         totalCost = calculateRatioAndCost(price.get(0), inputValues[0], true);
         return totalCost;
     }
 
-    private BigDecimal calculateRatioAndCost(Map<Integer, BigDecimal> price, BigDecimal searchValue, boolean cost) {
-        SortedSet<Integer> sortedKeys = new TreeSet<>(price.keySet());
+    /**
+     * calculateRatioAndCost - overloading methods.
+     * The method returns the ratio of the price to the values in the price.
+     * list and (or) calculates the total cost of freight transportation.
+     *
+     * @param priceList the price in which the match will be searched.
+     * @param searchValue the value that will be searched in the price list.
+     * @param cost if <tt>false</tt> calculates only the ratio in the price,
+     *             if <tt>true</tt> calculates the ratio in the price and the cost of shipping.
+     * @return ratio or shipping cost.
+     */
+    private BigDecimal calculateRatioAndCost(
+                    @javax.annotation.Nonnull final Map<Integer, BigDecimal> priceList,
+                                                BigDecimal searchValue,
+                                                final boolean cost) {
+        SortedSet<Integer> sortedKeys = new TreeSet<>(priceList.keySet());
         Integer valueMin = sortedKeys.first();
 
         if (cost) {
             Integer valueMax = sortedKeys.last();
-            BigDecimal decimalMax = BigDecimal.valueOf(valueMax);
+            BigDecimal decimalValueMax = BigDecimal.valueOf(valueMax);
             while (searchValue.doubleValue() > valueMax) {
-                totalCost = totalCost.add(multiplyFour(decimalMax, price.get(valueMax), distance, distanceRatio));
-                searchValue = searchValue.subtract(decimalMax);
+                totalCost = totalCost.add(multiplyFour(decimalValueMax,
+                                                        priceList.get(valueMax),
+                                                        distance,
+                                                        distanceRatio));
+                searchValue = searchValue.subtract(decimalValueMax);
             }
         }
 
@@ -40,21 +82,44 @@ public class CalculationImpl implements Calculation {
         }
 
         if (cost) {
-            totalCost = totalCost.add(multiplyFour(searchValue, price.get(valueMin), distance, distanceRatio));
+            totalCost = totalCost.add(multiplyFour(searchValue,
+                                                    priceList.get(valueMin),
+                                                    distance,
+                                                    distanceRatio));
             return totalCost;
         } else {
-            return price.get(valueMin);
+            return priceList.get(valueMin);
         }
     }
 
-    private BigDecimal calculateRatioAndCost(Map<Integer, BigDecimal> price, BigDecimal value) {
-        return calculateRatioAndCost(price, value, false);
+    /**
+     * Overloading methods
+     * If the last parameter is not specified, then run overloading methods
+     * and set last parameter <tt>false</tt>.
+     *
+     * @param priceList price list.
+     * @param searchValue search value in price list.
+     * @return <tt>discount rate by distance</tt>.
+     */
+    private BigDecimal calculateRatioAndCost(final Map<Integer, BigDecimal> priceList,
+                                             final BigDecimal searchValue) {
+        return calculateRatioAndCost(priceList, searchValue, false);
     }
 
-    private BigDecimal multiplyFour(BigDecimal one, BigDecimal two, BigDecimal three, BigDecimal four) {
-        BigDecimal result = one.multiply(two);
-        result = result.multiply(three);
-        result = result.multiply(four);
+    /**
+     * @return Multiply four BigDecimal numbers:
+     * @param oneNumber number;
+     * @param twoNumber number;
+     * @param threeNumber number;
+     * @param fourNumber number.
+     */
+    private BigDecimal multiplyFour(final BigDecimal oneNumber,
+                                    final BigDecimal twoNumber,
+                                    final BigDecimal threeNumber,
+                                    final BigDecimal fourNumber) {
+        BigDecimal result = oneNumber.multiply(twoNumber);
+        result = result.multiply(threeNumber);
+        result = result.multiply(fourNumber);
         return result;
     }
 }
