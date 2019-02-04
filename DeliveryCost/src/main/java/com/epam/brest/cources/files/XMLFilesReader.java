@@ -1,5 +1,7 @@
 package com.epam.brest.cources.files;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -12,11 +14,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * CalculationImpl this is implementation FilesReader to read data from XML file.
+ *
+ * @author  Sergey Nigerish
+ * @version 1.0
+ * @since   2019-02-01
+ * */
 public class XMLFilesReader implements FilesReader {
+
+    /**
+     * @param LOGGER process log variable.
+     */
+    private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
     public List<Map<Integer, BigDecimal>> readData(String[] fileNames) throws Exception {
 
+
+        LOGGER.debug("XML file for read: {}", fileNames);
         File inputFile = new File(FilesReader.getFullPath(fileNames[0]));
         SAXParserFactory saxFactory = SAXParserFactory.newInstance();
         SAXParser saxParser = saxFactory.newSAXParser();
@@ -45,6 +61,9 @@ public class XMLFilesReader implements FilesReader {
          */
         private final Map<Integer, BigDecimal> priceWeight = new TreeMap<>();
 
+        /**
+         * @param priceDistance price list for distance.
+         */
         private final Map<Integer, BigDecimal> priceDistance = new TreeMap<>();
 
         /**

@@ -63,6 +63,7 @@ final class DeliveryCost {
 
         FilesReader filesReader = new XMLFilesReader();
         List<Map<Integer, BigDecimal>> prices = filesReader.readData(FILES);
+        LOGGER.debug("Price from file: {}", FILES, prices);
 
         try {
             System.out.printf("%s %s: ", MESSAGES[1], MESSAGES[2]);
@@ -74,6 +75,7 @@ final class DeliveryCost {
             System.out.printf("%s: %.2f%s%n", MESSAGES[5], cost, MESSAGES[0]);
             LOGGER.debug("{}: {}{}", MESSAGES[5], String.format("%.2f", cost), MESSAGES[0]);
         } catch (IOException | NumberFormatException e) {
+            LOGGER.error(MESSAGES[6]);
             System.out.println(MESSAGES[6]);
         }
     }

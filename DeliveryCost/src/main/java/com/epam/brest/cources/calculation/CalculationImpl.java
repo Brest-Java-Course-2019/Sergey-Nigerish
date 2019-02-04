@@ -1,5 +1,8 @@
 package com.epam.brest.cources.calculation;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -26,19 +29,34 @@ import java.util.TreeSet;
  * @since   2019-02-01
  * */
 public class CalculationImpl implements Calculation {
+
     /**
      * @param totalCost variable in which the total cost of the freight is recorded.
-     * @param distance distance shipping.
-     * @param distanceRatio discount rate by distance.
      */
     private BigDecimal totalCost = BigDecimal.ZERO;
+
+    /**
+     * @param distance distance shipping.
+     */
     private BigDecimal distance;
+
+    /**
+     * @param distanceRatio discount rate by distance.
+     */
     private BigDecimal distanceRatio;
+
+    /**
+     * @param LOGGER process log variable.
+     */
+    private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
     public BigDecimal calculateCost(final List<Map<Integer, BigDecimal>> price,
                                     final BigDecimal[] inputValues) {
+        LOGGER.debug("calculateCost input price: {}", price);
+        LOGGER.debug("calculateCost input inputValues: {}", inputValues);
         distanceRatio = calculateRatioAndCost(price.get(1), inputValues[1]);
+        LOGGER.debug("calculateCost distanceRatio: {}", distanceRatio);
         distance = inputValues[1];
         totalCost = calculateRatioAndCost(price.get(0), inputValues[0], true);
         return totalCost;
@@ -59,6 +77,9 @@ public class CalculationImpl implements Calculation {
                     @javax.annotation.Nonnull final Map<Integer, BigDecimal> priceList,
                                                 BigDecimal searchValue,
                                                 final boolean cost) {
+        LOGGER.debug("calculateRatioAndCost input priceList: {}", priceList);
+        LOGGER.debug("calculateRatioAndCost input searchValue: {}", searchValue);
+        LOGGER.debug("calculateRatioAndCost input cost: {}", cost);
         SortedSet<Integer> sortedKeys = new TreeSet<>(priceList.keySet());
         Integer valueMin = sortedKeys.first();
 
@@ -120,6 +141,8 @@ public class CalculationImpl implements Calculation {
         BigDecimal result = oneNumber.multiply(twoNumber);
         result = result.multiply(threeNumber);
         result = result.multiply(fourNumber);
+        LOGGER.debug("multiplyFour: {}*{}*{}*{}={}", oneNumber, twoNumber,
+                                            threeNumber, fourNumber, result);
         return result;
     }
 }

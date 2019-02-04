@@ -19,6 +19,7 @@ public interface FilesReader {
      * This is the main method which reads price lists into variables.
      *
      * @param fileNames an array of price list names from which to read the data.
+     * @throws Exception if an I/O error
      * @return list of read data arrays.
      */
     List<Map<Integer, BigDecimal>> readData(final String[] fileNames) throws Exception;

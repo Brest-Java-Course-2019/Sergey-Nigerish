@@ -34,7 +34,7 @@ class DeliveryCostTest {
         InputStream inputStream = new ByteArrayInputStream(bytes);
         System.setIn(inputStream);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        main(new String[] {"ugg"});
+        main(new String[] {});
         String str;
         while ((str = reader.readLine())!= null) {
             System.out.println(str);
