@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS tariffs (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS clients (
   clientContractId INT NOT NULL AUTO_INCREMENT,
-  clientContractDay_date DATE NOT NULL,
   clientFIO VARCHAR(140) NOT NULL,
   clientAddress VARCHAR(90) NOT NULL,
+  clientContractDay_date DATE NOT NULL,
   clientBlocked TINYINT(1) NULL DEFAULT 0,
   client_to_idTariff INTEGER NOT NULL,
   clientDeleted TINYINT(1) NULL DEFAULT 0,
