@@ -19,9 +19,10 @@ public interface TariffsDao {
     /**
      * Get tariffs with the number of users.
      *
-     * @return stream of names tariffs and count users.
+     * @param id tariff for counting.
+     * @return count users.
      */
-    Stream<Tariff> countUsers();
+    Integer countUsers(final Integer id);
 
     /**
      * Get tariffs by id.
@@ -49,7 +50,7 @@ public interface TariffsDao {
     /**
      * Delete tariff with specified id.
      *
-     * @param id tariff.
+     * @param id tariff for delete.
      */
     void delete(final Integer id);
 }

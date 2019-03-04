@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(locations = {"classpath:test-db.xml", "classpath:test-dao.xml"})
 @Rollback
 @Transactional
-class TariffsDaoJpaImplTest {
+class TariffsDaoJdbcImplTest {
 
     private static final int COUNT_TARIFFS = 4;
 
@@ -35,7 +34,7 @@ class TariffsDaoJpaImplTest {
     private static final String NEW_TARIFF_NAME = "TestTariff";
     private static final int COUNT_NEW_TARIFFS = 1;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TariffsDaoJpaImplTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TariffsDaoJdbcImplTest.class);
 
     @Autowired
     TariffsDao tariffsDao;
@@ -101,19 +100,31 @@ class TariffsDaoJpaImplTest {
 
     @Test
     void update() {
-//        Tariff tariff = new Tariff();
-//        tariff.setTariffName(NEW_DEPARTMENT_NAME);
-//        tariff.setTariffDescription(NEW_DEPARTMENT_NAME);
-//        Tariff newTariff = tariffsDao.add(tariff).get();
-//        assertNotNull(newTariff.getTariffId());
-//
-//        tariff.setTariffName(NEW_DEPARTMENT_NAME + "_2");
-//        tariff.setTariffDescription(NEW_DEPARTMENT_NAME + "_2");
-//        tariffsDao.update(tariff);
-//
-//        Tariff updatedTariff = tariffsDao.findById(tariff.getTariffId()).get();
-//82.209.234.115
-//        assertEquals(NEW_DEPARTMENT_NAME + "_2", updatedTariff.getTariffName());
-//        assertEquals(NEW_DEPARTMENT_NAME + "_2", updatedTariff.getTariffDescription());
+        Tariff tariff = new Tariff();
+        tariff.setTariffName(FIRST_TARIFF_NAME + "_2");
+        tariff.setTariffId(FIRST_TARIFF_ID);
+        tariffsDao.update(tariff);
+
+        Tariff updatedTariff = tariffsDao.findById(tariff.getTariffId()).get();
+        LOGGER.debug("@Test update() result: expected({}) - actual({})", tariff, updatedTariff);
+        assertEquals(FIRST_TARIFF_NAME + "_2", updatedTariff.getTariffName());
+    }
+
+    @Test
+    void delete() {
+        tariffsDao.delete(FIRST_TARIFF_ID);
+
+        Throwable exception = assertThrows(EmptyResultDataAccessException.class, () -> {
+            tariffsDao.findById(FIRST_TARIFF_ID);
+        });
+        LOGGER.debug("@Test delete({}) waiting exception: {}", FIRST_TARIFF_ID, exception.toString());
+    }
+
+    @Test
+    void countUsers() {
+        int countUsers = tariffsDao.countUsers(FIRST_TARIFF_ID);
+
+        LOGGER.debug("@Test countUsers() result: expected({}) - actual({})", COUNT_TARIFFS, countUsers);
+        assertEquals(COUNT_TARIFFS, countUsers);
     }
 }

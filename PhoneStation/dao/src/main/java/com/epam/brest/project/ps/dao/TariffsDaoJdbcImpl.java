@@ -4,6 +4,7 @@ import com.epam.brest.project.ps.model.Tariff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -14,24 +15,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class TariffsDaoJpaImpl implements TariffsDao {
+public class TariffsDaoJdbcImpl implements TariffsDao {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TariffsDaoJpaImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TariffsDaoJdbcImpl.class);
 
     private static final String SELECT_SQL = "SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffDeleted = false";
     private static final String FIND_BY_ID_SQL = "SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffId = :tariffId AND tariffDeleted = false";
-    private static final String CHECK_COUNT_TARIFF = "SELECT COUNT(tariffId) FROM tariffs WHERE tariffName = :tariffName";
+    private static final String CHECK_COUNT_TARIFF = "SELECT COUNT(tariffId) FROM tariffs WHERE tariffName = :tariffName AND tariffDeleted = false";
+    private static final String COUNT_CLIENTS = "SELECT COUNT(clientContractId) FROM clients WHERE client_to_idTariff = :tariffId AND clientDeleted = false";
     private static final String INSERT = "INSERT INTO tariffs (tariffName) VALUES (:tariffName)";
-    private static final String CHECK_DELETE_STATUS = "SELECT tariffDeleted FROM tariffs WHERE tariffId = :tariffId";
+    private static final String UPDATE = "UPDATE tariffs SET tariffName = :tariffName, tariffDeleted = :tariffDeleted WHERE tariffId = :tariffId";
 
     private static final String TARIFF_ID = "tariffId";
     private static final String TARIFF_NAME = "tariffName";
-    private static final String TARIFF_DELETED = "tariffDeleted";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public TariffsDaoJpaImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public TariffsDaoJdbcImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
@@ -45,8 +46,12 @@ public class TariffsDaoJpaImpl implements TariffsDao {
     }
 
     @Override
-    public Stream<Tariff> countUsers() {
-        return null;
+    public Integer countUsers(final Integer id) {
+        LOGGER.debug("countUsers({})", id);
+        return namedParameterJdbcTemplate.queryForObject(
+                COUNT_CLIENTS,
+                new MapSqlParameterSource(TARIFF_ID, id),
+                Integer.class);
     }
 
     @Override
@@ -76,7 +81,7 @@ public class TariffsDaoJpaImpl implements TariffsDao {
                 Integer.class) == 0;
     }
 
-    private Optional<Tariff> insertTariff(Tariff tariff) {
+    private Optional<Tariff> insertTariff(final Tariff tariff) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue(TARIFF_NAME, tariff.getTariffName());
         KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
@@ -87,12 +92,25 @@ public class TariffsDaoJpaImpl implements TariffsDao {
     }
 
     @Override
-    public void update(Tariff tariff) {
+    public void update(final Tariff tariff) {
+        LOGGER.debug("update({})", tariff);
+        if (tariff.getTariffDeleted() == null) {
+            tariff.setTariffDeleted(false);
+        }
+        Optional.of(namedParameterJdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(tariff)))
+                .filter(this::successfullyUpdated)
+                .orElseThrow(() -> new RuntimeException("Failed to update tariff in DB"));
+    }
 
+    private boolean successfullyUpdated(final int numRowsUpdated) {
+        return numRowsUpdated == 1;
     }
 
     @Override
-    public void delete(Integer id) {
-
+    public void delete(final Integer id) {
+        LOGGER.debug("delete({})", id);
+        Tariff tariff = findById(id).get();
+        tariff.setTariffDeleted(true);
+        update(tariff);
     }
 }
