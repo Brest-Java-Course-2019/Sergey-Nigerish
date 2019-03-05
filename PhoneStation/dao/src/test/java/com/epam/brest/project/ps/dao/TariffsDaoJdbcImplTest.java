@@ -28,6 +28,7 @@ class TariffsDaoJdbcImplTest {
     private static final int FIRST_TARIFF_ID = 1;
     private static final String FIRST_TARIFF_NAME = "Talkative";
     private static final boolean FIRST_TARIFF_DELETE_STATUS = false;
+    private static final int COUNT_USERS_FOR_FIRST_TARIFF = 4;
 
     private static final int TARIFF_ID_IS_DELETED = 5;
 
@@ -41,25 +42,25 @@ class TariffsDaoJdbcImplTest {
 
     @Test
     public void findAll() {
-        List<Tariff> tariffs = tariffsDao.findAll().collect(Collectors.toList());
-        LOGGER.debug("@Test findAll() tariffs.isEmpty(): {}", tariffs.isEmpty());
-        assertFalse(tariffs.isEmpty());
+        List<Tariff> tariffsList = tariffsDao.findAll().collect(Collectors.toList());
+        LOGGER.debug("@Test findAll() tariffs.isEmpty(): {}", tariffsList.isEmpty());
+        assertFalse(tariffsList.isEmpty());
     }
 
     @Test
     public void findAll_count() {
-        List<Tariff> tariffs = tariffsDao.findAll().collect(Collectors.toList());
-        LOGGER.debug("@Test findAll_count() result: expected({}) - actual({})", COUNT_TARIFFS, tariffs.size());
-        assertEquals(COUNT_TARIFFS, tariffs.size());
+        long countTariffs = tariffsDao.findAll().count();
+        LOGGER.debug("@Test findAll_count() result: expected({}) - actual({})", COUNT_TARIFFS, countTariffs);
+        assertEquals(COUNT_TARIFFS, countTariffs);
     }
 
     @Test
     void findById() {
         Tariff tariff = tariffsDao.findById(FIRST_TARIFF_ID).get();
-        LOGGER.debug("@Test findById({}) result: expected(Tariff{tariffsId={}, tariffName='{}', tariffDeleted={}}) - actual({})",
+        LOGGER.debug("@Test findById({}) result: expected(Tariff{tariffId={}, tariffName='{}', tariffDeleted={}}) - actual({})",
                 FIRST_TARIFF_ID, FIRST_TARIFF_ID, FIRST_TARIFF_NAME, FIRST_TARIFF_DELETE_STATUS, tariff);
         assertNotNull(tariff);
-        assertTrue(tariff.getTariffId().equals(FIRST_TARIFF_ID));
+        assertEquals(FIRST_TARIFF_ID, (int) tariff.getTariffId());
         assertEquals(FIRST_TARIFF_NAME, tariff.getTariffName());
         assertEquals(FIRST_TARIFF_DELETE_STATUS, tariff.getTariffDeleted());
     }
@@ -112,19 +113,24 @@ class TariffsDaoJdbcImplTest {
 
     @Test
     void delete() {
+        long countBefore = tariffsDao.findAll().count();
         tariffsDao.delete(FIRST_TARIFF_ID);
+        long countAfter = tariffsDao.findAll().count();
 
         Throwable exception = assertThrows(EmptyResultDataAccessException.class, () -> {
             tariffsDao.findById(FIRST_TARIFF_ID);
         });
         LOGGER.debug("@Test delete({}) waiting exception: {}", FIRST_TARIFF_ID, exception.toString());
+        LOGGER.debug("@Test delete({}) result count : expected({}) - actual({})",
+                FIRST_TARIFF_ID, countBefore - 1, countAfter);
+        assertEquals(countBefore - 1, countAfter);
     }
 
     @Test
     void countUsers() {
         int countUsers = tariffsDao.countUsers(FIRST_TARIFF_ID);
 
-        LOGGER.debug("@Test countUsers() result: expected({}) - actual({})", COUNT_TARIFFS, countUsers);
-        assertEquals(COUNT_TARIFFS, countUsers);
+        LOGGER.debug("@Test countUsers() result: expected({}) - actual({})", COUNT_USERS_FOR_FIRST_TARIFF, countUsers);
+        assertEquals(COUNT_USERS_FOR_FIRST_TARIFF, countUsers);
     }
 }

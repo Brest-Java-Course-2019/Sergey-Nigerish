@@ -32,7 +32,7 @@ public class Tariff {
     @Override
     public String toString() {
         return "Tariff{" +
-                "tariffsId=" + tariffId +
+                "tariffId=" + tariffId +
                 ", tariffName='" + tariffName + "'" +
                 ", tariffDeleted=" + tariffDeleted +
                 "}";

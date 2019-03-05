@@ -6,11 +6,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * Tariff DAO Interface.
+ * Tariffs DAO Interface.
  */
 public interface TariffsDao {
     /**
-     * Get tariffs.
+     * Get all tariffs.
      *
      * @return tariffs stream.
      */
@@ -25,7 +25,7 @@ public interface TariffsDao {
     Integer countUsers(final Integer id);
 
     /**
-     * Get tariffs by id.
+     * Get tariff by id.
      *
      * @param id for getting.
      * @return tariff by id.
@@ -36,12 +36,12 @@ public interface TariffsDao {
      * Add new tariff.
      *
      * @param tariff new tariff.
-     * @return tariff id.
+     * @return new tariff.
      */
     Optional<Tariff> add(final Tariff tariff);
 
     /**
-     * Edit tariff.
+     * Edit tariff in base.
      *
      * @param tariff for editing.
      */
