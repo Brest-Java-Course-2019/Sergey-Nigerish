@@ -79,12 +79,12 @@ class TariffsDaoJdbcImplTest {
 
         Tariff tariff = new Tariff();
         tariff.setTariffName(NEW_TARIFF_NAME);
-        Tariff newTariff = tariffsDao.add(tariff).get();
-        assertNotNull(newTariff.getTariffId());
+        tariffsDao.add(tariff);
+        assertNotNull(tariff.getTariffId());
 
         long countAfter = tariffsDao.findAll().count();
         LOGGER.debug("@Test create({}) result id: {}, count additions: expected({}) - actual({})",
-                NEW_TARIFF_NAME, newTariff.getTariffId(), COUNT_NEW_TARIFFS, countAfter - countBefore);
+                NEW_TARIFF_NAME, tariff.getTariffId(), COUNT_NEW_TARIFFS, countAfter - countBefore);
         assertEquals(COUNT_NEW_TARIFFS, countAfter - countBefore);
     }
 

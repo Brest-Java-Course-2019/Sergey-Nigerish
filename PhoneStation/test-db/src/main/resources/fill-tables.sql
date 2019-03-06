@@ -36,6 +36,19 @@ INSERT INTO clients (clientContractDay_date
                     ,clientFIO
                     ,clientAddress
                     ,clientBlocked
+                    ,client_to_idTariff
+                    ,clientDeleted)
+            VALUES ('2016-03-17'
+                    ,'Demeduk Iosif'
+                    ,'Proletarskaya st.'
+                    ,1
+                    ,3
+                    ,true);
+
+INSERT INTO clients (clientContractDay_date
+                    ,clientFIO
+                    ,clientAddress
+                    ,clientBlocked
                     ,client_to_idTariff)
             VALUES ('2016-05-19'
                     ,'Hand made shop'

@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class ClientsDaoJdbcImplTest {
 
-    private static final int COUNT_CLIENTS_BY_DATE = 4;
     private static final int COUNT_CLIENTS_BLOCKED = 1;
     private static final int COUNT_CLIENTS_NO_BLOCKING = 7;
 
@@ -39,9 +38,14 @@ class ClientsDaoJdbcImplTest {
 
     private static final String NEW_CLIENT_FULL_NAME = "Vasya Loginov";
     private static final String NEW_CLIENT_ANDRESS = "Zolotaya st.";
-    private static final Date NEW_CLIENT_DATE = Date.valueOf("2019-03-05");
     private static final Integer NEW_CLIENT_TARIFF_ID = 2;
     private static final int COUNT_NEW_CLIENTS = 1;
+
+    private static final Date START_DATE = Date.valueOf("2016-03-11");
+    private static final Date END_DATE = Date.valueOf("2018-01-11");
+    private static final int COUNT_CLIENTS_BY_DATE = 5;
+    private static final int COUNT_CLIENTS_AFTER_DATE = 7;
+    private static final int COUNT_CLIENTS_BEFORE_DATE = 6;
 
     @Autowired
     ClientsDao clientsDao;
@@ -57,12 +61,26 @@ class ClientsDaoJdbcImplTest {
 
     @Test
     void findAllByDate() {
-        Date startDate = Date.valueOf("2016-03-11");
-        Date endDate = Date.valueOf("2018-01-11");
-        long countClients = clientsDao.findAllByDate(startDate, endDate).count();
+        long countClients = clientsDao.findAllByDate(START_DATE, END_DATE).count();
         LOGGER.debug("@Test findAllByDate({}, {}) result: expected({}) - actual({})",
-                startDate, endDate, COUNT_CLIENTS_BY_DATE, countClients);
+                START_DATE, END_DATE, COUNT_CLIENTS_BY_DATE, countClients);
         assertEquals(COUNT_CLIENTS_BY_DATE, countClients);
+    }
+
+    @Test
+    void findAllBeforeDate() {
+        long countClients = clientsDao.findAllByDate(null, END_DATE).count();
+        LOGGER.debug("@Test findAllBeforeDate({}, {}) result: expected({}) - actual({})",
+                null, END_DATE, COUNT_CLIENTS_BEFORE_DATE, countClients);
+        assertEquals(COUNT_CLIENTS_BEFORE_DATE, countClients);
+    }
+
+    @Test
+    void findAllAfterDate() {
+        long countClients = clientsDao.findAllByDate(START_DATE, null).count();
+        LOGGER.debug("@Test findAllAfterDate({}, {}) result: expected({}) - actual({})",
+                START_DATE, null, COUNT_CLIENTS_AFTER_DATE, countClients);
+        assertEquals(COUNT_CLIENTS_AFTER_DATE, countClients);
     }
 
     @Test
@@ -75,7 +93,7 @@ class ClientsDaoJdbcImplTest {
 
     @Test
     void findAllByNoBlocking() {
-        long countClients = clientsDao.findAllByBlocking(true).count();
+        long countClients = clientsDao.findAllByBlocking(false).count();
         LOGGER.debug("@Test findAllByNoBlocking(false) result: expected({}) - actual({})",
                 COUNT_CLIENTS_NO_BLOCKING, countClients);
         assertEquals(COUNT_CLIENTS_NO_BLOCKING, countClients);
@@ -84,8 +102,8 @@ class ClientsDaoJdbcImplTest {
     @Test
     void findById() {
         Client client = clientsDao.findById(FIRST_CLIENT_ID).get();
-        LOGGER.debug("@Test findById({}) result: expected(Client{clientContractId={}, clientContractDay_date='{}', " +
-                        "clientFIO='{}', clientAddress='{}', clientBlocked={}, client_to_idTariffs={}, " +
+        LOGGER.debug("@Test findById({}) result: expected(Client{clientContractId={}, clientContractDay_date={}, " +
+                        "clientFIO='{}', clientAddress='{}', clientBlocked={}, client_to_idTariff={}, " +
                         "clientDeleted={}}) - actual({})",
                 FIRST_CLIENT_ID, FIRST_CLIENT_ID, FIRST_CLIENT_DATE, FIRST_CLIENT_FULL_NAME, FIRST_CLIENT_ANDRESS,
                 FIRST_CLIENT_BLOCKED, FIRST_CLIENT_TARIFF_ID, FIRST_CLIENT_DELETED, client);
@@ -104,11 +122,10 @@ class ClientsDaoJdbcImplTest {
         Client client = new Client();
         client.setClientFIO(NEW_CLIENT_FULL_NAME);
         client.setClientAddress(NEW_CLIENT_ANDRESS);
-        client.setClientContractDay_date(NEW_CLIENT_DATE);
-        client.setClient_to_idTariffs(NEW_CLIENT_TARIFF_ID);
+        client.setClient_to_idTariff(NEW_CLIENT_TARIFF_ID);
 
-        Client newClient = clientsDao.add(client).get();
-        assertNotNull(newClient.getClientContractId());
+        clientsDao.add(client).get();
+        assertNotNull(client.getClientContractId());
 
         long countAfter = clientsDao.findAll().count();
         LOGGER.debug("@Test add({}) result id: {}, count additions: expected({}) - actual({})",
@@ -117,12 +134,29 @@ class ClientsDaoJdbcImplTest {
     }
 
     @Test
+    void update() {
+        Client client = new Client();
+        client.setClientContractId(FIRST_CLIENT_ID);
+        client.setClientFIO(FIRST_CLIENT_FULL_NAME + " update");
+        client.setClientAddress(FIRST_CLIENT_ANDRESS + " update");
+        client.setClientContractDay_date(FIRST_CLIENT_DATE);
+        client.setClient_to_idTariff(NEW_CLIENT_TARIFF_ID);
+
+        clientsDao.update(client);
+
+        Client updatedClient = clientsDao.findById(client.getClientContractId()).get();
+        LOGGER.debug("@Test update() result: expected({}) - actual({})", client, updatedClient);
+        assertEquals(FIRST_CLIENT_FULL_NAME + " update", updatedClient.getClientFIO());
+        assertEquals(FIRST_CLIENT_FULL_NAME + " update", updatedClient.getClientFIO());
+    }
+
+    @Test
     void updateTariff() {
         clientsDao.updateTariff(FIRST_CLIENT_ID, NEW_CLIENT_TARIFF_ID);
 
         Client updatedClient = clientsDao.findById(FIRST_CLIENT_ID).get();
-        LOGGER.debug("@Test updateTariff() result: expected({}) - actual({})", NEW_CLIENT_TARIFF_ID, updatedClient.getClient_to_idTariffs());
-        assertEquals(NEW_CLIENT_TARIFF_ID, updatedClient.getClient_to_idTariffs());
+        LOGGER.debug("@Test updateTariff() result: expected({}) - actual({})", NEW_CLIENT_TARIFF_ID, updatedClient.getClient_to_idTariff());
+        assertEquals(NEW_CLIENT_TARIFF_ID, updatedClient.getClient_to_idTariff());
     }
 
     @Test
@@ -136,23 +170,6 @@ class ClientsDaoJdbcImplTest {
         updatedClient = clientsDao.findById(FIRST_CLIENT_ID).get();
         LOGGER.debug("@Test updateBlocking() result: expected({}) - actual({})", false, updatedClient.getClientBlocked());
         assertEquals(false, updatedClient.getClientBlocked());
-    }
-
-    @Test
-    void update() {
-        Client client = new Client();
-        client.setClientContractId(FIRST_CLIENT_ID);
-        client.setClientFIO(FIRST_CLIENT_FULL_NAME + " update");
-        client.setClientAddress(FIRST_CLIENT_ANDRESS + " update");
-        client.setClientContractDay_date(FIRST_CLIENT_DATE);
-        client.setClient_to_idTariffs(NEW_CLIENT_TARIFF_ID);
-
-        clientsDao.update(client);
-
-        Client updatedClient = clientsDao.findById(client.getClientContractId()).get();
-        LOGGER.debug("@Test update() result: expected({}) - actual({})", client, updatedClient);
-        assertEquals(FIRST_CLIENT_FULL_NAME + " update", updatedClient.getClientFIO());
-        assertEquals(FIRST_CLIENT_FULL_NAME + " update", updatedClient.getClientFIO());
     }
 
     @Test

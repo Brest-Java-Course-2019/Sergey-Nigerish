@@ -1,6 +1,6 @@
 package com.epam.brest.project.ps.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Client {
     private Integer clientContractId;
@@ -8,7 +8,7 @@ public class Client {
     private String clientFIO;
     private String clientAddress;
     private Boolean clientBlocked;
-    private Integer client_to_idTariffs;
+    private Integer client_to_idTariff;
     private Boolean clientDeleted;
 
     public Integer getClientContractId() {
@@ -51,12 +51,12 @@ public class Client {
         this.clientBlocked = clientBlocked;
     }
 
-    public Integer getClient_to_idTariffs() {
-        return client_to_idTariffs;
+    public Integer getClient_to_idTariff() {
+        return client_to_idTariff;
     }
 
-    public void setClient_to_idTariffs(Integer client_to_idTariffs) {
-        this.client_to_idTariffs = client_to_idTariffs;
+    public void setClient_to_idTariff(Integer client_to_idTariff) {
+        this.client_to_idTariff = client_to_idTariff;
     }
 
     public Boolean getClientDeleted() {
@@ -75,7 +75,7 @@ public class Client {
                 ", clientFIO='" + clientFIO + "'" +
                 ", clientAddress='" + clientAddress + "'" +
                 ", clientBlocked=" + clientBlocked +
-                ", client_to_idTariffs=" + client_to_idTariffs +
+                ", client_to_idTariff=" + client_to_idTariff +
                 ", clientDeleted=" + clientDeleted +
                 "}";
     }

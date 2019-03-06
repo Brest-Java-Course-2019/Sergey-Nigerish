@@ -217,9 +217,6 @@
                         </packages>
                     </configuration>
                 </plugin>
-                <plugin>
-
-                </plugin>
             </plugins>
         </pluginManagement>
 

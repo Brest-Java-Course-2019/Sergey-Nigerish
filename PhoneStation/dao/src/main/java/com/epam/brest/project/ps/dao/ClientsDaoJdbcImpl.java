@@ -1,15 +1,52 @@
 package com.epam.brest.project.ps.dao;
 
 import com.epam.brest.project.ps.model.Client;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ClientsDaoJdbcImpl implements ClientsDao {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TariffsDaoJdbcImpl.class);
+
+    private static final String SELECT_ALL_SQL = "SELECT clientContractId, clientFIO, clientAddress, " +
+            "clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients " +
+            "WHERE clientDeleted = false";
+    private static final String SELECT_BY_DATE_SQL = "SELECT clientContractId, clientFIO, clientAddress, " +
+            "clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients " +
+            "WHERE clientDeleted = false AND :startDate <= clientContractDay_date AND clientContractDay_date <= :endDate";
+    private static final String SELECT_BY_BLOCKING_SQL = "SELECT clientContractId, clientFIO, clientAddress, " +
+            "clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients " +
+            "WHERE clientDeleted = false AND clientBlocked = :clientBlocked";
+    private static final String FIND_BY_ID_SQL = "SELECT clientContractId, clientFIO, clientAddress, " +
+            "clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients " +
+            "WHERE clientContractId = :clientId AND clientDeleted = false";
+    private static final String INSERT_SQL = "INSERT INTO clients (clientFIO, clientAddress, " +
+            "clientContractDay_date, clientBlocked, client_to_idTariff) " +
+            "VALUES (:clientFIO, :clientAddress, :clientContractDay_date, :clientBlocked, :client_to_idTariff)";
+
+
+    private static final String CLIENT_ID = "clientContractId";
+    private static final String CLIENT_BLOCKED = "clientBlocked";
+
+    private static final String START_DATE = "startDate";
+    private static final String END_DATE = "endDate";
+    private static final String FIRST_DATE = "1970-01-01";
+
     final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+
+
 
     public ClientsDaoJdbcImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -22,7 +59,10 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
      */
     @Override
     public Stream<Client> findAll() {
-        return null;
+        LOGGER.debug("findAll()");
+        List<Client> client = namedParameterJdbcTemplate
+                .query(SELECT_ALL_SQL, BeanPropertyRowMapper.newInstance(Client.class));
+        return client.stream();
     }
 
     /**
@@ -34,7 +74,22 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
      */
     @Override
     public Stream<Client> findAllByDate(Date startDate, Date endDate) {
-        return null;
+        LOGGER.debug("findAllByDate({}, {}) - input default", startDate, endDate);
+        if (startDate == null) {
+            startDate = Date.valueOf(FIRST_DATE);
+        }
+        if (endDate == null) {
+            endDate = new Date(new java.util.Date().getTime());
+
+        }
+        LOGGER.debug("findAllByDate({}, {}) - input modified", startDate, endDate);
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource(START_DATE, startDate);
+        namedParameters.addValue(END_DATE, endDate);
+        List<Client> client = namedParameterJdbcTemplate.query(
+                SELECT_BY_DATE_SQL,
+                namedParameters,
+                BeanPropertyRowMapper.newInstance(Client.class));
+        return client.stream();
     }
 
     /**
@@ -45,7 +100,12 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
      */
     @Override
     public Stream<Client> findAllByBlocking(Boolean blocking) {
-        return null;
+        LOGGER.debug("findAllByBlocking({})", blocking);
+        List<Client> client = namedParameterJdbcTemplate.query(
+                SELECT_BY_BLOCKING_SQL,
+                new MapSqlParameterSource(CLIENT_BLOCKED, blocking),
+                BeanPropertyRowMapper.newInstance(Client.class));
+        return client.stream();
     }
 
     /**
@@ -56,7 +116,12 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
      */
     @Override
     public Optional<Client> findById(Integer id) {
-        return Optional.empty();
+        LOGGER.debug("findById({})", id);
+        Client client = namedParameterJdbcTemplate.queryForObject(
+                FIND_BY_ID_SQL,
+                new MapSqlParameterSource(CLIENT_ID, id),
+                BeanPropertyRowMapper.newInstance(Client.class));
+        return Optional.ofNullable(client);
     }
 
     /**
@@ -67,7 +132,13 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
      */
     @Override
     public Optional<Client> add(Client client) {
-        return Optional.empty();
+        client.setClientContractDay_date(new Date(new java.util.Date().getTime()));
+        LOGGER.debug("add({})", client);
+        KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+        int result = namedParameterJdbcTemplate.update(INSERT_SQL, new BeanPropertySqlParameterSource(client), generatedKeyHolder);
+        LOGGER.debug("add client {count rows = {}, id = {}}", result, generatedKeyHolder.getKeys().get(CLIENT_ID));
+        client.setClientContractId((Integer) generatedKeyHolder.getKeys().get(CLIENT_ID));
+        return Optional.of(client);
     }
 
     /**

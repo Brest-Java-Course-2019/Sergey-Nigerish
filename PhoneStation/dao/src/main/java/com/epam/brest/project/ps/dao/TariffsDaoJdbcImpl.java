@@ -19,12 +19,12 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TariffsDaoJdbcImpl.class);
 
-    private static final String SELECT_SQL = "SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffDeleted = false";
+    private static final String SELECT_ALL_SQL = "SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffDeleted = false";
     private static final String FIND_BY_ID_SQL = "SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffId = :tariffId AND tariffDeleted = false";
-    private static final String CHECK_COUNT_TARIFF = "SELECT COUNT(tariffId) FROM tariffs WHERE tariffName = :tariffName AND tariffDeleted = false";
-    private static final String COUNT_CLIENTS = "SELECT COUNT(clientContractId) FROM clients WHERE client_to_idTariff = :tariffId AND clientDeleted = false";
-    private static final String INSERT = "INSERT INTO tariffs (tariffName) VALUES (:tariffName)";
-    private static final String UPDATE = "UPDATE tariffs SET tariffName = :tariffName, tariffDeleted = :tariffDeleted WHERE tariffId = :tariffId";
+    private static final String CHECK_COUNT_TARIFF_SQL = "SELECT COUNT(tariffId) FROM tariffs WHERE tariffName = :tariffName AND tariffDeleted = false";
+    private static final String COUNT_CLIENTS_SQL = "SELECT COUNT(clientContractId) FROM clients WHERE clientDeleted = false AND client_to_idTariff = :tariffId";
+    private static final String INSERT_SQL = "INSERT INTO tariffs (tariffName) VALUES (:tariffName)";
+    private static final String UPDATE_SQL = "UPDATE tariffs SET tariffName = :tariffName, tariffDeleted = :tariffDeleted WHERE tariffId = :tariffId";
 
     private static final String TARIFF_ID = "tariffId";
     private static final String TARIFF_NAME = "tariffName";
@@ -40,7 +40,7 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
     public Stream<Tariff> findAll() {
         LOGGER.debug("findAll()");
         List<Tariff> tariff = namedParameterJdbcTemplate
-                .query(SELECT_SQL, BeanPropertyRowMapper.newInstance(Tariff.class));
+                .query(SELECT_ALL_SQL, BeanPropertyRowMapper.newInstance(Tariff.class));
         return tariff.stream();
     }
 
@@ -48,7 +48,7 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
     public Integer countUsers(final Integer id) {
         LOGGER.debug("countUsers({})", id);
         return namedParameterJdbcTemplate.queryForObject(
-                COUNT_CLIENTS,
+                COUNT_CLIENTS_SQL,
                 new MapSqlParameterSource(TARIFF_ID, id),
                 Integer.class);
     }
@@ -75,7 +75,7 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
     private Boolean tariffInBase(final String tariffName) {
         LOGGER.debug("tariffInBase({})", tariffName);
         return namedParameterJdbcTemplate.queryForObject(
-                CHECK_COUNT_TARIFF,
+                CHECK_COUNT_TARIFF_SQL,
                 new MapSqlParameterSource(TARIFF_NAME, tariffName),
                 Integer.class) == 0;
     }
@@ -84,7 +84,7 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue(TARIFF_NAME, tariff.getTariffName());
         KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-        int result = namedParameterJdbcTemplate.update(INSERT, mapSqlParameterSource, generatedKeyHolder);
+        int result = namedParameterJdbcTemplate.update(INSERT_SQL, mapSqlParameterSource, generatedKeyHolder);
         LOGGER.debug("insertTariff {count rows = {}, id = {}}", result, generatedKeyHolder.getKeys().get(TARIFF_ID));
         tariff.setTariffId((Integer) generatedKeyHolder.getKeys().get(TARIFF_ID));
         return Optional.of(tariff);
@@ -96,7 +96,7 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
         if (tariff.getTariffDeleted() == null) {
             tariff.setTariffDeleted(false);
         }
-        Optional.of(namedParameterJdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(tariff)))
+        Optional.of(namedParameterJdbcTemplate.update(UPDATE_SQL, new BeanPropertySqlParameterSource(tariff)))
                 .filter(this::successfullyUpdated)
                 .orElseThrow(() -> new RuntimeException("Failed to update tariff in DB"));
     }
