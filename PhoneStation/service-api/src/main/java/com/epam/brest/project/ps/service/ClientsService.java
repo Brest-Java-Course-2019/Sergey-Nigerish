@@ -1,21 +1,20 @@
-package com.epam.brest.project.ps.dao;
+package com.epam.brest.project.ps.service;
 
 import com.epam.brest.project.ps.model.Client;
 
 import java.sql.Date;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.List;
 
 /**
- * Clients DAO Interface.
+ * Clients Service Interface.
  */
-public interface ClientsDao {
+public interface ClientsService {
     /**
      * Get all clients.
      *
      * @return clients stream.
      */
-    Stream<Client> findAll();
+    List<Client> findAll();
 
     /**
      * Return all clients filtering by date.
@@ -24,7 +23,7 @@ public interface ClientsDao {
      * @param endDate last date.
      * @return clients stream filtering by date.
      */
-    Stream<Client> findAllByDate(final Date startDate, final Date endDate);
+    List<Client> findAllByDate(final Date startDate, final Date endDate);
 
     /**
      * Return all clients filtering by blocking.
@@ -32,7 +31,7 @@ public interface ClientsDao {
      * @param blocking client status.
      * @return clients stream filtering by blocking.
      */
-    Stream<Client> findAllByBlocking(final Boolean blocking);
+    List<Client> findAllByBlocking(final Boolean blocking);
 
 
     /**
@@ -41,15 +40,14 @@ public interface ClientsDao {
      * @param clientId for getting.
      * @return client by id.
      */
-    Optional<Client> findById(final Integer clientId);
+    Client findById(final Integer clientId);
 
     /**
      * Add new client.
      *
      * @param client new client.
-     * @return new client.
      */
-    Optional<Client> add(final Client client);
+    void add(final Client client);
 
     /**
      * Edit client in base.

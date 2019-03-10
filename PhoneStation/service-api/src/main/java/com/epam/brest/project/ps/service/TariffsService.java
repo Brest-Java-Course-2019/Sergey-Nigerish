@@ -1,20 +1,19 @@
-package com.epam.brest.project.ps.dao;
+package com.epam.brest.project.ps.service;
 
 import com.epam.brest.project.ps.model.Tariff;
 
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.List;
 
 /**
- * Tariffs DAO Interface.
+ * Tariffs Service Interface.
  */
-public interface TariffsDao {
+public interface TariffsService {
     /**
      * Get all tariffs.
      *
      * @return tariffs stream.
      */
-    Stream<Tariff> findAll();
+    List<Tariff> findAll();
 
     /**
      * Get tariffs with the number of users.
@@ -30,15 +29,14 @@ public interface TariffsDao {
      * @param tariffId for getting.
      * @return tariff by tariffId.
      */
-    Optional<Tariff> findById(final Integer tariffId);
+    Tariff findById(final Integer tariffId);
 
     /**
      * Add new tariff.
      *
      * @param tariff new tariff.
-     * @return new tariff.
      */
-    Optional<Tariff> add(final Tariff tariff);
+    void add(final Tariff tariff);
 
     /**
      * Edit tariff in base.

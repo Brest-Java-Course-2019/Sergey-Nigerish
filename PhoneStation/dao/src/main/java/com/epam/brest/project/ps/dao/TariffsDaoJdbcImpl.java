@@ -45,20 +45,20 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
     }
 
     @Override
-    public Integer countUsers(final Integer id) {
-        LOGGER.debug("countUsers({})", id);
+    public Integer countUsers(final Integer tariffId) {
+        LOGGER.debug("countUsers({})", tariffId);
         return namedParameterJdbcTemplate.queryForObject(
                 COUNT_CLIENTS_SQL,
-                new MapSqlParameterSource(TARIFF_ID, id),
+                new MapSqlParameterSource(TARIFF_ID, tariffId),
                 Integer.class);
     }
 
     @Override
-    public Optional<Tariff> findById(final Integer id) {
-        LOGGER.debug("findById({})", id);
+    public Optional<Tariff> findById(final Integer tariffId) {
+        LOGGER.debug("findById({})", tariffId);
         Tariff tariff = namedParameterJdbcTemplate.queryForObject(
                 FIND_BY_ID_SQL,
-                new MapSqlParameterSource(TARIFF_ID, id),
+                new MapSqlParameterSource(TARIFF_ID, tariffId),
                 BeanPropertyRowMapper.newInstance(Tariff.class));
         return Optional.ofNullable(tariff);
     }
@@ -106,9 +106,9 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
     }
 
     @Override
-    public void delete(final Integer id) {
-        LOGGER.debug("delete({})", id);
-        Tariff tariff = findById(id).get();
+    public void delete(final Integer tariffId) {
+        LOGGER.debug("delete({})", tariffId);
+        Tariff tariff = findById(tariffId).get();
         tariff.setTariffDeleted(true);
         update(tariff);
     }

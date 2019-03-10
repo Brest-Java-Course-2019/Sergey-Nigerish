@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public class ClientsDaoJdbcImpl implements ClientsDao {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TariffsDaoJdbcImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientsDaoJdbcImpl.class);
 
     private static final String SELECT_ALL_SQL = "SELECT clientContractId, clientFIO, clientAddress, " +
             "clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients " +
@@ -30,10 +30,14 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
             "WHERE clientDeleted = false AND clientBlocked = :clientBlocked";
     private static final String FIND_BY_ID_SQL = "SELECT clientContractId, clientFIO, clientAddress, " +
             "clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients " +
-            "WHERE clientContractId = :clientId AND clientDeleted = false";
+            "WHERE clientContractId = :clientContractId AND clientDeleted = false";
     private static final String INSERT_SQL = "INSERT INTO clients (clientFIO, clientAddress, " +
             "clientContractDay_date, clientBlocked, client_to_idTariff) " +
             "VALUES (:clientFIO, :clientAddress, :clientContractDay_date, :clientBlocked, :client_to_idTariff)";
+    private static final String UPDATE_SQL = "UPDATE clients SET clientFIO = :clientFIO, " +
+            "clientAddress =:clientAddress, clientContractDay_date = :clientContractDay_date, " +
+            "clientBlocked =:clientBlocked, client_to_idTariff = :client_to_idTariff, " +
+            "clientDeleted = :clientDeleted WHERE  clientContractId = :clientContractId";
 
 
     private static final String CLIENT_ID = "clientContractId";
@@ -44,9 +48,6 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
     private static final String FIRST_DATE = "1970-01-01";
 
     final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-
-
 
     public ClientsDaoJdbcImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -111,15 +112,15 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
     /**
      * Get client by id.
      *
-     * @param id for getting.
+     * @param clientId for getting.
      * @return client by id.
      */
     @Override
-    public Optional<Client> findById(Integer id) {
-        LOGGER.debug("findById({})", id);
+    public Optional<Client> findById(Integer clientId) {
+        LOGGER.debug("findById({})", clientId);
         Client client = namedParameterJdbcTemplate.queryForObject(
                 FIND_BY_ID_SQL,
-                new MapSqlParameterSource(CLIENT_ID, id),
+                new MapSqlParameterSource(CLIENT_ID, clientId),
                 BeanPropertyRowMapper.newInstance(Client.class));
         return Optional.ofNullable(client);
     }
@@ -148,7 +149,17 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
      */
     @Override
     public void update(Client client) {
+        if (client.getClientDeleted() == null) {
+            client.setClientDeleted(false);
+        }
+        LOGGER.debug("update({})", client);
+        Optional.of(namedParameterJdbcTemplate.update(UPDATE_SQL, new BeanPropertySqlParameterSource(client)))
+                .filter(this::successfullyUpdated)
+                .orElseThrow(() -> new RuntimeException("Failed to update client in DB"));
+    }
 
+    private boolean successfullyUpdated(final int numRowsUpdated) {
+        return numRowsUpdated == 1;
     }
 
     /**
@@ -159,7 +170,10 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
      */
     @Override
     public void updateTariff(Integer clientId, Integer tariffId) {
-
+        LOGGER.debug("updateTariff({}, {})", clientId, tariffId);
+        Client client = findById(clientId).get();
+        client.setClient_to_idTariff(tariffId);
+        update(client);
     }
 
     /**
@@ -170,16 +184,22 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
      */
     @Override
     public void updateBlocking(Integer clientId, Boolean lockingStatus) {
-
+        LOGGER.debug("updateBlocking({}, {})", clientId, lockingStatus);
+        Client client = findById(clientId).get();
+        client.setClientBlocked(lockingStatus);
+        update(client);
     }
 
     /**
      * Delete client with specified id.
      *
-     * @param id client for delete.
+     * @param clientId client for delete.
      */
     @Override
-    public void delete(Integer id) {
-
+    public void delete(Integer clientId) {
+        LOGGER.debug("delete({})", clientId);
+        Client client = findById(clientId).get();
+        client.setClientDeleted(true);
+        update(client);
     }
 }
