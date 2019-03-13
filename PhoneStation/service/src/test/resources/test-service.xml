@@ -21,4 +21,12 @@
         <constructor-arg ref="clientsDao"/>
     </bean>
 
+    <bean id="tariffsDao" class="com.epam.brest.project.ps.dao.TariffsDaoJdbcImpl">
+        <constructor-arg ref="namedParameterJdbcTemplate"/>
+    </bean>
+
+    <bean id="tariffsService" class="com.epam.brest.project.ps.service.TariffsServiceImpl">
+        <constructor-arg ref="tariffsDao"/>
+    </bean>
+
 </beans>

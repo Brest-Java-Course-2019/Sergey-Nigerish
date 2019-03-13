@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <!--<link rel="stylesheet" href="css/datepicker.css">-->
+    <link rel="stylesheet" type="text/css" href="http://www.eyecon.ro/bootstrap-datepicker/css/datepicker.css">
+
+    <title>Client management</title>
+</head>
+<script>
+    var currentData = "client";
+</script>
+<body>
+<!--Head panel-->
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary navbar-fixed-top">
+    <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" id="Clients" href="index.html#Clients">Clients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Tariffs" href="#Tariffs">Tariffs</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<!--Head panel-->
+<header>
+    <nav class="navbar navbar-light bg-info navbar-fixed-bottom" id="test">
+        <a href="#cancel" class="btn btn-info btn-lg" onclick="cancel(currentData)" style="visibility: hidden;" id="cancel">
+            <i class="fa fa-times"></i></a>
+        <span class="navbar-brand" id="text-head">Clients</span>
+        <form class="form-inline">
+            <a href="#add" class="btn btn-info btn-lg" onclick="add(currentData)" id="add">
+                <i class="fa fa-plus"></i> Add</a>
+            <a href="#save" class="btn btn-info btn-lg" onclick="save(currentData)" style="display: none;" id="save">
+                <i class="fa fa-save"></i> Save</a>
+        </form>
+    </nav>
+    </br>
+</header>
+
+<section id="tariffs-table" style="display: none;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th style="width: 55%" hidden>Id</th>
+                            <th style="width: 55%">Tariff name</th>
+                            <th style="width: 30%">Count clients</th>
+                            <th style="width: 15%">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td hidden>1</td>
+                            <td>Talkative</td>
+                            <td>4</td>
+                            <td>
+                                <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                        class="fa fa-pencil fa-fw"></i></a>
+                                <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                        class="fa fa-trash-o fa-lg"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td hidden>2</td>
+                            <td>Silent</td>
+                            <td>2</td>
+                            <td>
+                                <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                        class="fa fa-pencil fa-fw"></i></a>
+                                <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                        class="fa fa-trash-o fa-lg"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td hidden>3</td>
+                            <td>Corporate</td>
+                            <td>0</td>
+                            <td>
+                                <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                        class="fa fa-pencil fa-fw"></i></a>
+                                <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                        class="fa fa-trash-o fa-lg"></i></a>
+                            </td>
+                        </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="tariff-form" style="display: none;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 pull-md-3 bd-content">
+                <form>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Tariff name</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="tariff name">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="clients-table">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-container fixed-height has-footer">
+                            <div class="fixed-table-body">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center;" colspan="7">
+                                                <div id="fikr-form" class="container">
+                                                <div class="row">
+                                                    <div id="filter-panel" class="collapse filter-panel">
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-body">
+                                                                <form class="form-inline" role="form">
+                                                                    <table class="table table-striped table-hover table-bordered">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th style="width: 40%">Filter by blocking:</th>
+                                                                            <th colspan="2">Filter by date:</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <table>
+                                                                                    <tr>
+                                                                                        <div class="d-flex">
+                                                                                            <div class="form-check">
+                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-all" value="all" checked>
+                                                                                                <label class="form-check-label" for="show-all">
+                                                                                                    All
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <div class="d-flex">
+                                                                                            <div class="form-check">
+                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-blocked" value="blocked">
+                                                                                                <label class="form-check-label" for="show-blocked">
+                                                                                                    Blocked
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <div class="d-flex">
+                                                                                            <div class="form-check">
+                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-no-blocked" value="no-blocked">
+                                                                                                <label class="form-check-label" for="show-no-blocked">
+                                                                                                    No blocked
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </td>
+                                                                            <td colspan="2">
+                                                                                <form>
+                                                                                    <div class="filtering">
+                                                                                        <div class="input-append date">
+                                                                                            <div class="input-group mb-3 col-sm-6">
+                                                                                                <label for="date-from">Date from:</label>
+                                                                                                <!--<div class="input-group-prepend bg-white">-->
+                                                                                                <!--<span class="input-group-text border-left-0 rounded-right bg-white"><i class="fa fa-calendar"></i></span>-->
+                                                                                                <!--</div>-->
+                                                                                                <input type="text" class="span2" value="" id="date-from" name="date-from" placeholder="DD.MM.YYYY">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="filtering">
+                                                                                        <div class="input-append date">
+                                                                                            <div class="input-group mb-3 col-sm-6">
+                                                                                                <label for="date-to">Date to:</label>
+                                                                                                <!--<div class="input-group-prepend bg-white">-->
+                                                                                                <!--<span class="input-group-text border-left-0 rounded-right bg-white"><i class="fa fa-calendar"  onclick="selectDate('date-from')"></i></span>-->
+                                                                                                <!--</div>-->
+                                                                                                <input type="text" class="span2" value="" id="date-to" name="date-to" placeholder="DD.MM.YYY">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="filtering">
+                                                                                        <div class="offset-6 col-8">
+                                                                                            <button type="submit" class="btn btn-outline-primary">Filtrate</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </form>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </form>
+                                                                </br>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary  md-2" data-toggle="collapse" data-target="#filter-panel">
+                                                        <span class="fa fa-filter"></span> Filter form
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 5%">Contract</th>
+                                            <th style="width: 25%">Full name</th>
+                                            <th style="width: 30%">Address</th>
+                                            <th style="width: 15%">Connection date</th>
+                                            <th style="width: 5%">Blocked</th>
+                                            <th style="width: 10%">Tariff</th>
+                                            <th style="width: 10%">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Sergey Pupkin</td>
+                                        <td>Lesnaya st.</td>
+                                        <td>02.10.2015</td>
+                                        <td><input type="checkbox" class="checkthis"></td>
+                                        <td>
+                                            <select size="1" name="select-tariff">
+                                                <option value="1" selected="selected">
+                                                    Talkative
+                                                </option>
+                                                <option value="2">
+                                                    Silent
+                                                </option>
+                                                <option value="3">
+                                                    Corporate
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit">
+                                                <i class="fa fa-pencil fa-fw"></i></a>
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Sergey Pupkin" data-table="client" data-id="1">
+                                                <a class="delete" data-toggle="tooltip" data-original-title="Delete">
+                                                    <i class="fa fa-trash-o fa-lg"></i></a>
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Dmitry Ivanov</td>
+                                        <td>Vishevaya st.</td>
+                                        <td>16.03.2016</td>
+                                        <td><input type="checkbox" class="checkthis" checked></td>
+                                        <td>
+                                            <select size="1" name="select-tariff">
+                                                <option value="1">
+                                                    Talkative
+                                                </option>
+                                                <option value="2" selected="selected">
+                                                    Silent
+                                                </option>
+                                                <option value="3">
+                                                    Corporate
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                                    class="fa fa-pencil fa-fw"></i></a>
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Dmitry Ivanov" data-table="client" data-id="2">
+                                                <a class="delete" data-toggle="tooltip" data-original-title="Delete">
+                                                    <i class="fa fa-trash-o fa-lg"></i></a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Handmade shop</td>
+                                        <td>Industrial st.</td>
+                                        <td>19.05.2016</td>
+                                        <td><input type="checkbox" class="checkthis"></td>
+                                        <td>
+                                            <select size="1" name="select-tariff">
+                                                <option value="1">
+                                                    Talkative
+                                                </option>
+                                                <option value="2">
+                                                    Silent
+                                                </option>
+                                                <option value="3" selected="selected">
+                                                    Corporate
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                                    class="fa fa-pencil fa-fw"></i></a>
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Handmade shop" data-table="client" data-id="3">
+                                                <a class="delete" data-toggle="tooltip" data-original-title="Delete">
+                                                    <i class="fa fa-trash-o fa-lg"></i></a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Bogdan Belousov</td>
+                                        <td>Budenogo st.</td>
+                                        <td>29.07.2017</td>
+                                        <td><input type="checkbox" class="checkthis"></td>
+                                        <td>
+                                            <select size="1" name="select-tariff">
+                                                <option value="1" selected="selected">
+                                                    Talkative
+                                                </option>
+                                                <option value="2">
+                                                    Silent
+                                                </option>
+                                                <option value="3">
+                                                    Corporate
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                                    class="fa fa-pencil fa-fw"></i></a>
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Bogdan Belousov" data-table="client" data-id="4">
+                                                <a class="delete" data-toggle="tooltip" data-original-title="Delete">
+                                                    <i class="fa fa-trash-o fa-lg"></i></a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Rozaliya Tixonenko</td>
+                                        <td>Basovskaya st.</td>
+                                        <td>02.01.2018</td>
+                                        <td><input type="checkbox" class="checkthis"></td>
+                                        <td>
+                                            <select size="1" name="select-tariff">
+                                                <option value="1" selected="selected">
+                                                    Talkative
+                                                </option>
+                                                <option value="2">
+                                                    Silent
+                                                </option>
+                                                <option value="3">
+                                                    Corporate
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                                    class="fa fa-pencil fa-fw"></i></a>
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Rozaliya Tixonenko" data-table="client" data-id="5">
+                                                <a class="delete" data-toggle="tooltip" data-original-title="Delete">
+                                                    <i class="fa fa-trash-o fa-lg"></i></a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>Vadim Krakov</td>
+                                        <td>Borovaya st.</td>
+                                        <td>02.01.2018</td>
+                                        <td><input type="checkbox" class="checkthis"></td>
+                                        <td>
+                                            <select size="1" name="select-tariff">
+                                                <option value="1">
+                                                    Talkative
+                                                </option>
+                                                <option value="2" selected="selected">
+                                                    Silent
+                                                </option>
+                                                <option value="3">
+                                                    Corporate
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                                    class="fa fa-pencil fa-fw"></i></a>
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Vadim Krakov" data-table="client" data-id="6">
+                                                <a class="delete" data-toggle="tooltip" data-original-title="Delete">
+                                                    <i class="fa fa-trash-o fa-lg"></i></a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td>Marta Pamfilova</td>
+                                        <td>Basmanova st.</td>
+                                        <td>02.07.2018</td>
+                                        <td><input type="checkbox" class="checkthis"></td>
+                                        <td>
+                                            <select size="1" name="select-tariff">
+                                                <option value="1" selected="selected">
+                                                    Talkative
+                                                </option>
+                                                <option value="2">
+                                                    Silent
+                                                </option>
+                                                <option value="3">
+                                                    Corporate
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                                    class="fa fa-pencil fa-fw"></i></a>
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Marta Pamfilova" data-table="client" data-id="7">
+                                                <a class="delete" data-toggle="tooltip" data-original-title="Delete">
+                                                    <i class="fa fa-trash-o fa-lg"></i></a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td>Oksana Doronina</td>
+                                        <td>Kovrova st.</td>
+                                        <td>19.02.2019</td>
+                                        <td><input type="checkbox" class="checkthis"></td>
+                                        <td>
+                                            <select size="1" name="select-tariff">
+                                                <option value="1">
+                                                    Talkative
+                                                </option>
+                                                <option value="2" selected="selected">
+                                                    Silent
+                                                </option>
+                                                <option value="3">
+                                                    Corporate
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                                    class="fa fa-pencil fa-fw"></i></a>
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Marta Pamfilova" data-table="client" data-id="8">
+                                                <a class="delete" data-toggle="tooltip" data-original-title="Delete">
+                                                    <i class="fa fa-trash-o fa-lg"></i></a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="fixed-table-border" style="height: 0px;"></div>
+                            </div>
+                            <div class="fixed-table-pagination" style="">
+                                <div class="float-left pagination-detail">
+                                    <span class="pagination-info">Total clients: </span>
+                                    <span class="page-size">10</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="client-form" style="display: none;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 pull-md-3 bd-content">
+                <form>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Tariff name</label>
+                        <input type="text" class="form-control" id="formGroupInput" placeholder="tariff name">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="fa fa-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">Delete this entry</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert alert-danger" id="message"><span class="fa fa-warning"></span>Are you sure you want to delete "</div>
+
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-success" id="save-button" data-dismiss="modal"><span class="fa fa-chevron-circle-down"></span> Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-remove"></span> No</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="js/jquery-3.3.1.slim.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-datepicker.min.js"></script>
+<script>
+$(function(){
+    $('body').on('click', '.nav-link', function(){
+        $('li.nav-item').removeClass('active');
+        $(this).parent( 'li' ).addClass( 'active' );
+        cancel(currentData);
+        if (this.id == "Tariffs") {
+          restoreElement("tariffs-table");
+          removeElement("clients-table");
+          currentData = "tariff";
+        } else {
+           restoreElement("clients-table");
+           removeElement("tariffs-table");
+           currentData = "client";
+        }
+        cancel(currentData);
+    });
+});
+
+function edit(currentData) {
+  add(currentData);
+}
+
+function add(currentData) {
+  showElement("cancel");
+  removeElement("add");
+  restoreElement("save");
+  var span = document.getElementById('text-head');
+  span.innerText = span.textContent = 'New ' + currentData;
+  <!--span.classList.add('text-uppercase');-->
+  if (currentData == "tariff") {
+      removeElement("tariffs-table");
+      restoreElement("tariff-form");
+    } else {
+       removeElement("clients-table");
+       restoreElement("client-form");
+    }
+}
+
+function save(currentData) {
+    cancel(currentData);
+}
+
+function cancel(currentData) {
+  clearFilter()
+  hideElement("cancel");
+  restoreElement("add");
+  removeElement("save");
+  var span = document.getElementById("text-head");
+  <!--span.classList.add('text-uppercase');-->
+  if (currentData == "tariff") {
+      span.innerText = span.textContent = "Tariffs";
+      restoreElement("tariffs-table");
+      removeElement("tariff-form");
+    } else {
+       span.innerText = span.textContent = "Clients";
+       <!--restoreElement("clients-table");-->
+       <!--removeElement("client-form");-->
+    }
+}
+
+function hideElement(id) {
+  document.getElementById(id).style.visibility = "hidden";
+}
+
+function showElement(id) {
+  document.getElementById(id).style.visibility = "visible";
+}
+
+function removeElement(id) {
+  document.getElementById(id).style.display = "none";
+}
+
+function restoreElement(id) {
+  document.getElementById(id).style.display = "block";
+}
+
+var nowTemp = new Date();
+var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+var checkin = $('#date-from').datepicker({
+    format: 'dd.mm.yyyy',
+    onRender: function (date) {
+        return date.valueOf() > now.valueOf() ? 'disabled' : '';
+    }
+}).on('changeDate', function (ev) {
+    if (ev.date.valueOf() > checkout.date.valueOf()) {
+        var newDate = new Date(ev.date)
+        newDate.setDate(newDate.getDate() + 1);
+        checkout.setValue(newDate);
+    }
+    checkin.hide();
+    $('#date-to')[0].focus();
+}).data('datepicker');
+var checkout = $('#date-to').datepicker({
+    format: 'dd.mm.yyyy',
+    onRender: function (date) {
+        return date.valueOf() > now.valueOf() ? 'disabled' : '';
+    },
+}).on('changeDate', function (ev) {
+    checkout.hide();
+}).data('datepicker');
+
+$('#delete').on('show.bs.modal', function (event) {
+
+  var button = $(event.relatedTarget)
+  var name = button.data('name')
+  var id = button.data('id')
+  var table = button.data('table')
+  var modal = $(this)
+  var span = document.getElementById("message");
+  span.innerText = span.textContent = span.textContent + name + '"?'
+  modal.find('.modal-body input').val(name)
+  $('#save-button').click(function() {
+  window.location='index.html#delete(' + id+ ')';
+});
+})
+
+function clearFilter() {
+  $('#date-from').val('')
+  $('#date-to').val('')
+}
+</script>
+</body>
+</html>

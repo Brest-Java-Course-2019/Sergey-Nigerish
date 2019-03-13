@@ -44,7 +44,7 @@ class ClientsServiceImplMockTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    public void tearDowns() {
         Mockito.verifyNoMoreInteractions(dao);
         Mockito.reset(dao);
     }
@@ -96,7 +96,7 @@ class ClientsServiceImplMockTest {
         assertNotNull(result);
         assertEquals(CLIENT_FULL_NAME, result.getClientFIO());
 
-        LOGGER.debug("@Test findAllByBlocking() result full name: expected({}) - actual({})", CLIENT_FULL_NAME, result.getClientFIO());
+        LOGGER.debug("@Test findById() result full name: expected({}) - actual({})", CLIENT_FULL_NAME, result.getClientFIO());
         Mockito.verify(dao, Mockito.times(ONCE)).findById(Mockito.any());
         Mockito.verifyNoMoreInteractions(dao);
     }
