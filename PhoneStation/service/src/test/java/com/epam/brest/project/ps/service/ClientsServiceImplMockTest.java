@@ -63,15 +63,15 @@ class ClientsServiceImplMockTest {
     }
 
     @Test
-    void findAllByDate() {
-        Mockito.when(dao.findAllByDate(Mockito.any(), Mockito.any())).thenReturn(Stream.of(client));
+    void findAllByFilter() {
+        Mockito.when(dao.findAllByFilter(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Stream.of(client));
 
-        List<Client> result = service.findAllByDate(Mockito.any(), Mockito.any());
+        List<Client> result = service.findAllByFilter(Mockito.any(), Mockito.any(), Mockito.any());
         assertNotNull(result);
         assertEquals(ONCE, result.size());
 
         LOGGER.debug("@Test findAllByDate() result size: expected({}) - actual({})", ONCE, result.size());
-        Mockito.verify(dao, Mockito.times(ONCE)).findAllByDate(Mockito.any(), Mockito.any());
+        Mockito.verify(dao, Mockito.times(ONCE)).findAllByFilter(Mockito.any(), Mockito.any(), Mockito.any());
         Mockito.verifyNoMoreInteractions(dao);
     }
 

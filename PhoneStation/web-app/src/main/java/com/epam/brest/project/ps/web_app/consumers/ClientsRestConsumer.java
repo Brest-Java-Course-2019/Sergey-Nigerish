@@ -1,25 +1,26 @@
-package com.epam.brest.project.ps.service;
+package com.epam.brest.project.ps.web_app.consumers;
 
-import com.epam.brest.project.ps.dao.ClientsDao;
 import com.epam.brest.project.ps.model.Client;
+import com.epam.brest.project.ps.service.ClientsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Transactional
-public class ClientsServiceImpl implements ClientsService {
+public class ClientsRestConsumer implements ClientsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientsServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientsRestConsumer.class);
 
-    private ClientsDao dao;
+    private String url;
 
-    public ClientsServiceImpl(ClientsDao dao) {
-        this.dao = dao;
+    private RestTemplate restTemplate;
+
+    public ClientsRestConsumer(String url, RestTemplate restTemplate) {
+        this.url = url;
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -30,22 +31,26 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public List<Client> findAll() {
         LOGGER.debug("findAll()");
-        return dao.findAll().collect(Collectors.toList());
+        ResponseEntity responseEntity = restTemplate.getForEntity(url + "/all", List.class);
+        return (List<Client>) responseEntity.getBody();
     }
 
     /**
      * Return all clients filtering by date and blocking.
      *
-     * @param blocking client status.
+     * @param blocking  client status.
      * @param startDate first date.
      * @param endDate   last date.
-     * @return clients stream filtering by date.
+     * @return clients stream filtering.
      */
     @Override
     public List<Client> findAllByFilter(Boolean blocking, Date startDate, Date endDate) {
-        LOGGER.debug("findAllByDate({}, {}, {})", blocking, startDate, endDate);
-        return dao.findAllByFilter(blocking, startDate, endDate).collect(Collectors.toList());
+        LOGGER.debug("findAllByFilter({}, {}, {} )", blocking, startDate, endDate);
+        ResponseEntity responseEntity = restTemplate.getForEntity(url + "/filter/" +
+                blocking + "/" + startDate + "/" + endDate, List.class);
+        return (List<Client>) responseEntity.getBody();
     }
+
 
     /**
      * Return all clients filtering by blocking.
@@ -56,7 +61,9 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public List<Client> findAllByBlocking(Boolean blocking) {
         LOGGER.debug("findAllByBlocking({})", blocking);
-        return dao.findAllByBlocking(blocking).collect(Collectors.toList());
+        ResponseEntity responseEntity = restTemplate.getForEntity(url + "/blockingFilter/" +
+                blocking, List.class);
+        return (List<Client>) responseEntity.getBody();
     }
 
     /**
@@ -68,7 +75,8 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public Client findById(Integer clientId) {
         LOGGER.debug("findById({})", clientId);
-        return dao.findById(clientId).get();
+        ResponseEntity<Client> responseEntity = restTemplate.getForEntity(url + "/" + clientId, Client.class);
+        return responseEntity.getBody();
     }
 
     /**
@@ -79,7 +87,7 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public void add(Client client) {
         LOGGER.debug("add({})", client);
-        dao.add(client);
+        restTemplate.postForEntity(url, client, Client.class);
     }
 
     /**
@@ -90,7 +98,7 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public void update(Client client) {
         LOGGER.debug("update({})", client);
-        dao.update(client);
+        restTemplate.put(url, client, Client.class);
     }
 
     /**
@@ -102,7 +110,9 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public void updateTariff(Integer clientId, Integer tariffId) {
         LOGGER.debug("updateTariff({}, {})", clientId, tariffId);
-        dao.updateTariff(clientId, tariffId);
+        restTemplate.getForEntity(url + "/updateTariff/" +
+                clientId + "/" + tariffId, String.class);
+
     }
 
     /**
@@ -114,7 +124,8 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public void updateBlocking(Integer clientId, Boolean lockingStatus) {
         LOGGER.debug("updateBlocking({}, {})", clientId, lockingStatus);
-        dao.updateBlocking(clientId, lockingStatus);
+        restTemplate.getForEntity(url + "/updateBlocking/" +
+                clientId + "/" + lockingStatus, String.class);
     }
 
     /**
@@ -125,6 +136,6 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public void delete(Integer clientId) {
         LOGGER.debug("delete({})", clientId);
-        dao.delete(clientId);
+        restTemplate.delete(url + "/" + clientId);
     }
 }

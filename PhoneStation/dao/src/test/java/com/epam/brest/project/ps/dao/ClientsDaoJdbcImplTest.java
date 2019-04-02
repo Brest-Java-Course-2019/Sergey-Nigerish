@@ -61,25 +61,33 @@ class ClientsDaoJdbcImplTest {
 
     @Test
     void findAllByDate() {
-        long countClients = clientsDao.findAllByDate(START_DATE, END_DATE).count();
-        LOGGER.debug("@Test findAllByDate({}, {}) result: expected({}) - actual({})",
-                START_DATE, END_DATE, COUNT_CLIENTS_BY_DATE, countClients);
+        long countClients = clientsDao.findAllByFilter(null, START_DATE, END_DATE).count();
+        LOGGER.debug("@Test findAllByDate({}, {}, {}) result: expected({}) - actual({})",
+                null, START_DATE, END_DATE, COUNT_CLIENTS_BY_DATE, countClients);
         assertEquals(COUNT_CLIENTS_BY_DATE, countClients);
     }
 
     @Test
+    void findAllByDateAndBlocking() {
+        long countClients = clientsDao.findAllByFilter(true, START_DATE, END_DATE).count();
+        LOGGER.debug("@Test findAllByDate({}, {}, {}) result: expected({}) - actual({})",
+                null, START_DATE, END_DATE, COUNT_CLIENTS_BY_DATE, countClients);
+        assertEquals(COUNT_CLIENTS_BLOCKED, countClients);
+    }
+
+    @Test
     void findAllBeforeDate() {
-        long countClients = clientsDao.findAllByDate(null, END_DATE).count();
-        LOGGER.debug("@Test findAllBeforeDate({}, {}) result: expected({}) - actual({})",
-                null, END_DATE, COUNT_CLIENTS_BEFORE_DATE, countClients);
+        long countClients = clientsDao.findAllByFilter(null,null, END_DATE).count();
+        LOGGER.debug("@Test findAllBeforeDate({}, {}, {}) result: expected({}) - actual({})",
+                null, null, END_DATE, COUNT_CLIENTS_BEFORE_DATE, countClients);
         assertEquals(COUNT_CLIENTS_BEFORE_DATE, countClients);
     }
 
     @Test
     void findAllAfterDate() {
-        long countClients = clientsDao.findAllByDate(START_DATE, null).count();
-        LOGGER.debug("@Test findAllAfterDate({}, {}) result: expected({}) - actual({})",
-                START_DATE, null, COUNT_CLIENTS_AFTER_DATE, countClients);
+        long countClients = clientsDao.findAllByFilter(null, START_DATE, null).count();
+        LOGGER.debug("@Test findAllAfterDate({}, {}, {}) result: expected({}) - actual({})",
+                null, START_DATE, null, COUNT_CLIENTS_AFTER_DATE, countClients);
         assertEquals(COUNT_CLIENTS_AFTER_DATE, countClients);
     }
 

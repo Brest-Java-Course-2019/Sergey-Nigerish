@@ -17,13 +17,14 @@ public interface ClientsService {
     List<Client> findAll();
 
     /**
-     * Return all clients filtering by date.
+     * Return all clients filtering by date and blocking.
      *
+     * @param blocking client status.
      * @param startDate first date.
      * @param endDate last date.
-     * @return clients stream filtering by date.
+     * @return clients stream filtering.
      */
-    List<Client> findAllByDate(final Date startDate, final Date endDate);
+    List<Client> findAllByFilter(final Boolean blocking, final Date startDate, final Date endDate);
 
     /**
      * Return all clients filtering by blocking.

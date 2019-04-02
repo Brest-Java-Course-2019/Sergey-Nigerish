@@ -18,21 +18,22 @@ public interface ClientsDao {
     Stream<Client> findAll();
 
     /**
-     * Return all clients filtering by date.
-     *
-     * @param startDate first date.
-     * @param endDate last date.
-     * @return clients stream filtering by date.
-     */
-    Stream<Client> findAllByDate(final Date startDate, final Date endDate);
-
-    /**
      * Return all clients filtering by blocking.
      *
      * @param blocking client status.
      * @return clients stream filtering by blocking.
      */
     Stream<Client> findAllByBlocking(final Boolean blocking);
+
+    /**
+     * Return all clients filtering by date and blocking.
+     *
+     * @param blocking client status.
+     * @param startDate first date.
+     * @param endDate last date.
+     * @return clients stream filtering by date and blocking.
+     */
+    Stream<Client> findAllByFilter(final Boolean blocking, final Date startDate, final Date endDate);
 
 
     /**

@@ -28,6 +28,10 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
     private static final String SELECT_BY_BLOCKING_SQL = "SELECT clientContractId, clientFIO, clientAddress, " +
             "clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients " +
             "WHERE clientDeleted = false AND clientBlocked = :clientBlocked";
+    private static final String SELECT_BY_FILTER = "SELECT clientContractId, clientFIO, clientAddress, " +
+            "clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients " +
+            "WHERE clientDeleted = false AND clientBlocked = :clientBlocked " +
+            "AND :startDate <= clientContractDay_date AND clientContractDay_date <= :endDate";
     private static final String FIND_BY_ID_SQL = "SELECT clientContractId, clientFIO, clientAddress, " +
             "clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients " +
             "WHERE clientContractId = :clientContractId AND clientDeleted = false";
@@ -67,15 +71,16 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
     }
 
     /**
-     * Return all clients filtering by date.
+     * Return all clients filtering by date and blocking.
      *
+     * @param blocking  client status.
      * @param startDate first date.
      * @param endDate   last date.
-     * @return clients stream filtering by date.
+     * @return clients stream filtering by date and blocking.
      */
     @Override
-    public Stream<Client> findAllByDate(Date startDate, Date endDate) {
-        LOGGER.debug("findAllByDate({}, {}) - input default", startDate, endDate);
+    public Stream<Client> findAllByFilter(Boolean blocking, Date startDate, Date endDate) {
+        LOGGER.debug("findAllByFilter({}, {}, {}) - input default", blocking, startDate, endDate);
         if (startDate == null) {
             startDate = Date.valueOf(FIRST_DATE);
         }
@@ -83,11 +88,17 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
             endDate = new Date(new java.util.Date().getTime());
 
         }
-        LOGGER.debug("findAllByDate({}, {}) - input modified", startDate, endDate);
+        LOGGER.debug("findAllByFilter({}, {}, {}) - input modified", blocking, startDate, endDate);
         MapSqlParameterSource namedParameters = new MapSqlParameterSource(START_DATE, startDate);
         namedParameters.addValue(END_DATE, endDate);
+        String QueryToSelect = SELECT_BY_DATE_SQL;
+        if (blocking != null) {
+            namedParameters.addValue(CLIENT_BLOCKED, blocking);
+            QueryToSelect = SELECT_BY_FILTER;
+        }
+
         List<Client> client = namedParameterJdbcTemplate.query(
-                SELECT_BY_DATE_SQL,
+                QueryToSelect,
                 namedParameters,
                 BeanPropertyRowMapper.newInstance(Client.class));
         return client.stream();

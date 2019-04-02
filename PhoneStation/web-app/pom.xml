@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>wep-app</artifactId>
+    <artifactId>web-app</artifactId>
 
     <packaging>war</packaging>
 
@@ -102,7 +102,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <configuration>
                     <httpConnector>
-                        <port>8090</port>
+                        <port>8089</port>
                     </httpConnector>
                 </configuration>
             </plugin>
