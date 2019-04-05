@@ -12,9 +12,9 @@
     <link rel="stylesheet"
           href="../../resources/static/css/font-awesome.css"
           th:href="@{/resources/static/css/font-awesome.css}">
-<!--    <link rel="stylesheet"-->
-<!--          href="../../resources/static/css/datepicker.css"-->
-<!--          th:href="@{/resources/static/css/datepicker.css}">-->
+    <!--    <link rel="stylesheet"-->
+    <!--          href="../../resources/static/css/datepicker.css"-->
+    <!--          th:href="@{/resources/static/css/datepicker.css}">-->
     <link rel="stylesheet" type="text/css"
           href="http://www.eyecon.ro/bootstrap-datepicker/css/datepicker.css">
 
@@ -29,10 +29,10 @@
     <div class="collapse navbar-collapse" id="navbarColor02">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" id="Clients" href="#Clients" th:href="@{|/|}">Clients</a>
+                <a class="nav-link" id="Clients" href="#Clients" th:href="@{|/clients/all|}">Clients</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="Tariffs" href="#Tariffs" th:href="@{|?tab=tariffs|}">Tariffs</a>
+                <a class="nav-link" id="Tariffs" href="#Tariffs"  th:href="@{|/tariffs/all|}">Tariffs</a>
             </li>
         </ul>
     </div>
@@ -60,47 +60,47 @@
                 <div class="card">
                     <table class="table table-striped table-hover">
                         <thead>
-                            <tr>
-                                <th style="width: 55%" hidden>Id</th>
-                                <th style="width: 55%">Tariff name</th>
-                                <th style="width: 30%">Count clients</th>
-                                <th style="width: 15%">Actions</th>
-                            </tr>
+                        <tr>
+                            <th style="width: 55%" hidden>Id</th>
+                            <th style="width: 55%">Tariff name</th>
+                            <th style="width: 30%">Count clients</th>
+                            <th style="width: 15%">Actions</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="tariff : ${tariffs}">
-                                <td hidden th:text="${tariff.tariffId}">1</td>
-                                <td th:text="${tariff.tariffName}">Talkative</td>
-                                <td th:text="${tariff.tariffName}">4</td>
-                                <td>
-                                    <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
-                                            class="fa fa-pencil fa-fw"></i></a>
-                                    <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
-                                            class="fa fa-trash-o fa-lg"></i></a>
-                                </td>
-                            </tr>
-                            <tr th:remove="all">
-                                <td hidden>2</td>
-                                <td>Silent</td>
-                                <td>2</td>
-                                <td>
-                                    <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
-                                            class="fa fa-pencil fa-fw"></i></a>
-                                    <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
-                                            class="fa fa-trash-o fa-lg"></i></a>
-                                </td>
-                            </tr>
-                            <tr th:remove="all">
-                                <td hidden>3</td>
-                                <td>Corporate</td>
-                                <td>0</td>
-                                <td>
-                                    <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
-                                            class="fa fa-pencil fa-fw"></i></a>
-                                    <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
-                                            class="fa fa-trash-o fa-lg"></i></a>
-                                </td>
-                            </tr>
+                        <tr th:remove="all">
+                            <td hidden>1</td>
+                            <td>Talkative</td>
+                            <td>4</td>
+                            <td>
+                                <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                        class="fa fa-pencil fa-fw"></i></a>
+                                <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                        class="fa fa-trash-o fa-lg"></i></a>
+                            </td>
+                        </tr>
+                        <tr th:remove="all">
+                            <td hidden>2</td>
+                            <td>Silent</td>
+                            <td>2</td>
+                            <td>
+                                <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                        class="fa fa-pencil fa-fw"></i></a>
+                                <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                        class="fa fa-trash-o fa-lg"></i></a>
+                            </td>
+                        </tr>
+                        <tr th:remove="all">
+                            <td hidden>3</td>
+                            <td>Corporate</td>
+                            <td>0</td>
+                            <td>
+                                <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                        class="fa fa-pencil fa-fw"></i></a>
+                                <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                        class="fa fa-trash-o fa-lg"></i></a>
+                            </td>
+                        </tr>
 
 
                         </tbody>
@@ -136,9 +136,9 @@
                             <div class="fixed-table-body">
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
-                                        <tr>
-                                            <th style="text-align: center;" colspan="7">
-                                                <div id="fikr-form" class="container">
+                                    <tr>
+                                        <th style="text-align: center;" colspan="7">
+                                            <div id="fikr-form" class="container">
                                                 <div class="row">
                                                     <div id="filter-panel" class="collapse filter-panel">
                                                         <div class="panel panel-default">
@@ -231,40 +231,34 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 5%">Contract</th>
-                                            <th style="width: 25%">Full name</th>
-                                            <th style="width: 30%">Address</th>
-                                            <th style="width: 15%">Connection date</th>
-                                            <th style="width: 5%">Blocked</th>
-                                            <th style="width: 10%">Tariff</th>
-                                            <th style="width: 10%">Actions</th>
-                                        </tr>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 5%">Contract</th>
+                                        <th style="width: 25%">Full name</th>
+                                        <th style="width: 30%">Address</th>
+                                        <th style="width: 15%">Connection date</th>
+                                        <th style="width: 5%">Blocked</th>
+                                        <th style="width: 10%">Tariff</th>
+                                        <th style="width: 10%">Actions</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="client : ${clients}">
-                                        <td th:text="${client.clientContractId}">1</td>
-                                        <td th:text="${client.clientFIO}">Sergey Pupkin</td>
-                                        <td th:text="${client.clientAddress}">Lesnaya st.</td>
-                                        <td th:text="${client.clientContractDay_date}">02.10.2015</td>
-                                        <td><input type="checkbox" class="checkthis" th:checked="${client.clientBlocked}"></td>
+                                    <tr th:remove="all">
+                                        <td>1</td>
+                                        <td>Sergey Pupkin</td>
+                                        <td>Lesnaya st.</td>
+                                        <td>02.10.2015</td>
+                                        <td><input type="checkbox" class="checkthis"></td>
                                         <td>
                                             <select size="1" name="select-tariff">
-<!--                                                client_to_idTariff-->
-                                                <option th:each="tariffs : ${tariffs}"
-                                                        th:value="${tariffs.tariffId}"
-                                                        th:selected="${tariffs.tariffId==client.client_to_idTariff}"
-                                                        th:text="${tariffs.tariffName}">
-                                                </option>
-                                                <option value="1" selected="selected" th:remove="all">
+                                                <option value="1" selected="selected">
                                                     Talkative
                                                 </option>
-                                                <option value="2" th:remove="all">
+                                                <option value="2">
                                                     Silent
                                                 </option>
-                                                <option value="3" th:remove="all">
+                                                <option value="3">
                                                     Corporate
                                                 </option>
                                             </select>
@@ -272,7 +266,7 @@
                                         <td>
                                             <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit">
                                                 <i class="fa fa-pencil fa-fw"></i></a>
-                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Sergey Pupkin" data-table="client" data-id="1" th:attr="data-name=${client.clientFIO},data-id=${client.clientContractId}">
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Sergey Pupkin" data-table="client" data-id="1">
                                                 <a class="delete" data-toggle="tooltip" data-original-title="Delete">
                                                     <i class="fa fa-trash-o fa-lg"></i></a>
                                             </button>
@@ -517,7 +511,7 @@
             </div>
             <div class="modal-body">
 
-                <div class="alert alert-danger" id="message"><span class="fa fa-warning"></span></div>
+                <div class="alert alert-danger" id="message"><span class="fa fa-warning"></span>Are you sure you want to delete "</div>
 
             </div>
             <div class="modal-footer ">
@@ -531,136 +525,136 @@
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="../../resources/static/js/jquery-3.3.1.slim.min.js"
+<script src="resources/static/js/jquery-3.3.1.slim.min.js"
         th:src="@{/resources/static/js/jquery-3.3.1.slim.min.js}"></script>
-<script src="../../resources/static/js/popper.min.js"
+<script src="resources/static/js/popper.min.js"
         th:src="@{/resources/static/js/popper.min.js}"></script>
-<script src="../../resources/static/js/bootstrap.min.js"
+<script src="resources/static/js/bootstrap.min.js"
         th:src="@{/resources/static/js/bootstrap.min.js}"></script>
-<script src="../../resources/static/js/bootstrap-datepicker.min.js"
+<script src="resources/static/js/bootstrap-datepicker.min.js"
         th:src="@{/resources/static/js/bootstrap-datepicker.min.js}"></script>
 <script>
-$(function(){
-    $('body').on('click', '.nav-link', function(){
-        $('li.nav-item').removeClass('active');
-        $(this).parent( 'li' ).addClass( 'active' );
-        cancel(currentData);
-        if (this.id == "Tariffs") {
-          restoreElement("tariffs-table");
-          removeElement("clients-table");
-          currentData = "tariff";
-        } else {
-           restoreElement("clients-table");
-           removeElement("tariffs-table");
-           currentData = "client";
-        }
-        cancel(currentData);
+    $(function(){
+        $('body').on('click', '.nav-link', function(){
+            $('li.nav-item').removeClass('active');
+            $(this).parent( 'li' ).addClass( 'active' );
+            cancel(currentData);
+            if (this.id == "Tariffs") {
+                restoreElement("tariffs-table");
+                removeElement("clients-table");
+                currentData = "tariff";
+            } else {
+                restoreElement("clients-table");
+                removeElement("tariffs-table");
+                currentData = "client";
+            }
+            cancel(currentData);
+        });
     });
-});
 
-function edit(currentData) {
-  add(currentData);
-}
-
-function add(currentData) {
-  showElement("cancel");
-  removeElement("add");
-  restoreElement("save");
-  var span = document.getElementById('text-head');
-  span.innerText = span.textContent = 'New ' + currentData;
-  <!--span.classList.add('text-uppercase');-->
-  if (currentData == "tariff") {
-      removeElement("tariffs-table");
-      restoreElement("tariff-form");
-    } else {
-       removeElement("clients-table");
-       restoreElement("client-form");
+    function edit(currentData) {
+        add(currentData);
     }
-}
 
-function save(currentData) {
-    cancel(currentData);
-}
-
-function cancel(currentData) {
-  clearFilter()
-  hideElement("cancel");
-  restoreElement("add");
-  removeElement("save");
-  var span = document.getElementById("text-head");
-  <!--span.classList.add('text-uppercase');-->
-  if (currentData == "tariff") {
-      span.innerText = span.textContent = "Tariffs";
-      restoreElement("tariffs-table");
-      removeElement("tariff-form");
-    } else {
-       span.innerText = span.textContent = "Clients";
-       <!--restoreElement("clients-table");-->
-       <!--removeElement("client-form");-->
+    function add(currentData) {
+        showElement("cancel");
+        removeElement("add");
+        restoreElement("save");
+        var span = document.getElementById('text-head');
+        span.innerText = span.textContent = 'New ' + currentData;
+        <!--span.classList.add('text-uppercase');-->
+        if (currentData == "tariff") {
+            removeElement("tariffs-table");
+            restoreElement("tariff-form");
+        } else {
+            removeElement("clients-table");
+            restoreElement("client-form");
+        }
     }
-}
 
-function hideElement(id) {
-  document.getElementById(id).style.visibility = "hidden";
-}
-
-function showElement(id) {
-  document.getElementById(id).style.visibility = "visible";
-}
-
-function removeElement(id) {
-  document.getElementById(id).style.display = "none";
-}
-
-function restoreElement(id) {
-  document.getElementById(id).style.display = "block";
-}
-
-var nowTemp = new Date();
-var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-
-var checkin = $('#date-from').datepicker({
-    format: 'dd.mm.yyyy',
-    onRender: function (date) {
-        return date.valueOf() > now.valueOf() ? 'disabled' : '';
+    function save(currentData) {
+        cancel(currentData);
     }
-}).on('changeDate', function (ev) {
-    if (ev.date.valueOf() > checkout.date.valueOf()) {
-        var newDate = new Date(ev.date)
-        newDate.setDate(newDate.getDate() + 1);
-        checkout.setValue(newDate);
+
+    function cancel(currentData) {
+        clearFilter()
+        hideElement("cancel");
+        restoreElement("add");
+        removeElement("save");
+        var span = document.getElementById("text-head");
+        <!--span.classList.add('text-uppercase');-->
+        if (currentData == "tariff") {
+            span.innerText = span.textContent = "Tariffs";
+            restoreElement("tariffs-table");
+            removeElement("tariff-form");
+        } else {
+            span.innerText = span.textContent = "Clients";
+            <!--restoreElement("clients-table");-->
+            <!--removeElement("client-form");-->
+        }
     }
-    checkin.hide();
-    $('#date-to')[0].focus();
-}).data('datepicker');
-var checkout = $('#date-to').datepicker({
-    format: 'dd.mm.yyyy',
-    onRender: function (date) {
-        return date.valueOf() > now.valueOf() ? 'disabled' : '';
-    },
-}).on('changeDate', function (ev) {
-    checkout.hide();
-}).data('datepicker');
 
-$('#delete').on('show.bs.modal', function (event) {
+    function hideElement(id) {
+        document.getElementById(id).style.visibility = "hidden";
+    }
 
-  var button = $(event.relatedTarget)
-  var name = button.data('name')
-  var id = button.data('id')
-  var table = button.data('table')
-  var modal = $(this)
-  var span = document.getElementById("message");
-  span.innerText = span.textContent = 'Are you sure you want to delete "' + name + '"?'
-  modal.find('.modal-body input').val(name)
-  $('#save-button').click(function() {
-  window.location='start.html.html#delete(' + id+ ')';
-});
-})
+    function showElement(id) {
+        document.getElementById(id).style.visibility = "visible";
+    }
 
-function clearFilter() {
-  $('#date-from').val('')
-  $('#date-to').val('')
-}
+    function removeElement(id) {
+        document.getElementById(id).style.display = "none";
+    }
+
+    function restoreElement(id) {
+        document.getElementById(id).style.display = "block";
+    }
+
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+    var checkin = $('#date-from').datepicker({
+        format: 'dd.mm.yyyy',
+        onRender: function (date) {
+            return date.valueOf() > now.valueOf() ? 'disabled' : '';
+        }
+    }).on('changeDate', function (ev) {
+        if (ev.date.valueOf() > checkout.date.valueOf()) {
+            var newDate = new Date(ev.date)
+            newDate.setDate(newDate.getDate() + 1);
+            checkout.setValue(newDate);
+        }
+        checkin.hide();
+        $('#date-to')[0].focus();
+    }).data('datepicker');
+    var checkout = $('#date-to').datepicker({
+        format: 'dd.mm.yyyy',
+        onRender: function (date) {
+            return date.valueOf() > now.valueOf() ? 'disabled' : '';
+        },
+    }).on('changeDate', function (ev) {
+        checkout.hide();
+    }).data('datepicker');
+
+    $('#delete').on('show.bs.modal', function (event) {
+
+        var button = $(event.relatedTarget)
+        var name = button.data('name')
+        var id = button.data('id')
+        var table = button.data('table')
+        var modal = $(this)
+        var span = document.getElementById("message");
+        span.innerText = span.textContent = span.textContent + name + '"?'
+        modal.find('.modal-body input').val(name)
+        $('#save-button').click(function() {
+            window.location='start.html.html#delete(' + id+ ')';
+        });
+    })
+
+    function clearFilter() {
+        $('#date-from').val('')
+        $('#date-to').val('')
+    }
 </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.epam.brest.project.ps.dao;
 
 import com.epam.brest.project.ps.model.Tariff;
+import com.epam.brest.project.ps.stub.TariffStub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,9 +23,11 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
     private static final String SELECT_ALL_SQL = "SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffDeleted = false";
     private static final String FIND_BY_ID_SQL = "SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffId = :tariffId AND tariffDeleted = false";
     private static final String CHECK_COUNT_TARIFF_SQL = "SELECT COUNT(tariffId) FROM tariffs WHERE tariffName = :tariffName AND tariffDeleted = false";
-    private static final String COUNT_CLIENTS_SQL = "SELECT COUNT(clientContractId) FROM clients WHERE clientDeleted = false AND client_to_idTariff = :tariffId";
     private static final String INSERT_SQL = "INSERT INTO tariffs (tariffName) VALUES (:tariffName)";
     private static final String UPDATE_SQL = "UPDATE tariffs SET tariffName = :tariffName, tariffDeleted = :tariffDeleted WHERE tariffId = :tariffId";
+    private static final String SELECT_ALL_STUBS_SQL = "SELECT t.tariffId, t.tariffName, t.tariffDeleted, IFNULL (COUNT(c.clientContractId), 0) AS tariffCountClients FROM tariffs AS t " +
+            "LEFT JOIN (SELECT clientContractId, client_to_idTariff FROM clients WHERE clientDeleted = false) AS c " +
+            "ON (c.client_to_idTariff = t.tariffId) WHERE t.tariffDeleted = false GROUP BY t.tariffId";
 
     private static final String TARIFF_ID = "tariffId";
     private static final String TARIFF_NAME = "tariffName";
@@ -45,12 +48,11 @@ public class TariffsDaoJdbcImpl implements TariffsDao {
     }
 
     @Override
-    public Integer countUsers(final Integer tariffId) {
-        LOGGER.debug("countUsers({})", tariffId);
-        return namedParameterJdbcTemplate.queryForObject(
-                COUNT_CLIENTS_SQL,
-                new MapSqlParameterSource(TARIFF_ID, tariffId),
-                Integer.class);
+    public Stream<TariffStub> findAllStubs() {
+        LOGGER.debug("findAllStubs()");
+        List<TariffStub> tariff = namedParameterJdbcTemplate
+                .query(SELECT_ALL_STUBS_SQL, BeanPropertyRowMapper.newInstance(TariffStub.class));
+        return tariff.stream();
     }
 
     @Override

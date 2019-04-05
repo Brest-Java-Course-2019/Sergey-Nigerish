@@ -2,6 +2,7 @@ package com.epam.brest.project.ps.service;
 
 import com.epam.brest.project.ps.dao.TariffsDao;
 import com.epam.brest.project.ps.model.Tariff;
+import com.epam.brest.project.ps.stub.TariffStub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,17 @@ public class TariffsServiceImpl implements TariffsService {
     }
 
     /**
+     * Get all tariffs with count people.
+     *
+     * @return tariffs stream.
+     */
+    @Override
+    public List<TariffStub> findAllStubs() {
+        LOGGER.debug("findAllStubs()");
+        return dao.findAllStubs().collect(Collectors.toList());
+    }
+
+    /**
      * Get all tariffs.
      *
      * @return tariffs stream.
@@ -27,18 +39,6 @@ public class TariffsServiceImpl implements TariffsService {
     public List<Tariff> findAll() {
         LOGGER.debug("findAll()");
         return dao.findAll().collect(Collectors.toList());
-    }
-
-    /**
-     * Get tariffs with the number of users.
-     *
-     * @param tariffId tariff for counting.
-     * @return count users.
-     */
-    @Override
-    public Integer countUsers(Integer tariffId) {
-        LOGGER.debug("countUsers({})", tariffId);
-        return dao.countUsers(tariffId);
     }
 
     /**

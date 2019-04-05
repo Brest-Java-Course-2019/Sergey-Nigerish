@@ -37,7 +37,7 @@ public class TariffsController {
 
         LOGGER.debug("findAll({})", model);
         model.addAttribute("tariffs", tariffsService.findAll());
-        return "tariffs";
+        return "index.html";
     }
 
     /**

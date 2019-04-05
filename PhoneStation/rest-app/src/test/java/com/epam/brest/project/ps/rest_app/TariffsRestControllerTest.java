@@ -2,6 +2,7 @@ package com.epam.brest.project.ps.rest_app;
 
 import com.epam.brest.project.ps.model.Tariff;
 import com.epam.brest.project.ps.service.TariffsService;
+import com.epam.brest.project.ps.stub.TariffStub;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +54,7 @@ class TariffsRestControllerTest {
 
     @Test
     void findAll() throws Exception {
-        Mockito.when(tariffsService.findAll()).thenReturn(arrayListTariff());
+        Mockito.when(tariffsService.findAll()).thenReturn(arrayListTariffs());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/tariffs/all")
@@ -72,18 +73,25 @@ class TariffsRestControllerTest {
     }
 
     @Test
-    void countUsers() throws Exception {
-        Mockito.when(tariffsService.countUsers(ONE)).thenReturn(ONE);
+    void findAllStubs() throws Exception {
+        Mockito.when(tariffsService.findAllStubs()).thenReturn(arrayListTariffsStubs());
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/tariffs/countUsers/" + ONE)
+                MockMvcRequestBuilders.get("/tariffs/allStubs")
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         ).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.is(ONE)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[" + ZERO + "].tariffId", Matchers.is(ZERO)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[" + ZERO + "].tariffName", Matchers.is("Tariff" + ZERO)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[" + ZERO + "].tariffDeleted", Matchers.is(false)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[" + ZERO + "].tariffCountClients", Matchers.is(ZERO)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[" + ONE + "].tariffId", Matchers.is(ONE)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[" + ONE + "].tariffName", Matchers.is("Tariff" + ONE)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[" + ONE + "].tariffDeleted", Matchers.is(false)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[" + ONE + "].tariffCountClients", Matchers.is(ONE)))
         ;
 
-        Mockito.verify(tariffsService, Mockito.times(ONE)).countUsers(ONE);
+        Mockito.verify(tariffsService, Mockito.times(ONE)).findAllStubs();
     }
 
     @Test
@@ -143,7 +151,7 @@ class TariffsRestControllerTest {
         Mockito.verify(tariffsService, Mockito.times(ONE)).delete(ONE);
     }
 
-    private ArrayList<Tariff> arrayListTariff() {
+    private ArrayList<Tariff> arrayListTariffs() {
         return new ArrayList<Tariff>() {{add(createTariff(ZERO));
             add(createTariff(ONE));}};
     }
@@ -153,6 +161,20 @@ class TariffsRestControllerTest {
         tariff.setTariffId(index);
         tariff.setTariffName("Tariff" + index);
         tariff.setTariffDeleted(false);
+        return tariff;
+    }
+
+    private ArrayList<TariffStub> arrayListTariffsStubs() {
+        return new ArrayList<TariffStub>() {{add(createTariffStub(ZERO));
+            add(createTariffStub(ONE));}};
+    }
+
+    private TariffStub createTariffStub(int index) {
+        TariffStub tariff = new TariffStub();
+        tariff.setTariffId(index);
+        tariff.setTariffName("Tariff" + index);
+        tariff.setTariffDeleted(false);
+        tariff.setTariffCountClients(index);
         return tariff;
     }
 }

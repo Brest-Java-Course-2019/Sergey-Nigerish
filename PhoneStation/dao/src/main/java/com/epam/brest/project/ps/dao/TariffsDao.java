@@ -1,6 +1,7 @@
 package com.epam.brest.project.ps.dao;
 
 import com.epam.brest.project.ps.model.Tariff;
+import com.epam.brest.project.ps.stub.TariffStub;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -17,12 +18,11 @@ public interface TariffsDao {
     Stream<Tariff> findAll();
 
     /**
-     * Get tariffs with the number of users.
+     * Get all tariffs with count people.
      *
-     * @param tariffId tariff for counting.
-     * @return count users.
+     * @return tariffs stream.
      */
-    Integer countUsers(final Integer tariffId);
+    Stream<TariffStub> findAllStubs();
 
     /**
      * Get tariff by id.

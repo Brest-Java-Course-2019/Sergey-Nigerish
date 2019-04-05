@@ -2,6 +2,7 @@ package com.epam.brest.project.ps.service;
 
 import com.epam.brest.project.ps.dao.TariffsDao;
 import com.epam.brest.project.ps.model.Tariff;
+import com.epam.brest.project.ps.stub.TariffStub;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ class TariffsServiceImplMockTest {
     private TariffsService service;
 
     private Tariff tariff= new Tariff();
+    private TariffStub tariffStub= new TariffStub();
 
     @BeforeEach
     void setup() {
@@ -38,6 +40,11 @@ class TariffsServiceImplMockTest {
         tariff.setTariffId(1);
         tariff.setTariffName("Testing Tariff");
         tariff.setTariffDeleted(false);
+
+        tariffStub.setTariffId(1);
+        tariffStub.setTariffName("Testing Tariff");
+        tariffStub.setTariffDeleted(false);
+        tariffStub.setTariffCountClients(3);
     }
 
     @AfterEach
@@ -60,14 +67,15 @@ class TariffsServiceImplMockTest {
     }
 
     @Test
-    void countUsers() {
-        Mockito.when(dao.countUsers(Mockito.any())).thenReturn(TEN);
+    void findAllStubs() {
+        Mockito.when(dao.findAllStubs()).thenReturn(Stream.of(tariffStub));
 
-        Integer result = service.countUsers(Mockito.any());
+        List<TariffStub> result = service.findAllStubs();
         assertNotNull(result);
+        assertEquals(ONCE, result.size());
 
-        LOGGER.debug("@Test countUsers() result: expected({}) - actual({})", TEN, result);
-        Mockito.verify(dao, Mockito.times(ONCE)).countUsers(Mockito.any());
+        LOGGER.debug("@Test findAllStubs() result size: expected({}) - actual({})", ONCE, result.size());
+        Mockito.verify(dao, Mockito.times(ONCE)).findAllStubs();
         Mockito.verifyNoMoreInteractions(dao);
     }
 

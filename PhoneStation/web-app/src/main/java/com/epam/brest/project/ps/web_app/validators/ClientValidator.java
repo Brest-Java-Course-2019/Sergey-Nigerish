@@ -34,7 +34,7 @@ public class ClientValidator implements Validator {
     public void validate(Date startDate, Date endDate, Errors errors) {
 
         if (startDate.compareTo(endDate) < 0) {
-            errors.rejectValue("client", "client.date");
+            errors.rejectValue("clientFIO", "clientFIO.date");
         }
     }
 }

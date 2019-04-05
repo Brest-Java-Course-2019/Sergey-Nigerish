@@ -1,9 +1,10 @@
-package com.epam.brest.project.ps.model;
+package com.epam.brest.project.ps.stub;
 
-public class Tariff {
+public class TariffStub {
     private String tariffName;
     private Integer tariffId;
     private Boolean tariffDeleted;
+    private Integer tariffCountClients;
 
     public Integer getTariffId() {
         return tariffId;
@@ -29,12 +30,21 @@ public class Tariff {
         this.tariffDeleted = tariffDeleted;
     }
 
+    public Integer getTariffCountClients() {
+        return tariffCountClients;
+    }
+
+    public void setTariffCountClients(Integer tariffCountClients) {
+        this.tariffCountClients = tariffCountClients;
+    }
+
     @Override
     public String toString() {
         return "Tariff{" +
                 "tariffId=" + tariffId +
                 ", tariffName='" + tariffName + "'" +
                 ", tariffDeleted=" + tariffDeleted +
+                ", tariffCountClients=" + tariffCountClients +
                 "}";
     }
 }

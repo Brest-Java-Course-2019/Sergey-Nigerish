@@ -1,6 +1,7 @@
 package com.epam.brest.project.ps.dao;
 
 import com.epam.brest.project.ps.model.Tariff;
+import com.epam.brest.project.ps.stub.TariffStub;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -44,6 +45,13 @@ class TariffsDaoJdbcImplTest {
     public void findAll() {
         List<Tariff> tariffsList = tariffsDao.findAll().collect(Collectors.toList());
         LOGGER.debug("@Test findAll() tariffs.isEmpty(): {}", tariffsList.isEmpty());
+        assertFalse(tariffsList.isEmpty());
+    }
+
+    @Test
+    public void findAllStubs() {
+        List<TariffStub> tariffsList = tariffsDao.findAllStubs().collect(Collectors.toList());
+        LOGGER.debug("@Test findAllStubs() tariffs.isEmpty(): {}", tariffsList.isEmpty());
         assertFalse(tariffsList.isEmpty());
     }
 
@@ -124,13 +132,5 @@ class TariffsDaoJdbcImplTest {
         LOGGER.debug("@Test delete({}) result count : expected({}) - actual({})",
                 FIRST_TARIFF_ID, countBefore - 1, countAfter);
         assertEquals(countBefore - 1, countAfter);
-    }
-
-    @Test
-    void countUsers() {
-        int countUsers = tariffsDao.countUsers(FIRST_TARIFF_ID);
-
-        LOGGER.debug("@Test countUsers() result: expected({}) - actual({})", COUNT_USERS_FOR_FIRST_TARIFF, countUsers);
-        assertEquals(COUNT_USERS_FOR_FIRST_TARIFF, countUsers);
     }
 }

@@ -38,13 +38,13 @@ public class ClientsController {
      *
      * @return view name
      */
-    @GetMapping(value = "/clients")
+    @GetMapping(value = "/")
     public final String clientsList(Model model) {
 
         LOGGER.debug("findAll({})", model);
         model.addAttribute("clients", clientsService.findAll());
         model.addAttribute("tariffs", tariffsService.findAll());
-        return "clients";
+        return "index.html";
     }
 
     /**

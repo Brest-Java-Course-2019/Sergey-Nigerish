@@ -1,6 +1,7 @@
 package com.epam.brest.project.ps.service;
 
 import com.epam.brest.project.ps.model.Tariff;
+import com.epam.brest.project.ps.stub.TariffStub;
 
 import java.util.List;
 
@@ -16,12 +17,11 @@ public interface TariffsService {
     List<Tariff> findAll();
 
     /**
-     * Get tariffs with the number of users.
+     * Get all tariffs with count people.
      *
-     * @param tariffId tariff for counting.
-     * @return count users.
+     * @return tariffs stream.
      */
-    Integer countUsers(final Integer tariffId);
+    List<TariffStub> findAllStubs();
 
     /**
      * Get tariff by id.
