@@ -44,10 +44,8 @@
             <i class="fa fa-times"></i></a>
         <span class="navbar-brand" id="text-head">Clients</span>
         <form class="form-inline">
-            <a href="#add" class="btn btn-info btn-lg" onclick="add(currentData)" id="add">
+            <a href="#add" class="btn btn-info btn-lg" th:href="@{|/client|}" id="add">
                 <i class="fa fa-plus"></i> Add</a>
-            <a href="#save" class="btn btn-info btn-lg" onclick="save(currentData)" style="display: none;" id="save">
-                <i class="fa fa-save"></i> Save</a>
         </form>
     </nav>
     </br>
@@ -197,7 +195,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit">
+                                            <a class="edit" href="#add" th:href="@{|/client/${client.clientContractId}|}" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit">
                                                 <i class="fa fa-pencil fa-fw"></i></a>
                                             <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Sergey Pupkin" data-table="client" data-id="1" th:attr="data-name=${client.clientFIO},data-id=${client.clientContractId}">
                                                 <a class="delete" data-toggle="tooltip" data-original-title="Delete">
@@ -420,21 +418,6 @@
     </div>
 </section>
 
-<section id="client-form" style="display: none;">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 pull-md-3 bd-content">
-                <form>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput">Tariff name</label>
-                        <input type="text" class="form-control" id="formGroupInput" placeholder="tariff name">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
-
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -467,151 +450,154 @@
 <script src="../../resources/static/js/bootstrap-datepicker.min.js"
         th:src="@{/resources/static/js/bootstrap-datepicker.min.js}"></script>
 <script>
-$(function(){
-    $('body').on('click', '.nav-link', function(){
-        $('li.nav-item').removeClass('active');
-        $(this).parent( 'li' ).addClass( 'active' );
-        cancel(currentData);
-        if (this.id == "Tariffs") {
-          restoreElement("tariffs-table");
-          removeElement("clients-table");
-          currentData = "tariff";
-        } else {
-           restoreElement("clients-table");
-           removeElement("tariffs-table");
-           currentData = "client";
-        }
-        cancel(currentData);
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    $(function(){
+        $('body').on('click', '.nav-link', function(){
+            $('li.nav-item').removeClass('active');
+            $(this).parent( 'li' ).addClass( 'active' );
+            cancel(currentData);
+            if (this.id == "Tariffs") {
+              restoreElement("tariffs-table");
+              removeElement("clients-table");
+              currentData = "tariff";
+            } else {
+               restoreElement("clients-table");
+               removeElement("tariffs-table");
+               currentData = "client";
+            }
+            cancel(currentData);
+        });
     });
-});
 
-function edit(currentData) {
-  add(currentData);
-}
-
-function add(currentData) {
-  showElement("cancel");
-  removeElement("add");
-  restoreElement("save");
-  var span = document.getElementById('text-head');
-  span.innerText = span.textContent = 'New ' + currentData;
-  <!--span.classList.add('text-uppercase');-->
-  if (currentData == "tariff") {
-      removeElement("tariffs-table");
-      restoreElement("tariff-form");
-    } else {
-       removeElement("clients-table");
-       restoreElement("client-form");
+    function edit(currentData) {
+      add(currentData);
     }
-}
 
-function save(currentData) {
-    cancel(currentData);
-}
-
-function cancel(currentData) {
-  clearFilter()
-  hideElement("cancel");
-  restoreElement("add");
-  removeElement("save");
-  var span = document.getElementById("text-head");
-  <!--span.classList.add('text-uppercase');-->
-  if (currentData == "tariff") {
-      span.innerText = span.textContent = "Tariffs";
-      restoreElement("tariffs-table");
-      removeElement("tariff-form");
-    } else {
-       span.innerText = span.textContent = "Clients";
-       <!--restoreElement("clients-table");-->
-       <!--removeElement("client-form");-->
+    function add(currentData) {
+      showElement("cancel");
+      removeElement("add");
+      restoreElement("save");
+      var span = document.getElementById('text-head');
+      span.innerText = span.textContent = 'New ' + currentData;
+      <!--span.classList.add('text-uppercase');-->
+      if (currentData == "tariff") {
+          removeElement("tariffs-table");
+          restoreElement("tariff-form");
+        } else {
+           removeElement("clients-table");
+           restoreElement("client-form");
+        }
     }
-}
 
-function hideElement(id) {
-  document.getElementById(id).style.visibility = "hidden";
-}
-
-function showElement(id) {
-  document.getElementById(id).style.visibility = "visible";
-}
-
-function removeElement(id) {
-  document.getElementById(id).style.display = "none";
-}
-
-function restoreElement(id) {
-  document.getElementById(id).style.display = "block";
-}
-
-var nowTemp = new Date();
-var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-
-var checkin = $('#date-from').datepicker({
-    format: 'dd.mm.yyyy',
-    onRender: function (date) {
-        return date.valueOf() > now.valueOf() ? 'disabled' : '';
+    function save(currentData) {
+        cancel(currentData);
     }
-}).on('changeDate', function (ev) {
-    if (ev.date.valueOf() > checkout.date.valueOf()) {
-        var newDate = new Date(ev.date)
-        newDate.setDate(newDate.getDate() + 1);
-        checkout.setValue(newDate);
+
+    function cancel(currentData) {
+      clearFilter()
+      hideElement("cancel");
+      restoreElement("add");
+      removeElement("save");
+      var span = document.getElementById("text-head");
+      <!--span.classList.add('text-uppercase');-->
+      if (currentData == "tariff") {
+          span.innerText = span.textContent = "Tariffs";
+          restoreElement("tariffs-table");
+          removeElement("tariff-form");
+        } else {
+           span.innerText = span.textContent = "Clients";
+           <!--restoreElement("clients-table");-->
+           <!--removeElement("client-form");-->
+        }
     }
-    checkin.hide();
-    $('#date-to')[0].focus();
-}).data('datepicker');
-var checkout = $('#date-to').datepicker({
-    format: 'dd.mm.yyyy',
-    onRender: function (date) {
-        return date.valueOf() > now.valueOf() ? 'disabled' : '';
-    },
-}).on('changeDate', function (ev) {
-    checkout.hide();
-}).data('datepicker');
 
-$('#delete').on('show.bs.modal', function (event) {
+    function hideElement(id) {
+      document.getElementById(id).style.visibility = "hidden";
+    }
 
-  var button = $(event.relatedTarget)
-  name = button.data('name')
-  id = button.data('id')
-  var table = button.data('table')
-  var modal = $(this)
-  var span = document.getElementById("message");
-  span.innerText = span.textContent = 'Are you sure you want to delete "' + name + '"?'
-  modal.find('.modal-body input').val(name)
-  $('#save-button').click(function() {
+    function showElement(id) {
+      document.getElementById(id).style.visibility = "visible";
+    }
+
+    function removeElement(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    function restoreElement(id) {
+      document.getElementById(id).style.display = "block";
+    }
+
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+    var checkin = $('#date-from').datepicker({
+        format: 'dd.mm.yyyy',
+        onRender: function (date) {
+            return date.valueOf() > now.valueOf() ? 'disabled' : '';
+        }
+    }).on('changeDate', function (ev) {
+        if (ev.date.valueOf() > checkout.date.valueOf()) {
+            var newDate = new Date(ev.date)
+            newDate.setDate(newDate.getDate() + 1);
+            checkout.setValue(newDate);
+        }
+        checkin.hide();
+        $('#date-to')[0].focus();
+    }).data('datepicker');
+    var checkout = $('#date-to').datepicker({
+        format: 'dd.mm.yyyy',
+        onRender: function (date) {
+            return date.valueOf() > now.valueOf() ? 'disabled' : '';
+        },
+    }).on('changeDate', function (ev) {
+        checkout.hide();
+    }).data('datepicker');
+
+    $('#delete').on('show.bs.modal', function (event) {
+
+    var button = $(event.relatedTarget)
+    name = button.data('name')
+    id = button.data('id')
+    var table = button.data('table')
+    var modal = $(this)
+    var span = document.getElementById("message");
+    span.innerText = span.textContent = 'Are you sure you want to delete "' + name + '"?'
+    modal.find('.modal-body input').val(name)
+    $('#save-button').click(function() {
       var i = document.createElement("img");
-      i.src = "/updateTariff/"+ clientId + "/" + tariffId;
+      i.src = "/delete/"+ id;
       document.getElementById('row' + id).remove();
       var table=document.getElementById('tableClient');
       size=table.getElementsByTagName('tr');
       var clientsCount = document.getElementById("clientsCount");
       clientsCount.innerText = clientsCount.textContent = size.length;
+    });
+    })
 
-});
-})
-
-function clearFilter() {
-  $('#date-from').val('')
-  $('#date-to').val('')
-}
-
-function changeLock(clientId)
-{
-    var i = document.createElement("img");
-    if (document.getElementById('lock' + clientId).checked)
-    {
-        i.src = "/updateBlocking/"+ clientId + "/true";
-    } else {
-        i.src = "/updateBlocking/"+ clientId + "/false";
+    function clearFilter() {
+      $('#date-from').val('')
+      $('#date-to').val('')
     }
-}
 
-function changeTariff(tariffId, clientId)
-{
-    var i = document.createElement("img");
-    i.src = "/updateTariff/"+ clientId + "/" + tariffId;
-}
+    function changeLock(clientId)
+    {
+        var i = document.createElement("img");
+        if (document.getElementById('lock' + clientId).checked)
+        {
+            i.src = "/updateBlocking/"+ clientId + "/true";
+        } else {
+            i.src = "/updateBlocking/"+ clientId + "/false";
+        }
+    }
+
+    function changeTariff(tariffId, clientId)
+    {
+        var i = document.createElement("img");
+        i.src = "/updateTariff/"+ clientId + "/" + tariffId;
+    }
 </script>
 </body>
 </html>

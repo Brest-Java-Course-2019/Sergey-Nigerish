@@ -45,7 +45,7 @@ public class TariffsController {
      *
      * @return view name
      */
-    @GetMapping(value = "/tariffs/{tariffId}")
+    @GetMapping(value = "/tariff/{tariffId}")
     public final String gotoEditTariffPage(@PathVariable Integer tariffId, Model model) {
 
         LOGGER.debug("gotoEditTariffPage({},{})", tariffId, model);

@@ -147,7 +147,6 @@ class ClientsDaoJdbcImplTest {
         client.setClientContractId(FIRST_CLIENT_ID);
         client.setClientFIO(FIRST_CLIENT_FULL_NAME + " update");
         client.setClientAddress(FIRST_CLIENT_ANDRESS + " update");
-        client.setClientContractDay_date(FIRST_CLIENT_DATE);
         client.setClient_to_idTariff(NEW_CLIENT_TARIFF_ID);
 
         clientsDao.update(client);
@@ -155,7 +154,7 @@ class ClientsDaoJdbcImplTest {
         Client updatedClient = clientsDao.findById(client.getClientContractId()).get();
         LOGGER.debug("@Test update() result: expected({}) - actual({})", client, updatedClient);
         assertEquals(FIRST_CLIENT_FULL_NAME + " update", updatedClient.getClientFIO());
-        assertEquals(FIRST_CLIENT_FULL_NAME + " update", updatedClient.getClientFIO());
+        assertEquals(FIRST_CLIENT_ANDRESS + " update", updatedClient.getClientAddress());
     }
 
     @Test

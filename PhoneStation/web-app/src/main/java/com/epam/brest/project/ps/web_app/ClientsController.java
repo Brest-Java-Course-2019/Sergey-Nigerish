@@ -93,9 +93,10 @@ public class ClientsController {
     @GetMapping(value = "/client/{clientId}")
     public final String gotoEditClientPage(@PathVariable Integer clientId, Model model) {
 
-        LOGGER.debug("gotoEditClientPage({},{})", clientId, model);
+        LOGGER.debug("gotoEditClientPage({}, {})", clientId, model);
         Client client = clientsService.findById(clientId);
         model.addAttribute("client", client);
+        model.addAttribute("tariffs", tariffsService.findAll());
         return "client";
     }
 
@@ -104,7 +105,7 @@ public class ClientsController {
      *
      * @return view name
      */
-    @PutMapping(value = "/client")
+    @PostMapping(value = "/client")
     public String updateClient(@Valid Client client, BindingResult result) {
 
         LOGGER.debug("updateClient({}, {})", client, result);
@@ -113,7 +114,7 @@ public class ClientsController {
             return "client";
         } else {
             this.clientsService.update(client);
-            return "redirect:/clients";
+            return "redirect:/";
         }
     }
 
@@ -129,6 +130,7 @@ public class ClientsController {
         Client client = new Client();
         model.addAttribute("isNew", true);
         model.addAttribute("client", client);
+        model.addAttribute("tariffs", tariffsService.findAll());
         return "client";
     }
 
@@ -139,7 +141,7 @@ public class ClientsController {
      * @param result binding result.
      * @return view name
      */
-    @PostMapping(value = "/client")
+    @PostMapping(value = "/clientAdd")
     public String addClient(@Valid Client client, BindingResult result) {
 
         LOGGER.debug("addClient({}, {})", client, result);
@@ -148,7 +150,7 @@ public class ClientsController {
             return "client";
         } else {
             this.clientsService.add(client);
-            return "redirect:/clients";
+            return "redirect:/";
         }
     }
 
@@ -181,12 +183,11 @@ public class ClientsController {
     /**
      * Delete client from persistence storage.
      *
-     * @return view name
+     * @param clientId for deleting.
      */
-    @DeleteMapping(value = "/client/{clientId}")
-    public final String deleteClientById(Integer clientId, Model model) {
+    @GetMapping(value = "/delete/{clientId}")
+    public void deleteClientById(@PathVariable Integer clientId, Model model) {
         LOGGER.debug("deleteClientById({},{})", clientId, model);
         clientsService.delete(clientId);
-        return "redirect:/clients";
     }
 }

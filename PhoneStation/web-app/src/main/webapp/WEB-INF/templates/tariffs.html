@@ -68,15 +68,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="tariff : ${tariffs}">
+                            <tr th:each="tariff : ${tariffs}" th:id="'row' + ${tariff.tariffId}">
                                 <td hidden th:text="${tariff.tariffId}">1</td>
                                 <td th:text="${tariff.tariffName}">Talkative</td>
                                 <td th:text="${tariff.tariffCountClients}">4</td>
                                 <td>
-                                    <a class="edit" href="#add" onclick="edit(currentData)" data-toggle="tooltip" data-original-title="Edit"><i
+                                    <a class="edit" href="#edit" th:href="@{|/tariff/${tariff.tariffId}|}" data-toggle="tooltip" data-original-title="Edit"><i
                                             class="fa fa-pencil fa-fw"></i></a>
-                                    <a class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
-                                            class="fa fa-trash-o fa-lg"></i></a>
+                                    <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Talkative" data-table="tariff" data-id="1"
+                                            th:attr="data-name=${tariff.tariffName},data-id=${tariff.tariffId}">
+                                        <a class="delete" data-toggle="tooltip" data-original-title="Delete">
+                                            <i class="fa fa-trash-o fa-lg"></i></a>
+                                    </button>
                                 </td>
                             </tr>
                             <tr th:remove="all">
@@ -158,127 +161,26 @@
 <script src="../../resources/static/js/bootstrap-datepicker.min.js"
         th:src="@{/resources/static/js/bootstrap-datepicker.min.js}"></script>
 <script>
-$(function(){
-    $('body').on('click', '.nav-link', function(){
-        $('li.nav-item').removeClass('active');
-        $(this).parent( 'li' ).addClass( 'active' );
-        cancel(currentData);
-        if (this.id == "Tariffs") {
-          restoreElement("tariffs-table");
-          removeElement("clients-table");
-          currentData = "tariff";
-        } else {
-           restoreElement("clients-table");
-           removeElement("tariffs-table");
-           currentData = "client";
-        }
-        cancel(currentData);
-    });
-});
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 
-function edit(currentData) {
-  add(currentData);
-}
+    $('#delete').on('show.bs.modal', function (event) {
 
-function add(currentData) {
-  showElement("cancel");
-  removeElement("add");
-  restoreElement("save");
-  var span = document.getElementById('text-head');
-  span.innerText = span.textContent = 'New ' + currentData;
-  <!--span.classList.add('text-uppercase');-->
-  if (currentData == "tariff") {
-      removeElement("tariffs-table");
-      restoreElement("tariff-form");
-    } else {
-       removeElement("clients-table");
-       restoreElement("client-form");
-    }
-}
-
-function save(currentData) {
-    cancel(currentData);
-}
-
-function cancel(currentData) {
-  clearFilter()
-  hideElement("cancel");
-  restoreElement("add");
-  removeElement("save");
-  var span = document.getElementById("text-head");
-  <!--span.classList.add('text-uppercase');-->
-  if (currentData == "tariff") {
-      span.innerText = span.textContent = "Tariffs";
-      restoreElement("tariffs-table");
-      removeElement("tariff-form");
-    } else {
-       span.innerText = span.textContent = "Clients";
-       <!--restoreElement("clients-table");-->
-       <!--removeElement("client-form");-->
-    }
-}
-
-function hideElement(id) {
-  document.getElementById(id).style.visibility = "hidden";
-}
-
-function showElement(id) {
-  document.getElementById(id).style.visibility = "visible";
-}
-
-function removeElement(id) {
-  document.getElementById(id).style.display = "none";
-}
-
-function restoreElement(id) {
-  document.getElementById(id).style.display = "block";
-}
-
-var nowTemp = new Date();
-var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
-
-var checkin = $('#date-from').datepicker({
-    format: 'dd.mm.yyyy',
-    onRender: function (date) {
-        return date.valueOf() > now.valueOf() ? 'disabled' : '';
-    }
-}).on('changeDate', function (ev) {
-    if (ev.date.valueOf() > checkout.date.valueOf()) {
-        var newDate = new Date(ev.date)
-        newDate.setDate(newDate.getDate() + 1);
-        checkout.setValue(newDate);
-    }
-    checkin.hide();
-    $('#date-to')[0].focus();
-}).data('datepicker');
-var checkout = $('#date-to').datepicker({
-    format: 'dd.mm.yyyy',
-    onRender: function (date) {
-        return date.valueOf() > now.valueOf() ? 'disabled' : '';
-    },
-}).on('changeDate', function (ev) {
-    checkout.hide();
-}).data('datepicker');
-
-$('#delete').on('show.bs.modal', function (event) {
-
-  var button = $(event.relatedTarget)
-  var name = button.data('name')
-  var id = button.data('id')
-  var table = button.data('table')
-  var modal = $(this)
-  var span = document.getElementById("message");
-  span.innerText = span.textContent = 'Are you sure you want to delete "' + name + '"?'
-  modal.find('.modal-body input').val(name)
-  $('#save-button').click(function() {
-  window.location='start.html.html#delete(' + id+ ')';
-});
-})
-
-function clearFilter() {
-  $('#date-from').val('')
-  $('#date-to').val('')
-}
+        var button = $(event.relatedTarget)
+        elementName = button.data('name')
+        id = button.data('id')
+        var table = button.data('table')
+        var modal = $(this)
+        var span = document.getElementById("message");
+        span.innerText = span.textContent = 'Are you sure you want to delete "' + elementName + '"?'
+        modal.find('.modal-body input').val(elementName)
+        $('#save-button').click(function() {
+            var i = document.createElement("img");
+            i.src = "/delete/"+ id;
+            document.getElementById('row' + id).remove();
+        });
+    })
 </script>
 </body>
 </html>

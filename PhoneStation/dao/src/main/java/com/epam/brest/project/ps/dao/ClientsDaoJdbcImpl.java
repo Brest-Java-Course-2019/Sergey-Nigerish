@@ -39,9 +39,8 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
             "clientContractDay_date, clientBlocked, client_to_idTariff) " +
             "VALUES (:clientFIO, :clientAddress, :clientContractDay_date, :clientBlocked, :client_to_idTariff)";
     private static final String UPDATE_SQL = "UPDATE clients SET clientFIO = :clientFIO, " +
-            "clientAddress =:clientAddress, clientContractDay_date = :clientContractDay_date, " +
-            "clientBlocked =:clientBlocked, client_to_idTariff = :client_to_idTariff, " +
-            "clientDeleted = :clientDeleted WHERE  clientContractId = :clientContractId";
+            "clientAddress =:clientAddress, clientBlocked =:clientBlocked, client_to_idTariff = :client_to_idTariff " +
+            "WHERE  clientContractId = :clientContractId";
 
 
     private static final String CLIENT_ID = "clientContractId";

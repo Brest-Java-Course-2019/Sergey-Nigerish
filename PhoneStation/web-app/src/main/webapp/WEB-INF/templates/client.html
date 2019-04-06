@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="../../resources/static/css/bootstrap.min.css"
+          th:href="@{/resources/static/css/bootstrap.min.css}">
+    <link rel="stylesheet"
+          href="../../resources/static/css/font-awesome.css"
+          th:href="@{/resources/static/css/font-awesome.css}">
+<!--    <link rel="stylesheet"-->
+<!--          href="../../resources/static/css/datepicker.css"-->
+<!--          th:href="@{/resources/static/css/datepicker.css}">-->
+    <link rel="stylesheet" type="text/css"
+          href="http://www.eyecon.ro/bootstrap-datepicker/css/datepicker.css">
+
+    <title>Client management</title>
+</head>
+<script>
+    var currentData = "client";
+</script>
+<body>
+<!--Head panel-->
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary navbar-fixed-top">
+    <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" id="Clients" href="#Clients" th:href="@{|/|}">Clients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Tariffs" href="#Tariffs" th:href="@{|/tariffs|}">Tariffs</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<!--Head panel-->
+<header>
+    <nav class="navbar navbar-light bg-info navbar-fixed-bottom" id="test">
+        <a href="#cancel" class="btn btn-info btn-lg" th:href="@{|/|}" id="cancel">
+            <i class="fa fa-times"></i></a>
+        <span class="navbar-brand" id="text-head" th:text="${isNew} ? 'Add client' : 'Edit client'">Edit client</span>
+        <form class="form-inline">
+            <a href="#save" class="btn btn-info btn-lg" id="save" th:href="@{/clients}"
+               th:onclick="@{document.forms['clientForm'].submit(); return false;}"
+               data-placement="bottom">
+                <i class="fa fa-save"></i> Save</a>
+        </form>
+    </nav>
+    </br>
+</header>
+
+<section id="client-form">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 pull-md-3 bd-content">
+                <form id="clientForm" th:object="${client}" th:action="${isNew} ? @{/clientAdd} : @{/client}" th:method="@{post}">
+                    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                        <p>Please fix errors below:</p>
+                    </div>
+                    <input id="clientId" type="hidden" th:field="*{clientContractId}"/>
+                    <div class="form-group">
+                        <label for="clientFIO">Client full name:</label>
+                        <input type="text" class="form-control" id="clientFIO" placeholder="Client full name"
+                        th:class="${#fields.hasErrors('clientFIO')} ? 'form-control is-invalid' : 'form-control'"
+                        th:field="*{clientFIO}"/>
+                        <div th:if="${#fields.hasErrors('clientFIO')}"
+                             class="invalid-feedback"
+                             th:errors="*{clientFIO}">[errors]
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientAddress">Client address:</label>
+                        <input type="text" class="form-control" id="clientAddress" placeholder="Client address"
+                        th:class="${#fields.hasErrors('clientFIO')} ? 'form-control is-invalid' : 'form-control'"
+                        th:field="*{clientAddress}">
+                        <div th:if="${#fields.hasErrors('clientFIO')}"
+                             class="invalid-feedback"
+                             th:errors="*{clientAddress}">[errors]</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clientTariff">Client tariff:</label>
+                        <select size="1" name="client_to_idTariff" id="clientTariff">
+                            <option th:each="tariffs : ${tariffs}"
+                                    th:value="${tariffs.tariffId}"
+                                    th:selected="${tariffs.tariffId}==*{client_to_idTariff}"
+                                    th:text="${tariffs.tariffName}">
+                            </option>
+                            <option value="1" th:remove="all">
+                                Talkative
+                            </option>
+                            <option value="2" selected="selected" th:remove="all">
+                                Silent
+                            </option>
+                            <option value="3" th:remove="all">
+                                Corporate
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group pull-left">
+                        <label for="clientBlocked">Client blocked:</label>
+                        <input type="checkbox" class="form-control" th:checked="*{clientBlocked}" name="clientBlocked" id="clientBlocked" placeholder="Client blocked">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="../../resources/static/js/jquery-3.3.1.slim.min.js"
+        th:src="@{/resources/static/js/jquery-3.3.1.slim.min.js}"></script>
+<script src="../../resources/static/js/popper.min.js"
+        th:src="@{/resources/static/js/popper.min.js}"></script>
+<script src="../../resources/static/js/bootstrap.min.js"
+        th:src="@{/resources/static/js/bootstrap.min.js}"></script>
+<script src="../../resources/static/js/bootstrap-datepicker.min.js"
+        th:src="@{/resources/static/js/bootstrap-datepicker.min.js}"></script>
+</body>
+</html>
