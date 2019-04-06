@@ -44,7 +44,7 @@ public class ClientsController {
         LOGGER.debug("findAll({})", model);
         model.addAttribute("clients", clientsService.findAll());
         model.addAttribute("tariffs", tariffsService.findAll());
-        return "index.html";
+        return "clients.html";
     }
 
     /**
@@ -164,6 +164,7 @@ public class ClientsController {
         LOGGER.debug("changeTariff({}, {}, )", clientId, tariffId);
         clientsService.updateTariff(clientId, tariffId);
     }
+
     /**
      * Persist new locking status for client into persistence storage.
      *
@@ -173,7 +174,7 @@ public class ClientsController {
     @GetMapping(value = "/updateBlocking/{clientId}/{lockingStatus}")
     public void updateBlockingStatus(@PathVariable Integer clientId,
                                      @PathVariable Boolean lockingStatus) {
-        LOGGER.debug("updateBlockingStatus({}, {}, )", clientId, lockingStatus);
+        LOGGER.debug("updateBlockingStatus({}, {})", clientId, lockingStatus);
         clientsService.updateBlocking(clientId, lockingStatus);
     }
 

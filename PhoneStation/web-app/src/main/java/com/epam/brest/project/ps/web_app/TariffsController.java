@@ -35,9 +35,9 @@ public class TariffsController {
     @GetMapping(value = "/tariffs")
     public final String tariffsList(Model model) {
 
-        LOGGER.debug("findAll({})", model);
-        model.addAttribute("tariffs", tariffsService.findAll());
-        return "index.html";
+        LOGGER.debug("findAllStubs({})", model);
+        model.addAttribute("tariffs", tariffsService.findAllStubs());
+        return "tariffs.html";
     }
 
     /**
@@ -112,10 +112,13 @@ public class TariffsController {
      *
      * @return view name
      */
-    @DeleteMapping(value = "/tariff/{tariffId}")
-    public final String deleteTariffById(@Valid Integer tariffId, BindingResult result, Model model) {
+    @DeleteMapping(value = "/tariff/{tariffId}/{tariffCountClients}")
+    public final String deleteTariffById(@Valid Integer tariffId,
+                                         @Valid Integer tariffCountClients,
+                                         BindingResult result,
+                                         Model model) {
         LOGGER.debug("deleteTariffById({},{})", tariffId, model);
-        tariffValidator.validate(tariffsService.countUsers(tariffId), result);
+        tariffValidator.validate(tariffCountClients, result);
         if (result.hasErrors()) {
             return "tariffs";
         } else {

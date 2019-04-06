@@ -2,6 +2,7 @@ package com.epam.brest.project.ps.web_app.consumers;
 
 import com.epam.brest.project.ps.model.Tariff;
 import com.epam.brest.project.ps.service.TariffsService;
+import com.epam.brest.project.ps.stub.TariffStub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class TariffsRestConsumer implements TariffsService {
         this.url = url;
         this.restTemplate = restTemplate;
     }
+
     /**
      * Get all tariffs.
      *
@@ -34,17 +36,15 @@ public class TariffsRestConsumer implements TariffsService {
     }
 
     /**
-     * Get tariffs with the number of users.
+     * Get all tariffs with count people.
      *
-     * @param tariffId tariff for counting.
-     * @return count users.
+     * @return tariffs stream.
      */
     @Override
-    public Integer countUsers(Integer tariffId) {
-        LOGGER.debug("countUsers({})", tariffId);
-        ResponseEntity responseEntity = restTemplate.getForEntity(url + "/countUsers/" +
-                tariffId, Integer.class);
-        return (Integer) responseEntity.getBody();
+    public List<TariffStub> findAllStubs() {
+        LOGGER.debug("findAllStubs()");
+        ResponseEntity responseEntity = restTemplate.getForEntity(url + "/allStubs", List.class);
+        return (List<TariffStub>) responseEntity.getBody();
     }
 
     /**
