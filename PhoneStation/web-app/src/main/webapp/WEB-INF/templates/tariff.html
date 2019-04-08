@@ -12,12 +12,6 @@
     <link rel="stylesheet"
           href="../../resources/static/css/font-awesome.css"
           th:href="@{/resources/static/css/font-awesome.css}">
-<!--    <link rel="stylesheet"-->
-<!--          href="../../resources/static/css/datepicker.css"-->
-<!--          th:href="@{/resources/static/css/datepicker.css}">-->
-    <link rel="stylesheet" type="text/css"
-          href="http://www.eyecon.ro/bootstrap-datepicker/css/datepicker.css">
-
     <title>Client management</title>
 </head>
 <script>
@@ -57,15 +51,9 @@
     <div class="container">
         <div class="row">
             <div class="col-12 pull-md-3 bd-content">
-                <form>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput">Tariff name</label>
-                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="tariff name">
-                    </div>
-                </form>
                 <form id="tariffForm" th:object="${tariff}" th:action="${isNew} ? @{/tariffAdd} : @{/tariff}" th:method="@{post}">
                     <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
-                        <p>Please fix errors below:</p>
+                        <p>Please correct the errors in the fields.</p>
                     </div>
                     <input id="tariffId" type="hidden" th:field="*{tariffId}"/>
                     <div class="form-group">
@@ -93,7 +81,5 @@
         th:src="@{/resources/static/js/popper.min.js}"></script>
 <script src="../../resources/static/js/bootstrap.min.js"
         th:src="@{/resources/static/js/bootstrap.min.js}"></script>
-<script src="../../resources/static/js/bootstrap-datepicker.min.js"
-        th:src="@{/resources/static/js/bootstrap-datepicker.min.js}"></script>
 </body>
 </html>

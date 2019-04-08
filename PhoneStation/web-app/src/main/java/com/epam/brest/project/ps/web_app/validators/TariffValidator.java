@@ -10,7 +10,7 @@ import org.springframework.validation.Validator;
 @Component
 public class TariffValidator implements Validator {
 
-    public static final int TARIFF_NAME_MAX_SIZE = 255;
+    private static final int FIELD_MAX_LENGTH = 255;
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -20,19 +20,13 @@ public class TariffValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
 
-        ValidationUtils.rejectIfEmpty(errors, "TariffName", "TariffName.empty");
+        ValidationUtils.rejectIfEmpty(errors, "tariffName", "emptyField");
+
         Tariff tariff = (Tariff) target;
 
         if (StringUtils.hasLength(tariff.getTariffName())
-                && tariff.getTariffName().length() > TARIFF_NAME_MAX_SIZE) {
-            errors.rejectValue("tariffName", "tariffName.maxSize255");
-        }
-    }
-
-    public void validate(Integer countUsers, Errors errors) {
-
-        if (countUsers > 0) {
-            errors.rejectValue("tariff", "tariff.count");
+                && tariff.getTariffName().length() > FIELD_MAX_LENGTH) {
+            errors.rejectValue("tariffName", "maxLength255");
         }
     }
 }

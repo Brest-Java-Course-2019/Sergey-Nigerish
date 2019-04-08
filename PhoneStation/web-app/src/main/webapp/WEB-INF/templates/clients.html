@@ -12,11 +12,11 @@
     <link rel="stylesheet"
           href="../../resources/static/css/font-awesome.css"
           th:href="@{/resources/static/css/font-awesome.css}">
-<!--    <link rel="stylesheet"-->
-<!--          href="../../resources/static/css/datepicker.css"-->
-<!--          th:href="@{/resources/static/css/datepicker.css}">-->
-    <link rel="stylesheet" type="text/css"
-          href="http://www.eyecon.ro/bootstrap-datepicker/css/datepicker.css">
+    <link rel="stylesheet"
+          href="../../resources/static/css/datepicker.css"
+          th:href="@{/resources/static/css/datepicker.css}">
+<!--    <link rel="stylesheet" type="text/css"-->
+<!--          href="http://www.eyecon.ro/bootstrap-datepicker/css/datepicker.css">-->
 
     <title>Client management</title>
 </head>
@@ -68,7 +68,7 @@
                                                     <div id="filter-panel" class="collapse filter-panel">
                                                         <div class="panel panel-default">
                                                             <div class="panel-body">
-                                                                <form class="form-inline" role="form">
+                                                                <form class="form-inline" role="form" id="filterForm" th:object="${filter}" th:action="@{/filter}" th:method="@{post}">
                                                                     <table class="table table-striped table-hover table-bordered">
                                                                         <thead>
                                                                         <tr>
@@ -83,7 +83,7 @@
                                                                                     <tr>
                                                                                         <div class="d-flex">
                                                                                             <div class="form-check">
-                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-all" value="all" checked>
+                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-all" value="null" checked>
                                                                                                 <label class="form-check-label" for="show-all">
                                                                                                     All
                                                                                                 </label>
@@ -93,7 +93,7 @@
                                                                                     <tr>
                                                                                         <div class="d-flex">
                                                                                             <div class="form-check">
-                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-blocked" value="blocked">
+                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-blocked" value="true">
                                                                                                 <label class="form-check-label" for="show-blocked">
                                                                                                     Blocked
                                                                                                 </label>
@@ -103,7 +103,7 @@
                                                                                     <tr>
                                                                                         <div class="d-flex">
                                                                                             <div class="form-check">
-                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-no-blocked" value="no-blocked">
+                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-no-blocked" value="false">
                                                                                                 <label class="form-check-label" for="show-no-blocked">
                                                                                                     No blocked
                                                                                                 </label>
@@ -117,28 +117,28 @@
                                                                                     <div class="filtering">
                                                                                         <div class="input-append date">
                                                                                             <div class="input-group mb-3 col-sm-6">
-                                                                                                <label for="date-from">Date from:</label>
+                                                                                                <label for="startDate">Date from:</label>
                                                                                                 <!--<div class="input-group-prepend bg-white">-->
                                                                                                 <!--<span class="input-group-text border-left-0 rounded-right bg-white"><i class="fa fa-calendar"></i></span>-->
                                                                                                 <!--</div>-->
-                                                                                                <input type="text" class="span2" value="" id="date-from" name="date-from" placeholder="DD.MM.YYYY">
+                                                                                                <input type="text" class="span2" value="" id="startDate" name="startDate" placeholder="DD.MM.YYYY" th:field="${filter.startDate}">
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="filtering">
                                                                                         <div class="input-append date">
                                                                                             <div class="input-group mb-3 col-sm-6">
-                                                                                                <label for="date-to">Date to:</label>
+                                                                                                <label for="endDate">Date to:</label>
                                                                                                 <!--<div class="input-group-prepend bg-white">-->
-                                                                                                <!--<span class="input-group-text border-left-0 rounded-right bg-white"><i class="fa fa-calendar"  onclick="selectDate('date-from')"></i></span>-->
+                                                                                                <!--<span class="input-group-text border-left-0 rounded-right bg-white"><i class="fa fa-calendar"  onclick="selectDate('startDate')"></i></span>-->
                                                                                                 <!--</div>-->
-                                                                                                <input type="text" class="span2" value="" id="date-to" name="date-to" placeholder="DD.MM.YYY">
+                                                                                                <input type="text" class="span2" value="" id="endDate" name="endDate" placeholder="DD.MM.YYY" th:field="${filter.endDate}">
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="filtering">
                                                                                         <div class="offset-6 col-8">
-                                                                                            <button type="submit" class="btn btn-outline-primary">Filtrate</button>
+                                                                                            <button th:href="@{/filter}" class="btn btn-outline-primary" th:onclick="@{document.forms['filterForm'].submit(); return false;}">Filtrate</button>
                                                                                         </div>
                                                                                     </div>
                                                                                 </form>
@@ -454,86 +454,10 @@
         $('[data-toggle="tooltip"]').tooltip()
     })
 
-    $(function(){
-        $('body').on('click', '.nav-link', function(){
-            $('li.nav-item').removeClass('active');
-            $(this).parent( 'li' ).addClass( 'active' );
-            cancel(currentData);
-            if (this.id == "Tariffs") {
-              restoreElement("tariffs-table");
-              removeElement("clients-table");
-              currentData = "tariff";
-            } else {
-               restoreElement("clients-table");
-               removeElement("tariffs-table");
-               currentData = "client";
-            }
-            cancel(currentData);
-        });
-    });
-
-    function edit(currentData) {
-      add(currentData);
-    }
-
-    function add(currentData) {
-      showElement("cancel");
-      removeElement("add");
-      restoreElement("save");
-      var span = document.getElementById('text-head');
-      span.innerText = span.textContent = 'New ' + currentData;
-      <!--span.classList.add('text-uppercase');-->
-      if (currentData == "tariff") {
-          removeElement("tariffs-table");
-          restoreElement("tariff-form");
-        } else {
-           removeElement("clients-table");
-           restoreElement("client-form");
-        }
-    }
-
-    function save(currentData) {
-        cancel(currentData);
-    }
-
-    function cancel(currentData) {
-      clearFilter()
-      hideElement("cancel");
-      restoreElement("add");
-      removeElement("save");
-      var span = document.getElementById("text-head");
-      <!--span.classList.add('text-uppercase');-->
-      if (currentData == "tariff") {
-          span.innerText = span.textContent = "Tariffs";
-          restoreElement("tariffs-table");
-          removeElement("tariff-form");
-        } else {
-           span.innerText = span.textContent = "Clients";
-           <!--restoreElement("clients-table");-->
-           <!--removeElement("client-form");-->
-        }
-    }
-
-    function hideElement(id) {
-      document.getElementById(id).style.visibility = "hidden";
-    }
-
-    function showElement(id) {
-      document.getElementById(id).style.visibility = "visible";
-    }
-
-    function removeElement(id) {
-      document.getElementById(id).style.display = "none";
-    }
-
-    function restoreElement(id) {
-      document.getElementById(id).style.display = "block";
-    }
-
     var nowTemp = new Date();
     var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
 
-    var checkin = $('#date-from').datepicker({
+    var checkin = $('#startDate').datepicker({
         format: 'dd.mm.yyyy',
         onRender: function (date) {
             return date.valueOf() > now.valueOf() ? 'disabled' : '';
@@ -545,9 +469,9 @@
             checkout.setValue(newDate);
         }
         checkin.hide();
-        $('#date-to')[0].focus();
+        $('#endDate')[0].focus();
     }).data('datepicker');
-    var checkout = $('#date-to').datepicker({
+    var checkout = $('#endDate').datepicker({
         format: 'dd.mm.yyyy',
         onRender: function (date) {
             return date.valueOf() > now.valueOf() ? 'disabled' : '';
@@ -559,13 +483,13 @@
     $('#delete').on('show.bs.modal', function (event) {
 
     var button = $(event.relatedTarget)
-    name = button.data('name')
+        elementName = button.data('name')
     id = button.data('id')
     var table = button.data('table')
     var modal = $(this)
     var span = document.getElementById("message");
-    span.innerText = span.textContent = 'Are you sure you want to delete "' + name + '"?'
-    modal.find('.modal-body input').val(name)
+    span.innerText = span.textContent = 'Are you sure you want to delete "' + elementName + '"?'
+    modal.find('.modal-body input').val(elementName)
     $('#save-button').click(function() {
       var i = document.createElement("img");
       i.src = "/delete/"+ id;
@@ -578,8 +502,8 @@
     })
 
     function clearFilter() {
-      $('#date-from').val('')
-      $('#date-to').val('')
+      $('#startDate').val('')
+      $('#endDate').val('')
     }
 
     function changeLock(clientId)

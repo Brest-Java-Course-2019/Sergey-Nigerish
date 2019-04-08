@@ -12,7 +12,7 @@ import java.sql.Date;
 @Component
 public class ClientValidator implements Validator {
 
-    public static final int CLIENT_FULL_NAME_MAX_SIZE = 255;
+    private static final int FIELD_MAX_LENGTH = 2555;
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -22,19 +22,19 @@ public class ClientValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
 
-        ValidationUtils.rejectIfEmpty(errors, "clientFIO", "clientFIO.empty");
+        ValidationUtils.rejectIfEmpty(errors, "clientFIO", "emptyField");
+        ValidationUtils.rejectIfEmpty(errors, "clientAddress", "emptyField");
+
         Client client = (Client) target;
 
         if (StringUtils.hasLength(client.getClientFIO())
-                && client.getClientFIO().length() > CLIENT_FULL_NAME_MAX_SIZE) {
-            errors.rejectValue("clientFIO", "clientFIO.maxSize255");
+                && client.getClientFIO().length() > FIELD_MAX_LENGTH) {
+            errors.rejectValue("clientFIO", "maxLength255");
         }
-    }
 
-    public void validate(Date startDate, Date endDate, Errors errors) {
-
-        if (startDate.compareTo(endDate) < 0) {
-            errors.rejectValue("clientFIO", "clientFIO.date");
+        if (StringUtils.hasLength(client.getClientAddress())
+                && client.getClientAddress().length() > FIELD_MAX_LENGTH) {
+            errors.rejectValue("clientAddress", "maxLength255");
         }
     }
 }

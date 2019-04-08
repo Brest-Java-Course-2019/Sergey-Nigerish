@@ -12,11 +12,6 @@
     <link rel="stylesheet"
           href="../../resources/static/css/font-awesome.css"
           th:href="@{/resources/static/css/font-awesome.css}">
-<!--    <link rel="stylesheet"-->
-<!--          href="../../resources/static/css/datepicker.css"-->
-<!--          th:href="@{/resources/static/css/datepicker.css}">-->
-    <link rel="stylesheet" type="text/css"
-          href="http://www.eyecon.ro/bootstrap-datepicker/css/datepicker.css">
 
     <title>Client management</title>
 </head>
@@ -44,10 +39,8 @@
             <i class="fa fa-times"></i></a>
         <span class="navbar-brand" id="text-head">Tariffs</span>
         <form class="form-inline">
-            <a href="#add" class="btn btn-info btn-lg" onclick="add(currentData)" id="add">
+            <a href="#add" class="btn btn-info btn-lg" th:href="@{|/tariff|}" id="add">
                 <i class="fa fa-plus"></i> Add</a>
-            <a href="#save" class="btn btn-info btn-lg" onclick="save(currentData)" style="display: none;" id="save">
-                <i class="fa fa-save"></i> Save</a>
         </form>
     </nav>
     </br>
@@ -76,7 +69,7 @@
                                     <a class="edit" href="#edit" th:href="@{|/tariff/${tariff.tariffId}|}" data-toggle="tooltip" data-original-title="Edit"><i
                                             class="fa fa-pencil fa-fw"></i></a>
                                     <button type="button" class="btn" data-toggle="modal" data-target="#delete" data-name="Talkative" data-table="tariff" data-id="1"
-                                            th:attr="data-name=${tariff.tariffName},data-id=${tariff.tariffId}">
+                                            th:attr="data-name=${tariff.tariffName}, data-id=${tariff.tariffId}, data-count=${tariff.tariffCountClients}">
                                         <a class="delete" data-toggle="tooltip" data-original-title="Delete">
                                             <i class="fa fa-trash-o fa-lg"></i></a>
                                     </button>
@@ -114,21 +107,6 @@
     </div>
 </section>
 
-<section id="tariff-form" style="display: none;">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 pull-md-3 bd-content">
-                <form>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput">Tariff name</label>
-                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="tariff name">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
-
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -143,7 +121,7 @@
             </div>
             <div class="modal-footer ">
                 <button type="button" class="btn btn-success" id="save-button" data-dismiss="modal"><span class="fa fa-chevron-circle-down"></span> Yes</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-remove"></span> No</button>
+                <button type="button" class="btn btn-default" id="no-button" data-dismiss="modal"><span class="fa fa-remove"></span> No</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -158,8 +136,6 @@
         th:src="@{/resources/static/js/popper.min.js}"></script>
 <script src="../../resources/static/js/bootstrap.min.js"
         th:src="@{/resources/static/js/bootstrap.min.js}"></script>
-<script src="../../resources/static/js/bootstrap-datepicker.min.js"
-        th:src="@{/resources/static/js/bootstrap-datepicker.min.js}"></script>
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
@@ -170,14 +146,24 @@
         var button = $(event.relatedTarget)
         elementName = button.data('name')
         id = button.data('id')
+        count = button.data('count')
         var table = button.data('table')
         var modal = $(this)
-        var span = document.getElementById("message");
-        span.innerText = span.textContent = 'Are you sure you want to delete "' + elementName + '"?'
+        var spanText = document.getElementById("message");
+        var spanButton = document.getElementById("no-button");
+        if (count > 0) {var spanText = document.getElementById("message");
+            spanText.innerText = spanText.textContent = 'You cannot remove tariff  "' + elementName + '" because it is used!'
+            spanButton.innerText = spanButton.textContent = ' Ok'
+            document.getElementById("save-button").style.visibility = "hidden"
+        } else {
+            spanText.innerText = spanText.textContent = 'Are you sure you want to delete "' + elementName + '"?'
+            spanButton.innerText = spanButton.textContent = ' No'
+            document.getElementById("save-button").style.visibility = "visible"
+        }
         modal.find('.modal-body input').val(elementName)
         $('#save-button').click(function() {
             var i = document.createElement("img");
-            i.src = "/delete/"+ id;
+            i.src = "tariff/delete/"+ id;
             document.getElementById('row' + id).remove();
         });
     })

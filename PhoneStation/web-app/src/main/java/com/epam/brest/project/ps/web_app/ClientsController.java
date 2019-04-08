@@ -2,9 +2,11 @@ package com.epam.brest.project.ps.web_app;
 
 
 import com.epam.brest.project.ps.model.Client;
+import com.epam.brest.project.ps.model.Filter;
 import com.epam.brest.project.ps.service.ClientsService;
 import com.epam.brest.project.ps.service.TariffsService;
 import com.epam.brest.project.ps.web_app.validators.ClientValidator;
+import com.epam.brest.project.ps.web_app.validators.FilterValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class ClientsController {
     @Autowired
     private ClientValidator clientValidator;
 
+    @Autowired
+    private FilterValidator filterValidator;
+
     /**
      * Goto clients list page.
      *
@@ -41,7 +46,7 @@ public class ClientsController {
     @GetMapping(value = "/")
     public final String clientsList(Model model) {
 
-        LOGGER.debug("findAll({})", model);
+        LOGGER.debug("findAll()");
         model.addAttribute("clients", clientsService.findAll());
         model.addAttribute("tariffs", tariffsService.findAll());
         return "clients.html";
@@ -50,24 +55,23 @@ public class ClientsController {
     /**
      * Return all clients filtering by date and blocking.
      *
-     * @param blocking client status.
-     * @param startDate first date.
-     * @param endDate   last date.
+     * @param filter params.
      * @return clients stream filtering.
      */
-    @GetMapping(value = "/clients/{blocking}/{startDate}/{endDate}")
-    public final String filteringClientsByDate(@PathVariable Boolean blocking,
-                                               @PathVariable @Valid Date startDate,
-                                               @PathVariable @Valid Date endDate,
-                                         BindingResult result,
+    @PostMapping(value = "/filter")
+    public final String filteringClients(@Valid Filter filter,
+//                                         BindingResult result,
                                          Model model) {
-        LOGGER.debug("filteringClientsByDate({}, {}, {} )", blocking, startDate, endDate);
-        clientValidator.validate(startDate, endDate, result);
-        if (result.hasErrors()) {
-            model.addAttribute("clients", clientsService.findAll());
-        } else {
-            model.addAttribute("clients", clientsService.findAllByFilter(blocking, startDate, endDate));
-        }
+        LOGGER.debug("filteringClients({})", filter);
+//        filterValidator.validate(filter, result);
+//        if (result.hasErrors()) {
+//            model.addAttribute("clients", clientsService.findAll());
+//        } else {
+//            model.addAttribute("clients", clientsService.findAllByFilter(filter.getBlocking(),
+//                                                                            filter.getStartDate(),
+//                                                                            filter.getEndDate()));
+            model.addAttribute("clients", clientsService.findAllByBlocking(filter.getBlocking()));
+//        }
         return "clients";
     }
 
@@ -80,7 +84,7 @@ public class ClientsController {
     @GetMapping(value = "/clients/{blocking}")
     public final String filteringClientsByBlocking(@PathVariable Boolean blocking,
                                          Model model) {
-        LOGGER.debug("filteringClientsByBlocking({}, {}, {} )", blocking);
+        LOGGER.debug("filteringClientsByBlocking({})", blocking);
         model.addAttribute("clients", clientsService.findAllByBlocking(blocking));
         return "clients";
     }
@@ -93,7 +97,7 @@ public class ClientsController {
     @GetMapping(value = "/client/{clientId}")
     public final String gotoEditClientPage(@PathVariable Integer clientId, Model model) {
 
-        LOGGER.debug("gotoEditClientPage({}, {})", clientId, model);
+        LOGGER.debug("gotoEditClientPage({})", clientId);
         Client client = clientsService.findById(clientId);
         model.addAttribute("client", client);
         model.addAttribute("tariffs", tariffsService.findAll());
@@ -108,7 +112,7 @@ public class ClientsController {
     @PostMapping(value = "/client")
     public String updateClient(@Valid Client client, BindingResult result) {
 
-        LOGGER.debug("updateClient({}, {})", client, result);
+        LOGGER.debug("updateClient({})", client);
         clientValidator.validate(client, result);
         if (result.hasErrors()) {
             return "client";
@@ -126,7 +130,7 @@ public class ClientsController {
     @GetMapping(value = "/client")
     public final String gotoAddClientPage(Model model) {
 
-        LOGGER.debug("gotoAddClientPage({})", model);
+        LOGGER.debug("gotoAddClientPage()");
         Client client = new Client();
         model.addAttribute("isNew", true);
         model.addAttribute("client", client);
@@ -144,7 +148,7 @@ public class ClientsController {
     @PostMapping(value = "/clientAdd")
     public String addClient(@Valid Client client, BindingResult result) {
 
-        LOGGER.debug("addClient({}, {})", client, result);
+        LOGGER.debug("addClient({})", client);
         clientValidator.validate(client, result);
         if (result.hasErrors()) {
             return "client";
@@ -163,7 +167,7 @@ public class ClientsController {
     @GetMapping(value = "/updateTariff/{clientId}/{tariffId}")
     public void changeTariff(@PathVariable Integer clientId,
                              @PathVariable Integer tariffId) {
-        LOGGER.debug("changeTariff({}, {}, )", clientId, tariffId);
+        LOGGER.debug("changeTariff({}, {})", clientId, tariffId);
         clientsService.updateTariff(clientId, tariffId);
     }
 
@@ -186,8 +190,8 @@ public class ClientsController {
      * @param clientId for deleting.
      */
     @GetMapping(value = "/delete/{clientId}")
-    public void deleteClientById(@PathVariable Integer clientId, Model model) {
-        LOGGER.debug("deleteClientById({},{})", clientId, model);
+    public void deleteClientById(@PathVariable Integer clientId) {
+        LOGGER.debug("deleteClientById({})", clientId);
         clientsService.delete(clientId);
     }
 }

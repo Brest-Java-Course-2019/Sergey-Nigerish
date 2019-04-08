@@ -12,11 +12,6 @@
     <link rel="stylesheet"
           href="../../resources/static/css/font-awesome.css"
           th:href="@{/resources/static/css/font-awesome.css}">
-<!--    <link rel="stylesheet"-->
-<!--          href="../../resources/static/css/datepicker.css"-->
-<!--          th:href="@{/resources/static/css/datepicker.css}">-->
-    <link rel="stylesheet" type="text/css"
-          href="http://www.eyecon.ro/bootstrap-datepicker/css/datepicker.css">
 
     <title>Client management</title>
 </head>
@@ -59,7 +54,7 @@
             <div class="col-12 pull-md-3 bd-content">
                 <form id="clientForm" th:object="${client}" th:action="${isNew} ? @{/clientAdd} : @{/client}" th:method="@{post}">
                     <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
-                        <p>Please fix errors below:</p>
+                        <p>Please correct the errors in the fields.</p>
                     </div>
                     <input id="clientId" type="hidden" th:field="*{clientContractId}"/>
                     <div class="form-group">
@@ -75,9 +70,9 @@
                     <div class="form-group">
                         <label for="clientAddress">Client address:</label>
                         <input type="text" class="form-control" id="clientAddress" placeholder="Client address"
-                        th:class="${#fields.hasErrors('clientFIO')} ? 'form-control is-invalid' : 'form-control'"
+                        th:class="${#fields.hasErrors('clientAddress')} ? 'form-control is-invalid' : 'form-control'"
                         th:field="*{clientAddress}">
-                        <div th:if="${#fields.hasErrors('clientFIO')}"
+                        <div th:if="${#fields.hasErrors('clientAddress')}"
                              class="invalid-feedback"
                              th:errors="*{clientAddress}">[errors]</div>
                     </div>
@@ -119,7 +114,5 @@
         th:src="@{/resources/static/js/popper.min.js}"></script>
 <script src="../../resources/static/js/bootstrap.min.js"
         th:src="@{/resources/static/js/bootstrap.min.js}"></script>
-<script src="../../resources/static/js/bootstrap-datepicker.min.js"
-        th:src="@{/resources/static/js/bootstrap-datepicker.min.js}"></script>
 </body>
 </html>

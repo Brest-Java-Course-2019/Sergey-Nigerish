@@ -35,7 +35,7 @@ public class TariffsController {
     @GetMapping(value = "/tariffs")
     public final String tariffsList(Model model) {
 
-        LOGGER.debug("findAllStubs({})", model);
+        LOGGER.debug("findAllStubs()");
         model.addAttribute("tariffs", tariffsService.findAllStubs());
         return "tariffs.html";
     }
@@ -48,7 +48,7 @@ public class TariffsController {
     @GetMapping(value = "/tariff/{tariffId}")
     public final String gotoEditTariffPage(@PathVariable Integer tariffId, Model model) {
 
-        LOGGER.debug("gotoEditTariffPage({},{})", tariffId, model);
+        LOGGER.debug("gotoEditTariffPage({})", tariffId);
         Tariff tariff = tariffsService.findById(tariffId);
         model.addAttribute("tariff", tariff);
         return "tariff";
@@ -62,7 +62,7 @@ public class TariffsController {
     @GetMapping(value = "/tariff")
     public final String gotoAddTariffPage(Model model) {
 
-        LOGGER.debug("gotoAddTariffPage({})", model);
+        LOGGER.debug("gotoAddTariffPage()");
         Tariff tariff = new Tariff();
         model.addAttribute("isNew", true);
         model.addAttribute("tariff", tariff);
@@ -74,10 +74,10 @@ public class TariffsController {
      *
      * @return view name
      */
-    @PutMapping(value = "/tariff")
+    @PostMapping(value = "/tariff")
     public String updateTariff(@Valid Tariff tariff, BindingResult result) {
 
-        LOGGER.debug("updateTariff({}, {})", tariff, result);
+        LOGGER.debug("updateTariff({})", tariff);
         tariffValidator.validate(tariff, result);
         if (result.hasErrors()) {
             return "tariff";
@@ -94,10 +94,10 @@ public class TariffsController {
      * @param result binding result.
      * @return view name
      */
-    @PostMapping(value = "/tariff")
+    @PostMapping(value = "/tariffAdd")
     public String addTariff(@Valid Tariff tariff, BindingResult result) {
 
-        LOGGER.debug("addTariff({}, {})", tariff, result);
+        LOGGER.debug("addTariff({})", tariff);
         tariffValidator.validate(tariff, result);
         if (result.hasErrors()) {
             return "tariff";
@@ -112,18 +112,9 @@ public class TariffsController {
      *
      * @return view name
      */
-    @DeleteMapping(value = "/tariff/{tariffId}/{tariffCountClients}")
-    public final String deleteTariffById(@Valid Integer tariffId,
-                                         @Valid Integer tariffCountClients,
-                                         BindingResult result,
-                                         Model model) {
-        LOGGER.debug("deleteTariffById({},{})", tariffId, model);
-        tariffValidator.validate(tariffCountClients, result);
-        if (result.hasErrors()) {
-            return "tariffs";
-        } else {
-            tariffsService.delete(tariffId);
-            return "redirect:/tariffs";
-        }
+    @GetMapping(value = "tariff/delete/{tariffId}")
+    public void deleteTariffById(@PathVariable Integer tariffId) {
+        LOGGER.debug("deleteTariffById({})", tariffId);
+        tariffsService.delete(tariffId);
     }
 }
