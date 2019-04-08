@@ -2,41 +2,86 @@ package com.epam.brest.project.ps.model;
 
 import java.sql.Date;
 
+/**
+ * Model for filtering variables.
+ */
 public class Filter {
+
+    /**
+     * Status blocking for clients.
+     */
     private Boolean blocking;
+
+    /**
+     * Start date for search.
+     */
     private Date startDate;
+
+    /**
+     * End date for search.
+     */
     private Date endDate;
 
-    public Boolean getBlocking() {
+    /**
+     * Getter for blocking.
+     *
+     * @return blocking.
+     */
+    public final Boolean getBlocking() {
         return blocking;
     }
 
-    public void setBlocking(Boolean blocking) {
-        this.blocking = blocking;
+    /**
+     * Setter for blocking.
+     *
+     * @param status blocking.
+     */
+    public final void setBlocking(final Boolean status) {
+        this.blocking = status;
     }
 
-    public Date getStartDate() {
+    /**
+     * Getter for startDate.
+     *
+     * @return startDate.
+     */
+    public final Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    /**
+     * Setter for startDate.
+     *
+     * @param start date.
+     */
+    public final void setStartDate(final Date start) {
+        this.startDate = start;
     }
 
-    public Date getEndDate() {
+    /**
+     * Getter for endDate.
+     *
+     * @return endDate.
+     */
+    public final Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    /**
+     * Setter for endDate.
+     *
+     * @param end date.
+     */
+    public final void setEndDate(final Date end) {
+        this.endDate = end;
     }
 
     @Override
-    public String toString() {
-        return "Filter{" +
-                "blocking=" + blocking +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                '}';
+    public final String toString() {
+        return "Filter{"
+                + "blocking=" + blocking
+                + ", startDate=" + startDate
+                + ", endDate=" + endDate
+                + '}';
     }
 }
