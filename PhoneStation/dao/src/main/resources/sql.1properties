@@ -1,0 +1,29 @@
+client.fieldClientId=clientContractId
+client.fieldClientBlocked=clientBlocked
+client.fieldStartDate=startDate
+client.fieldEndDate=endDate
+
+client.dataFirstDate=1970-01-01
+
+client.selectAll=SELECT clientContractId, clientFIO, clientAddress, clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients WHERE clientDeleted=false
+client.selectByDate=SELECT clientContractId, clientFIO, clientAddress, clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients WHERE clientDeleted=false AND :startDate <= clientContractDay_date AND clientContractDay_date <= :endDate
+client.selectByBlocking=SELECT clientContractId, clientFIO, clientAddress, clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients WHERE clientDeleted=false AND clientBlocked=:clientBlocked
+client.selectByFilter=SELECT clientContractId, clientFIO, clientAddress, clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients WHERE clientDeleted=false AND clientBlocked=:clientBlocked AND :startDate <= clientContractDay_date AND clientContractDay_date <= :endDate
+client.findById=SELECT clientContractId, clientFIO, clientAddress, clientContractDay_date, clientBlocked, client_to_idTariff, clientDeleted FROM clients WHERE clientContractId=:clientContractId AND clientDeleted=false
+client.insert=INSERT INTO clients (clientFIO, clientAddress, clientContractDay_date, clientBlocked, client_to_idTariff) VALUES (:clientFIO, :clientAddress, :clientContractDay_date, :clientBlocked, :client_to_idTariff)
+client.update=UPDATE clients SET clientFIO=:clientFIO, clientAddress=:clientAddress, clientBlocked=:clientBlocked, client_to_idTariff=:client_to_idTariff, clientDeleted=:clientDeleted WHERE clientContractId=:clientContractId
+
+client.failUpdate=Failed to update client in DB.
+
+tariff.fieldTariffId=tariffId
+tariff.fieldTariffName=tariffName
+
+tariff.selectAll=SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffDeleted=false
+tariff.findById=SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffId=:tariffId AND tariffDeleted=false
+tariff.checkCount=SELECT COUNT(tariffId) FROM tariffs WHERE tariffName=:tariffName AND tariffDeleted=false
+tariff.insert=INSERT INTO tariffs (tariffName) VALUES (:tariffName)
+tariff.update=UPDATE tariffs SET tariffName=:tariffName, tariffDeleted=:tariffDeleted WHERE tariffId=:tariffId
+tariff.selectAllStubs=SELECT t.tariffId, t.tariffName, t.tariffDeleted, IFNULL (COUNT(c.clientContractId), 0) AS tariffCountClients FROM tariffs AS t LEFT JOIN (SELECT clientContractId, client_to_idTariff FROM clients WHERE clientDeleted=false) AS c ON (c.client_to_idTariff=t.tariffId) WHERE t.tariffDeleted=false GROUP BY t.tariffId
+
+tariff.alreadyExists=Tariff with the same name already exists in DB.
+tariff.failUpdate=Failed to update tariff in DB.

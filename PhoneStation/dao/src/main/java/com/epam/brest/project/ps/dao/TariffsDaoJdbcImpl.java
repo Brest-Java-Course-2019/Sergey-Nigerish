@@ -4,6 +4,8 @@ import com.epam.brest.project.ps.model.Tariff;
 import com.epam.brest.project.ps.stub.TariffStub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,100 +17,227 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Implementation for TariffsDao.
+ */
 public class TariffsDaoJdbcImpl implements TariffsDao {
 
+    /**
+     * Connects logger.
+     */
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(TariffsDaoJdbcImpl.class);
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TariffsDaoJdbcImpl.class);
-
-    private static final String SELECT_ALL_SQL = "SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffDeleted = false";
-    private static final String FIND_BY_ID_SQL = "SELECT tariffId, tariffName, tariffDeleted FROM tariffs WHERE tariffId = :tariffId AND tariffDeleted = false";
-    private static final String CHECK_COUNT_TARIFF_SQL = "SELECT COUNT(tariffId) FROM tariffs WHERE tariffName = :tariffName AND tariffDeleted = false";
-    private static final String INSERT_SQL = "INSERT INTO tariffs (tariffName) VALUES (:tariffName)";
-    private static final String UPDATE_SQL = "UPDATE tariffs SET tariffName = :tariffName, tariffDeleted = :tariffDeleted WHERE tariffId = :tariffId";
-    private static final String SELECT_ALL_STUBS_SQL = "SELECT t.tariffId, t.tariffName, t.tariffDeleted, IFNULL (COUNT(c.clientContractId), 0) AS tariffCountClients FROM tariffs AS t " +
-            "LEFT JOIN (SELECT clientContractId, client_to_idTariff FROM clients WHERE clientDeleted = false) AS c " +
-            "ON (c.client_to_idTariff = t.tariffId) WHERE t.tariffDeleted = false GROUP BY t.tariffId";
-
-    private static final String TARIFF_ID = "tariffId";
-    private static final String TARIFF_NAME = "tariffName";
-
+    /**
+     * Property namedParameterJdbcTemplate.
+     */
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public TariffsDaoJdbcImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    /**
+     * SQL field tariffId for query.
+     */
+    @Value("${tariff.fieldTariffId}")
+    private String fieldTariffId;
 
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    /**
+     * SQL field tariffName for query.
+     */
+    @Value("${tariff.fieldTariffName}")
+    private String fieldTariffName;
+
+    /**
+     * SQL Select all tariffs String.
+     */
+    @Value("${tariff.selectAll}")
+    private String selectAllSQL;
+
+    /**
+     * SQL Find by id tariff String.
+     */
+    @Value("${tariff.findById}")
+    private String findByIdSQL;
+
+    /**
+     * SQL Check count clients fo tariff String.
+     */
+    @Value("${tariff.checkCount}")
+    private String checkCountSQL;
+
+    /**
+     * SQL Insert new tariff String.
+     */
+    @Value("${tariff.insert}")
+    private String insertSQL;
+
+    /**
+     * SQL Update tariff String.
+     */
+    @Value("${tariff.update}")
+    private String updateSQL;
+
+    /**
+     * SQL Select all tariffs with count clients String.
+     */
+    @Value("${tariff.selectAllStubs}")
+    private String selectAllStubsSQL;
+
+    /**
+     * Message if tariff exists in DB.
+     */
+    @Value("${tariff.alreadyExists}")
+    private String alreadyExists;
+
+    /**
+     * Message if failed to update tariff in DB.
+     */
+    @Value("${tariff.failUpdate}")
+    private String failUpdate;
+
+    /**
+     * TariffsDaoJdbcImpl setter method for parameterJdbcTemplate property.
+     *
+     * @param parameterJdbcTemplate input value.
+     */
+    public TariffsDaoJdbcImpl(
+            final NamedParameterJdbcTemplate parameterJdbcTemplate) {
+
+        this.namedParameterJdbcTemplate = parameterJdbcTemplate;
     }
 
+    /**
+     * Get all tariffs.
+     *
+     * @return tariffs stream.
+     */
     @Override
-    public Stream<Tariff> findAll() {
+    public final Stream<Tariff> findAll() {
         LOGGER.debug("findAll()");
         List<Tariff> tariff = namedParameterJdbcTemplate
-                .query(SELECT_ALL_SQL, BeanPropertyRowMapper.newInstance(Tariff.class));
+                .query(selectAllSQL,
+                        BeanPropertyRowMapper.newInstance(Tariff.class));
         return tariff.stream();
     }
 
+    /**
+     * Get all tariffs with count people.
+     *
+     * @return tariffs stream.
+     */
     @Override
-    public Stream<TariffStub> findAllStubs() {
+    public final Stream<TariffStub> findAllStubs() {
         LOGGER.debug("findAllStubs()");
         List<TariffStub> tariff = namedParameterJdbcTemplate
-                .query(SELECT_ALL_STUBS_SQL, BeanPropertyRowMapper.newInstance(TariffStub.class));
+                .query(selectAllStubsSQL,
+                        BeanPropertyRowMapper.newInstance(TariffStub.class));
         return tariff.stream();
     }
 
+    /**
+     * Get tariff by id.
+     *
+     * @param tariffId for getting.
+     * @return tariff by tariffId.
+     */
     @Override
-    public Optional<Tariff> findById(final Integer tariffId) {
+    public final Optional<Tariff> findById(final Integer tariffId) {
         LOGGER.debug("findById({})", tariffId);
         Tariff tariff = namedParameterJdbcTemplate.queryForObject(
-                FIND_BY_ID_SQL,
-                new MapSqlParameterSource(TARIFF_ID, tariffId),
+                findByIdSQL,
+                new MapSqlParameterSource(fieldTariffId, tariffId),
                 BeanPropertyRowMapper.newInstance(Tariff.class));
         return Optional.ofNullable(tariff);
     }
 
+    /**
+     * Add new tariff.
+     *
+     * @param tariff new tariff.
+     * @return new tariff.
+     */
     @Override
-    public Optional<Tariff> add(final Tariff tariff) {
+    public final Optional<Tariff> add(final Tariff tariff) {
         LOGGER.debug("add({})", tariff);
         return Optional.of(tariff)
-                .filter(t -> tariffInBase(t.getTariffName()))
-                .map(this::insertTariff)
-                .orElseThrow(() -> new IllegalArgumentException("Tariff with the same name already exists in DB."));
+            .filter(t -> tariffInBase(t.getTariffName()))
+            .map(this::insertTariff)
+            .orElseThrow(() -> new IllegalArgumentException(alreadyExists));
     }
 
+    /**
+     * Checks if there is a tariff in database.
+     *
+     * @param tariffName for checking.
+     * @return return true, if tariff no in database.
+     */
     private Boolean tariffInBase(final String tariffName) {
         LOGGER.debug("tariffInBase({})", tariffName);
-        return namedParameterJdbcTemplate.queryForObject(
-                CHECK_COUNT_TARIFF_SQL,
-                new MapSqlParameterSource(TARIFF_NAME, tariffName),
-                Integer.class) == 0;
+        Integer tariffCount = namedParameterJdbcTemplate.queryForObject(
+                checkCountSQL,
+                new MapSqlParameterSource(fieldTariffName, tariffName),
+                Integer.class);
+        return tariffCount != null && tariffCount == 0;
     }
 
+    /**
+     * Persist new tariff in DB.
+     *
+     * @param tariff for persist.
+     * @return updated tariff.
+     */
     private Optional<Tariff> insertTariff(final Tariff tariff) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue(TARIFF_NAME, tariff.getTariffName());
+        MapSqlParameterSource mapSqlParameterSource =
+                                                new MapSqlParameterSource();
+        mapSqlParameterSource.addValue(fieldTariffName, tariff.getTariffName());
         KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-        int result = namedParameterJdbcTemplate.update(INSERT_SQL, mapSqlParameterSource, generatedKeyHolder);
-        LOGGER.debug("insertTariff {count rows = {}, id = {}}", result, generatedKeyHolder.getKeys().get(TARIFF_ID));
-        tariff.setTariffId((Integer) generatedKeyHolder.getKeys().get(TARIFF_ID));
+        int result = namedParameterJdbcTemplate.update(insertSQL,
+                                                     mapSqlParameterSource,
+                                                     generatedKeyHolder);
+        LOGGER.debug("insertTariff {count rows = {}, id = {}}",
+                                     result,
+                                     generatedKeyHolder
+                                            .getKeys()
+                                            .get(fieldTariffId));
+        tariff.setTariffId((Integer) generatedKeyHolder
+                                            .getKeys()
+                                            .get(fieldTariffId));
         return Optional.of(tariff);
     }
 
+    /**
+     * Edit tariff in base.
+     *
+     * @param tariff for editing.
+     */
     @Override
-    public void update(final Tariff tariff) {
+    public final void update(final Tariff tariff) {
         LOGGER.debug("update({})", tariff);
         if (tariff.getTariffDeleted() == null) {
             tariff.setTariffDeleted(false);
         }
-        Optional.of(namedParameterJdbcTemplate.update(UPDATE_SQL, new BeanPropertySqlParameterSource(tariff)))
-                .filter(this::successfullyUpdated)
-                .orElseThrow(() -> new RuntimeException("Failed to update tariff in DB"));
+        Optional.of(namedParameterJdbcTemplate.update(updateSQL,
+                new BeanPropertySqlParameterSource(tariff)))
+                    .filter(this::successfullyUpdated)
+                    .orElseThrow(() ->
+                        new RuntimeException(failUpdate));
     }
 
+    /**
+     * Check status for update request.
+     *
+     * @param numRowsUpdated count updated rows.
+     * @return true if update successful.
+     */
     private boolean successfullyUpdated(final int numRowsUpdated) {
         return numRowsUpdated == 1;
     }
 
+    /**
+     * Delete tariff with specified id.
+     *
+     * @param tariffId tariff for delete.
+     */
     @Override
-    public void delete(final Integer tariffId) {
+    public final void delete(final Integer tariffId) {
         LOGGER.debug("delete({})", tariffId);
         Tariff tariff = findById(tariffId).get();
         tariff.setTariffDeleted(true);
