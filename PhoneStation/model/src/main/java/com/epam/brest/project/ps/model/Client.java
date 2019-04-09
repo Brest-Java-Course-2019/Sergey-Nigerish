@@ -83,7 +83,7 @@ public class Client {
      *
      * @return clientFIO.
      */
-    public final String getClientFIO() {
+    public String getClientFIO() {
         return clientFIO;
     }
 

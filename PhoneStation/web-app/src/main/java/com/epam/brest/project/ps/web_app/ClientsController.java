@@ -67,10 +67,11 @@ public class ClientsController {
 //        if (result.hasErrors()) {
 //            model.addAttribute("clients", clientsService.findAll());
 //        } else {
-//            model.addAttribute("clients", clientsService.findAllByFilter(filter.getBlocking(),
-//                                                                            filter.getStartDate(),
-//                                                                            filter.getEndDate()));
-            model.addAttribute("clients", clientsService.findAllByBlocking(filter.getBlocking()));
+            model.addAttribute("clients", clientsService.findAllByFilter(filter.getBlocking(),
+                                                                            filter.getStartDate(),
+                                                                            filter.getEndDate()));
+            model.addAttribute("tariffs", tariffsService.findAll());
+//            model.addAttribute("clients", clientsService.findAllByBlocking(filter.getBlocking()));
 //        }
         return "clients";
     }
@@ -86,6 +87,7 @@ public class ClientsController {
                                          Model model) {
         LOGGER.debug("filteringClientsByBlocking({})", blocking);
         model.addAttribute("clients", clientsService.findAllByBlocking(blocking));
+        model.addAttribute("tariffs", tariffsService.findAll());
         return "clients";
     }
 

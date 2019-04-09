@@ -19,13 +19,13 @@ import java.util.stream.Stream;
 /**
  * Implementation for TariffsDao.
  */
-public class TariffsDaoJdbcImplProperties implements TariffsDao {
+public class TariffsDaoJdbcImpl implements TariffsDao {
 
     /**
      * Connects logger.
      */
     private static final Logger LOGGER =
-            LoggerFactory.getLogger(TariffsDaoJdbcImplProperties.class);
+            LoggerFactory.getLogger(TariffsDaoJdbcImpl.class);
 
     /**
      * Property namedParameterJdbcTemplate.
@@ -97,7 +97,7 @@ public class TariffsDaoJdbcImplProperties implements TariffsDao {
      *
      * @param parameterJdbcTemplate input value.
      */
-    public TariffsDaoJdbcImplProperties(
+    public TariffsDaoJdbcImpl(
             final NamedParameterJdbcTemplate parameterJdbcTemplate) {
 
         this.namedParameterJdbcTemplate = parameterJdbcTemplate;

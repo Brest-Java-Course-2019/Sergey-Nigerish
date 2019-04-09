@@ -20,9 +20,6 @@ class ClientValidatorTest {
     private ClientValidator clientValidator = new ClientValidator();
     private BindingResult result;
 
-    private static final Date START_DATE = Date.valueOf("2016-03-11");
-    private static final Date END_DATE = Date.valueOf("2018-01-11");
-
     @BeforeEach
     void setup() {
         client = Mockito.mock(Client.class);
@@ -56,28 +53,15 @@ class ClientValidatorTest {
         String filled = StringUtils.repeat("+", 250);
         Mockito.when(client.getClientFIO()).thenReturn(filled);
         clientValidator.validate(client, result);
-        assertFalse(result.hasErrors());
+        assertTrue(result.hasErrors());
     }
 
     @Test
-    void shouldValidateClass() {
-        assertEquals(true, clientValidator.supports(Client.class));
+    void shouldValidateClass() {        assertEquals(true, clientValidator.supports(Client.class));
     }
 
     @Test
     void shouldValidateAnotherClass() {
         assertEquals(false, clientValidator.supports(Tariff.class));
-    }
-
-    @Test
-    void validateDate() {
-        clientValidator.validate(START_DATE, END_DATE, result);
-        assertTrue(result.hasErrors());
-    }
-
-    @Test
-    void validateWrongDate() {
-        clientValidator.validate(END_DATE, START_DATE, result);
-        assertFalse(result.hasErrors());
     }
 }

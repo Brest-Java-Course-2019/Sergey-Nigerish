@@ -12,7 +12,7 @@ import java.sql.Date;
 @Component
 public class ClientValidator implements Validator {
 
-    private static final int FIELD_MAX_LENGTH = 2555;
+    private static final int FIELD_MAX_LENGTH = 255;
 
     @Override
     public boolean supports(Class<?> aClass) {

@@ -19,13 +19,13 @@ import java.util.stream.Stream;
 /**
  * Implementation for ClientsDao.
  */
-public class ClientsDaoJdbcImplProperties implements ClientsDao {
+public class ClientsDaoJdbcImpl implements ClientsDao {
 
     /**
      * Connects logger.
      */
     private static final Logger LOGGER =
-            LoggerFactory.getLogger(ClientsDaoJdbcImplProperties.class);
+            LoggerFactory.getLogger(ClientsDaoJdbcImpl.class);
 
     /**
      * SQL field clientId for query.
@@ -116,7 +116,7 @@ public class ClientsDaoJdbcImplProperties implements ClientsDao {
      *
      * @param parameterJdbcTemplate input value.
      */
-    public ClientsDaoJdbcImplProperties(
+    public ClientsDaoJdbcImpl(
             final NamedParameterJdbcTemplate parameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = parameterJdbcTemplate;
     }
