@@ -10,12 +10,22 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Rest controller for tariffs.
+ */
 @RestController
 @RequestMapping(value = "/clients")
 public class ClientsRestController implements ClientsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientsRestController.class);
+    /**
+     * Connects logger.
+     */
+    private static final Logger LOGGER =
+                     LoggerFactory.getLogger(ClientsRestController.class);
 
+    /**
+     * We connect client service.
+     */
     @Autowired
     private ClientsService clientsService;
 
@@ -25,8 +35,9 @@ public class ClientsRestController implements ClientsService {
      * @return clients stream.
      */
     @Override
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public List<Client> findAll() {
+    @RequestMapping(value = "/all",
+                    method = RequestMethod.GET)
+    public final List<Client> findAll() {
         LOGGER.debug("findAll()");
         return clientsService.findAll();
     }
@@ -40,11 +51,14 @@ public class ClientsRestController implements ClientsService {
      * @return clients stream filtering.
      */
     @Override
-    @RequestMapping(value = "/filter/{blocking}/{startDate}/{endDate}", method = RequestMethod.GET)
-    public List<Client> findAllByFilter(@PathVariable Boolean blocking,
-                                        @PathVariable Date startDate,
-                                        @PathVariable Date endDate) {
-        LOGGER.debug("findAllByFilter({}, {}, {} )", blocking, startDate, endDate);
+    @RequestMapping(value = "/filter/{blocking}/{startDate}/{endDate}",
+                    method = RequestMethod.GET)
+    public final List<Client> findAllByFilter(
+                                        @PathVariable final Boolean blocking,
+                                        @PathVariable final Date startDate,
+                                        @PathVariable final Date endDate) {
+        LOGGER.debug("findAllByFilter({}, {}, {} )",
+                            blocking, startDate, endDate);
         return clientsService.findAllByFilter(blocking, startDate, endDate);
     }
 
@@ -55,8 +69,10 @@ public class ClientsRestController implements ClientsService {
      * @return clients stream filtering by blocking.
      */
     @Override
-    @RequestMapping(value = "/blockingFilter/{blocking}", method = RequestMethod.GET)
-    public List<Client> findAllByBlocking(@PathVariable Boolean blocking) {
+    @RequestMapping(value = "/blockingFilter/{blocking}",
+                    method = RequestMethod.GET)
+    public final List<Client> findAllByBlocking(
+                                @PathVariable final Boolean blocking) {
         LOGGER.debug("FindAllByBlocking({})", blocking);
         return clientsService.findAllByBlocking(blocking);
     }
@@ -68,8 +84,9 @@ public class ClientsRestController implements ClientsService {
      * @return client by id.
      */
     @Override
-    @RequestMapping(value = "/{clientId}", method = RequestMethod.GET)
-    public Client findById(@PathVariable Integer clientId) {
+    @RequestMapping(value = "/{clientId}",
+                    method = RequestMethod.GET)
+    public final Client findById(@PathVariable final Integer clientId) {
         LOGGER.debug("findById({})", clientId);
         return clientsService.findById(clientId);
     }
@@ -81,7 +98,7 @@ public class ClientsRestController implements ClientsService {
      */
     @Override
     @RequestMapping(method = RequestMethod.POST)
-    public void add(@RequestBody Client client) {
+    public final void add(@RequestBody final Client client) {
         LOGGER.debug("add({})", client);
         clientsService.add(client);
     }
@@ -93,7 +110,7 @@ public class ClientsRestController implements ClientsService {
      */
     @Override
     @RequestMapping(method = RequestMethod.PUT)
-    public void update(@RequestBody Client client) {
+    public final void update(@RequestBody final Client client) {
         LOGGER.debug("update({})", client);
         clientsService.update(client);
     }
@@ -105,9 +122,10 @@ public class ClientsRestController implements ClientsService {
      * @param tariffId new tariff id for client.
      */
     @Override
-    @RequestMapping(value = "/updateTariff/{clientId}/{tariffId}", method = RequestMethod.GET)
-    public void updateTariff(@PathVariable Integer clientId,
-                             @PathVariable Integer tariffId) {
+    @RequestMapping(value = "/updateTariff/{clientId}/{tariffId}",
+                    method = RequestMethod.GET)
+    public final void updateTariff(@PathVariable final Integer clientId,
+                             @PathVariable final Integer tariffId) {
         LOGGER.debug("updateTariff({}, {})", clientId, tariffId);
         clientsService.updateTariff(clientId, tariffId);
     }
@@ -119,9 +137,10 @@ public class ClientsRestController implements ClientsService {
      * @param lockingStatus new locking status.
      */
     @Override
-    @RequestMapping(value = "/updateBlocking/{clientId}/{lockingStatus}", method = RequestMethod.GET)
-    public void updateBlocking(@PathVariable Integer clientId,
-                               @PathVariable Boolean lockingStatus) {
+    @RequestMapping(value = "/updateBlocking/{clientId}/{lockingStatus}",
+                    method = RequestMethod.GET)
+    public final void updateBlocking(@PathVariable final Integer clientId,
+                               @PathVariable final Boolean lockingStatus) {
         LOGGER.debug("updateBlocking({}, {})", clientId, lockingStatus);
         clientsService.updateBlocking(clientId, lockingStatus);
     }
@@ -133,7 +152,7 @@ public class ClientsRestController implements ClientsService {
      */
     @Override
     @RequestMapping(value = "/{clientId}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Integer clientId) {
+    public final void delete(@PathVariable final Integer clientId) {
         LOGGER.debug("delete({})", clientId);
         clientsService.delete(clientId);
     }

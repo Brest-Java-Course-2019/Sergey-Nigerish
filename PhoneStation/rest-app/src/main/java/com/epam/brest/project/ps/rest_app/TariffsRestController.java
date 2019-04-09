@@ -10,12 +10,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Rest controller for tariffs.
+ */
 @RestController
 @RequestMapping(value = "/tariffs")
 public class TariffsRestController implements TariffsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientsRestController.class);
+    /**
+     * Connects logger.
+     */
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(ClientsRestController.class);
 
+    /**
+     * We connect tariff service.
+     */
     @Autowired
     private TariffsService tariffsService;
 
@@ -25,8 +35,9 @@ public class TariffsRestController implements TariffsService {
      * @return tariffs stream.
      */
     @Override
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public List<Tariff> findAll() {
+    @RequestMapping(value = "/all",
+                    method = RequestMethod.GET)
+    public final List<Tariff> findAll() {
         LOGGER.debug("findAll()");
         return tariffsService.findAll();
     }
@@ -37,8 +48,9 @@ public class TariffsRestController implements TariffsService {
      * @return tariffs stream.
      */
     @Override
-    @RequestMapping(value = "/allStubs", method = RequestMethod.GET)
-    public List<TariffStub> findAllStubs() {
+    @RequestMapping(value = "/allStubs",
+                    method = RequestMethod.GET)
+    public final List<TariffStub> findAllStubs() {
         LOGGER.debug("findAllStubs()");
         return tariffsService.findAllStubs();
     }
@@ -50,8 +62,9 @@ public class TariffsRestController implements TariffsService {
      * @return tariff by tariffId.
      */
     @Override
-    @RequestMapping(value = "/{tariffId}", method = RequestMethod.GET)
-    public Tariff findById(@PathVariable Integer tariffId) {
+    @RequestMapping(value = "/{tariffId}",
+                    method = RequestMethod.GET)
+    public final Tariff findById(@PathVariable final Integer tariffId) {
         LOGGER.debug("findById({})", tariffId);
         return tariffsService.findById(tariffId);
     }
@@ -63,7 +76,7 @@ public class TariffsRestController implements TariffsService {
      */
     @Override
     @RequestMapping(method = RequestMethod.POST)
-    public void add(@RequestBody Tariff tariff) {
+    public final void add(@RequestBody final Tariff tariff) {
         LOGGER.debug("add({})", tariff);
         tariffsService.add(tariff);
     }
@@ -75,7 +88,7 @@ public class TariffsRestController implements TariffsService {
      */
     @Override
     @RequestMapping(method = RequestMethod.PUT)
-    public void update(@RequestBody Tariff tariff) {
+    public final void update(@RequestBody final Tariff tariff) {
         LOGGER.debug("update({})", tariff);
         tariffsService.update(tariff);
     }
@@ -86,8 +99,9 @@ public class TariffsRestController implements TariffsService {
      * @param tariffId tariff for delete.
      */
     @Override
-    @RequestMapping(value = "/{tariffId}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Integer tariffId) {
+    @RequestMapping(value = "/{tariffId}",
+                    method = RequestMethod.DELETE)
+    public final void delete(@PathVariable final Integer tariffId) {
         LOGGER.debug("delete({})", tariffId);
         tariffsService.delete(tariffId);
     }

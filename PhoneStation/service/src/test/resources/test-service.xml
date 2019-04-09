@@ -13,7 +13,7 @@
         <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="clientsDao" class="com.epam.brest.project.ps.dao.ClientsDaoJdbcImpl">
+    <bean id="clientsDao" class="com.epam.brest.project.ps.dao.ClientsDaoJdbcImplProperties">
         <constructor-arg ref="namedParameterJdbcTemplate"/>
     </bean>
 
@@ -21,7 +21,7 @@
         <constructor-arg ref="clientsDao"/>
     </bean>
 
-    <bean id="tariffsDao" class="com.epam.brest.project.ps.dao.TariffsDaoJdbcImpl">
+    <bean id="tariffsDao" class="com.epam.brest.project.ps.dao.TariffsDaoJdbcImplProperties">
         <constructor-arg ref="namedParameterJdbcTemplate"/>
     </bean>
 
