@@ -4,22 +4,36 @@ import com.epam.brest.project.ps.dao.ClientsDao;
 import com.epam.brest.project.ps.model.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service implementation for client.
+ */
 @Transactional
 public class ClientsServiceImpl implements ClientsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientsServiceImpl.class);
+    /**
+     * Connects logger.
+     */
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(ClientsServiceImpl.class);
 
-    private ClientsDao dao;
+    /**
+     * Variable for DAO.
+     */
+    private ClientsDao clientsDao;
 
-    public ClientsServiceImpl(ClientsDao dao) {
-        this.dao = dao;
+    /**
+     * Service constructor.
+     *
+     * @param dao of client objects.
+     */
+    public ClientsServiceImpl(final ClientsDao dao) {
+        this.clientsDao = dao;
     }
 
     /**
@@ -28,9 +42,9 @@ public class ClientsServiceImpl implements ClientsService {
      * @return clients stream.
      */
     @Override
-    public List<Client> findAll() {
+    public final List<Client> findAll() {
         LOGGER.debug("findAll()");
-        return dao.findAll().collect(Collectors.toList());
+        return clientsDao.findAll().collect(Collectors.toList());
     }
 
     /**
@@ -42,9 +56,13 @@ public class ClientsServiceImpl implements ClientsService {
      * @return clients stream filtering by date.
      */
     @Override
-    public List<Client> findAllByFilter(Boolean blocking, Date startDate, Date endDate) {
-        LOGGER.debug("findAllByDate({}, {}, {})", blocking, startDate, endDate);
-        return dao.findAllByFilter(blocking, startDate, endDate).collect(Collectors.toList());
+    public final List<Client> findAllByFilter(final Boolean blocking,
+                                              final Date startDate,
+                                              final Date endDate) {
+        LOGGER.debug("findAllByDate({}, {},{})", blocking, startDate, endDate);
+        return clientsDao.findAllByFilter(blocking,
+                                    startDate,
+                                    endDate).collect(Collectors.toList());
     }
 
     /**
@@ -54,9 +72,11 @@ public class ClientsServiceImpl implements ClientsService {
      * @return clients stream filtering by blocking.
      */
     @Override
-    public List<Client> findAllByBlocking(Boolean blocking) {
+    public final List<Client> findAllByBlocking(final Boolean blocking) {
         LOGGER.debug("findAllByBlocking({})", blocking);
-        return dao.findAllByBlocking(blocking).collect(Collectors.toList());
+        return clientsDao.
+                findAllByBlocking(blocking).
+                collect(Collectors.toList());
     }
 
     /**
@@ -66,9 +86,9 @@ public class ClientsServiceImpl implements ClientsService {
      * @return client by id.
      */
     @Override
-    public Client findById(Integer clientId) {
+    public final Client findById(final Integer clientId) {
         LOGGER.debug("findById({})", clientId);
-        return dao.findById(clientId).get();
+        return clientsDao.findById(clientId).get();
     }
 
     /**
@@ -77,9 +97,9 @@ public class ClientsServiceImpl implements ClientsService {
      * @param client new client.
      */
     @Override
-    public void add(Client client) {
+    public final void add(final Client client) {
         LOGGER.debug("add({})", client);
-        dao.add(client);
+        clientsDao.add(client);
     }
 
     /**
@@ -88,9 +108,9 @@ public class ClientsServiceImpl implements ClientsService {
      * @param client for editing.
      */
     @Override
-    public void update(Client client) {
+    public final void update(final Client client) {
         LOGGER.debug("update({})", client);
-        dao.update(client);
+        clientsDao.update(client);
     }
 
     /**
@@ -100,9 +120,10 @@ public class ClientsServiceImpl implements ClientsService {
      * @param tariffId new tariff id for client.
      */
     @Override
-    public void updateTariff(Integer clientId, Integer tariffId) {
+    public final void updateTariff(final Integer clientId,
+                                   final Integer tariffId) {
         LOGGER.debug("updateTariff({}, {})", clientId, tariffId);
-        dao.updateTariff(clientId, tariffId);
+        clientsDao.updateTariff(clientId, tariffId);
     }
 
     /**
@@ -112,9 +133,10 @@ public class ClientsServiceImpl implements ClientsService {
      * @param lockingStatus new locking status.
      */
     @Override
-    public void updateBlocking(Integer clientId, Boolean lockingStatus) {
+    public final void updateBlocking(final Integer clientId,
+                                     final Boolean lockingStatus) {
         LOGGER.debug("updateBlocking({}, {})", clientId, lockingStatus);
-        dao.updateBlocking(clientId, lockingStatus);
+        clientsDao.updateBlocking(clientId, lockingStatus);
     }
 
     /**
@@ -123,8 +145,8 @@ public class ClientsServiceImpl implements ClientsService {
      * @param clientId client for delete.
      */
     @Override
-    public void delete(Integer clientId) {
+    public final void delete(final Integer clientId) {
         LOGGER.debug("delete({})", clientId);
-        dao.delete(clientId);
+        clientsDao.delete(clientId);
     }
 }

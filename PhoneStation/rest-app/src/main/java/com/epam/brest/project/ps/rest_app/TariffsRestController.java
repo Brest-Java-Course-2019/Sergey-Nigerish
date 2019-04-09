@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Rest controller for tariffs.
+ * Rest controller implementation for tariffs.
  */
 @RestController
 @RequestMapping(value = "/tariffs")

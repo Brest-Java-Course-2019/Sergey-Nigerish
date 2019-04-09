@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.util.List;
 
 /**
- * Rest controller for tariffs.
+ * Rest controller implementation for tariffs.
  */
 @RestController
 @RequestMapping(value = "/clients")

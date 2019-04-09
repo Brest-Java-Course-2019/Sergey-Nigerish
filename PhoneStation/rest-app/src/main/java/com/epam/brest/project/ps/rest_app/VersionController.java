@@ -13,7 +13,7 @@ public class VersionController {
     /**
      * Application version.
      */
-    final static private String VERSION = "1.0.0";
+    private static final String VERSION = "1.0.0";
 
     /**
      * Version.

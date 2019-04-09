@@ -5,18 +5,35 @@ import com.epam.brest.project.ps.model.Tariff;
 import com.epam.brest.project.ps.stub.TariffStub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service implementation for tariff.
+ */
+@Transactional
 public class TariffsServiceImpl implements TariffsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TariffsServiceImpl.class);
+    /**
+     * Connects logger.
+     */
+    private static final Logger LOGGER =
+                    LoggerFactory.getLogger(TariffsServiceImpl.class);
 
-    private TariffsDao dao;
+    /**
+     * Variable for DAO.
+     */
+    private TariffsDao tariffsDao;
 
-    public TariffsServiceImpl(TariffsDao dao) {
-        this.dao = dao;
+    /**
+     * Service constructor.
+     *
+     * @param dao of tariff objects.
+     */
+    public TariffsServiceImpl(final TariffsDao dao) {
+        this.tariffsDao = dao;
     }
 
     /**
@@ -25,9 +42,9 @@ public class TariffsServiceImpl implements TariffsService {
      * @return tariffs stream.
      */
     @Override
-    public List<TariffStub> findAllStubs() {
+    public final List<TariffStub> findAllStubs() {
         LOGGER.debug("findAllStubs()");
-        return dao.findAllStubs().collect(Collectors.toList());
+        return tariffsDao.findAllStubs().collect(Collectors.toList());
     }
 
     /**
@@ -36,9 +53,9 @@ public class TariffsServiceImpl implements TariffsService {
      * @return tariffs stream.
      */
     @Override
-    public List<Tariff> findAll() {
+    public final List<Tariff> findAll() {
         LOGGER.debug("findAll()");
-        return dao.findAll().collect(Collectors.toList());
+        return tariffsDao.findAll().collect(Collectors.toList());
     }
 
     /**
@@ -48,9 +65,9 @@ public class TariffsServiceImpl implements TariffsService {
      * @return tariff by tariffId.
      */
     @Override
-    public Tariff findById(Integer tariffId) {
+    public final Tariff findById(final Integer tariffId) {
         LOGGER.debug("findById({})", tariffId);
-        return dao.findById(tariffId).get();
+        return tariffsDao.findById(tariffId).get();
     }
 
     /**
@@ -59,9 +76,9 @@ public class TariffsServiceImpl implements TariffsService {
      * @param tariff new tariff.
      */
     @Override
-    public void add(Tariff tariff) {
+    public final void add(final Tariff tariff) {
         LOGGER.debug("add({})", tariff);
-        dao.add(tariff);
+        tariffsDao.add(tariff);
     }
 
     /**
@@ -70,9 +87,9 @@ public class TariffsServiceImpl implements TariffsService {
      * @param tariff for editing.
      */
     @Override
-    public void update(Tariff tariff) {
+    public final void update(final Tariff tariff) {
         LOGGER.debug("update({})", tariff);
-        dao.update(tariff);
+        tariffsDao.update(tariff);
     }
 
     /**
@@ -81,8 +98,8 @@ public class TariffsServiceImpl implements TariffsService {
      * @param tariffId tariff for delete.
      */
     @Override
-    public void delete(Integer tariffId) {
+    public final void delete(final Integer tariffId) {
         LOGGER.debug("delete({})", tariffId);
-        dao.delete(tariffId);
+        tariffsDao.delete(tariffId);
     }
 }
