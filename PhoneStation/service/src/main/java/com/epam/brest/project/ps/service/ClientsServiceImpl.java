@@ -56,7 +56,7 @@ public class ClientsServiceImpl implements ClientsService {
      * @return clients stream filtering by date.
      */
     @Override
-    public final List<Client> findAllByFilter(final Boolean blocking,
+    public final List<Client> findAllByFilter(final String blocking,
                                               final Date startDate,
                                               final Date endDate) {
         LOGGER.debug("findAllByDate({}, {},{})", blocking, startDate, endDate);
@@ -72,7 +72,7 @@ public class ClientsServiceImpl implements ClientsService {
      * @return clients stream filtering by blocking.
      */
     @Override
-    public final List<Client> findAllByBlocking(final Boolean blocking) {
+    public List<Client> findAllByBlocking(final Boolean blocking) {
         LOGGER.debug("findAllByBlocking({})", blocking);
         return clientsDao.
                 findAllByBlocking(blocking).
@@ -133,7 +133,7 @@ public class ClientsServiceImpl implements ClientsService {
      * @param lockingStatus new locking status.
      */
     @Override
-    public final void updateBlocking(final Integer clientId,
+    public void updateBlocking(final Integer clientId,
                                      final Boolean lockingStatus) {
         LOGGER.debug("updateBlocking({}, {})", clientId, lockingStatus);
         clientsDao.updateBlocking(clientId, lockingStatus);

@@ -6,7 +6,6 @@ import com.epam.brest.project.ps.model.Filter;
 import com.epam.brest.project.ps.service.ClientsService;
 import com.epam.brest.project.ps.service.TariffsService;
 import com.epam.brest.project.ps.web_app.validators.ClientValidator;
-import com.epam.brest.project.ps.web_app.validators.FilterValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * Clients controller.
@@ -35,8 +36,10 @@ public class ClientsController {
     @Autowired
     private ClientValidator clientValidator;
 
-    @Autowired
-    private FilterValidator filterValidator;
+//    @Autowired
+//    private FilterValidator filterValidator;
+
+    private static final String FIRST_DATE = "1970-01-01";
 
     /**
      * Goto clients list page.
@@ -49,29 +52,65 @@ public class ClientsController {
         LOGGER.debug("findAll()");
         model.addAttribute("clients", clientsService.findAll());
         model.addAttribute("tariffs", tariffsService.findAll());
-        return "clients.html";
+        return "clients";
     }
 
     /**
      * Return all clients filtering by date and blocking.
      *
-     * @param filter params.
+     * @param blocking params.
      * @return clients stream filtering.
      */
     @PostMapping(value = "/filter")
-    public final String filteringClients(@Valid Filter filter,
+    public final String filteringClients(@RequestParam String blocking,
+                                         @Valid String startDate,
+                                         @Valid String endDate,
 //                                         BindingResult result,
-                                         Model model) {
-        LOGGER.debug("filteringClients({})", filter);
-//        filterValidator.validate(filter, result);
+                                         Model model) throws ParseException {
+        LOGGER.debug("filteringClientsInput({}, {}, {})", blocking, startDate, endDate);
+
+        Filter filterValue = new Filter();
+        Boolean block = null;
+        Date DateFrom = Date.valueOf(FIRST_DATE);
+        Date DateTo = new Date(new java.util.Date().getTime());
+        String empty = "";
+
+
+        if (!"null".equals(blocking)) {
+            block = Boolean.parseBoolean(blocking);
+        }
+
+        if (!empty.equals(startDate)) {
+            DateFrom = Date.valueOf(
+                    new SimpleDateFormat("yyyy-MM-dd").format(
+                            new SimpleDateFormat("dd.MM.yyyy").
+                                    parse(startDate)));
+        }
+
+        if (!empty.equals(endDate)) {
+            DateTo = Date.valueOf(
+                    new SimpleDateFormat("yyyy-MM-dd").format(
+                            new SimpleDateFormat("dd.MM.yyyy").
+                                    parse(endDate)));
+        }
+
+        filterValue.setBlocking(block);
+        filterValue.setStartDate(DateFrom);
+        filterValue.setEndDate(DateFrom);
+
+        LOGGER.debug("filteringClientsOutput({}, {}, {})", blocking, DateFrom, DateTo);
+
+        model.addAttribute("block", block);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+        model.addAttribute("tariffs", tariffsService.findAll());
+        model.addAttribute("filterOn", true);
+
+//        filterValidator.validate(filterValue, result);
 //        if (result.hasErrors()) {
 //            model.addAttribute("clients", clientsService.findAll());
 //        } else {
-            model.addAttribute("clients", clientsService.findAllByFilter(filter.getBlocking(),
-                                                                            filter.getStartDate(),
-                                                                            filter.getEndDate()));
-            model.addAttribute("tariffs", tariffsService.findAll());
-//            model.addAttribute("clients", clientsService.findAllByBlocking(filter.getBlocking()));
+            model.addAttribute("clients", clientsService.findAllByFilter(blocking, DateFrom, DateTo));
 //        }
         return "clients";
     }
@@ -84,7 +123,7 @@ public class ClientsController {
      */
     @GetMapping(value = "/clients/{blocking}")
     public final String filteringClientsByBlocking(@PathVariable Boolean blocking,
-                                         Model model) {
+                                                   Model model) {
         LOGGER.debug("filteringClientsByBlocking({})", blocking);
         model.addAttribute("clients", clientsService.findAllByBlocking(blocking));
         model.addAttribute("tariffs", tariffsService.findAll());

@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.thymeleaf.util.StringUtils;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 @ExtendWith(SpringExtension.class)
@@ -68,7 +70,7 @@ class ClientsControllerTest {
                 MockMvcRequestBuilders.get("/")
         ).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(TEXT_HTML_UTF8))
-                .andExpect(MockMvcResultMatchers.view().name("clients.html"))
+                .andExpect(MockMvcResultMatchers.view().name("clients"))
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.
                         containsString("<title>Client management</title>")))
         ;
@@ -79,15 +81,15 @@ class ClientsControllerTest {
 
     @Test
     void filteringClients() throws Exception {
-        Mockito.when(clientsService.findAllByFilter(Mockito.anyBoolean(), Mockito.any(), Mockito.any())).thenReturn(arrayListClient());
+        Mockito.when(clientsService.findAllByFilter(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(arrayListClient());
         Mockito.when(tariffsService.findAll()).thenReturn(arrayListTariffs());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/filter")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("blocking", "true")
-                        .param("startDate", "2018-02-03")
-                        .param("endDate", "2019-03-02")
+                        .param("startDate", "03.02.2018")
+                        .param("endDate", "02.3.2019")
         ).andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(TEXT_HTML_UTF8))
@@ -96,10 +98,14 @@ class ClientsControllerTest {
                         containsString("<title>Client management</title>")))
         ;
 
-        Mockito.verify(clientsService, Mockito.times(ONE)).findAllByFilter(Mockito.anyBoolean(), Mockito.any(), Mockito.any());
+        Mockito.verify(clientsService, Mockito.times(ONE)).findAllByFilter(Mockito.any(), Mockito.any(), Mockito.any());
         Mockito.verify(tariffsService, Mockito.times(ONE)).findAll();
     }
 
+    @Test
+    void test() {
+        System.out.println("".equals(""));
+    }
     @Test
     void filteringClientsByBlocking() throws Exception {
         Mockito.when(clientsService.findAllByBlocking(Mockito.anyBoolean())).thenReturn(arrayListClient());

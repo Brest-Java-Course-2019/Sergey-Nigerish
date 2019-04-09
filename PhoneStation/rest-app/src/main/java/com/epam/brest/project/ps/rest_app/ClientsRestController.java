@@ -54,7 +54,7 @@ public class ClientsRestController implements ClientsService {
     @RequestMapping(value = "/filter/{blocking}/{startDate}/{endDate}",
                     method = RequestMethod.GET)
     public final List<Client> findAllByFilter(
-                                        @PathVariable final Boolean blocking,
+                                        @PathVariable final String blocking,
                                         @PathVariable final Date startDate,
                                         @PathVariable final Date endDate) {
         LOGGER.debug("findAllByFilter({}, {}, {} )",

@@ -44,13 +44,12 @@ public class ClientsRestConsumer implements ClientsService {
      * @return clients stream filtering.
      */
     @Override
-    public List<Client> findAllByFilter(Boolean blocking, Date startDate, Date endDate) {
+    public List<Client> findAllByFilter(String blocking, Date startDate, Date endDate) {
         LOGGER.debug("findAllByFilter({}, {}, {} )", blocking, startDate, endDate);
         ResponseEntity responseEntity = restTemplate.getForEntity(url + "/filter/" +
                 blocking + "/" + startDate + "/" + endDate, List.class);
         return (List<Client>) responseEntity.getBody();
     }
-
 
     /**
      * Return all clients filtering by blocking.

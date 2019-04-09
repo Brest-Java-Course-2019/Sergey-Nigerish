@@ -43,9 +43,9 @@ class ClientsDaoJdbcImplTest {
 
     private static final Date START_DATE = Date.valueOf("2016-03-11");
     private static final Date END_DATE = Date.valueOf("2018-01-11");
-    private static final int COUNT_CLIENTS_BY_DATE = 5;
+    private static final int COUNT_CLIENTS_BY_DATE_NO_BLOCKED = 5;
     private static final int COUNT_CLIENTS_AFTER_DATE = 7;
-    private static final int COUNT_CLIENTS_BEFORE_DATE = 6;
+    private static final int COUNT_CLIENTS_BY_DATE_BLOCKED = 4;
 
     @Autowired
     ClientsDao clientsDao;
@@ -61,34 +61,27 @@ class ClientsDaoJdbcImplTest {
 
     @Test
     void findAllByDate() {
-        long countClients = clientsDao.findAllByFilter(null, START_DATE, END_DATE).count();
+        long countClients = clientsDao.findAllByFilter("null", START_DATE, END_DATE).count();
         LOGGER.debug("@Test findAllByDate({}, {}, {}) result: expected({}) - actual({})",
-                null, START_DATE, END_DATE, COUNT_CLIENTS_BY_DATE, countClients);
-        assertEquals(COUNT_CLIENTS_BY_DATE, countClients);
+                null, START_DATE, END_DATE, COUNT_CLIENTS_BY_DATE_NO_BLOCKED, countClients);
+        assertEquals(COUNT_CLIENTS_BY_DATE_NO_BLOCKED, countClients);
     }
 
     @Test
     void findAllByDateAndBlocking() {
-        long countClients = clientsDao.findAllByFilter(true, START_DATE, END_DATE).count();
+        long countClients = clientsDao.findAllByFilter("true", START_DATE, END_DATE).count();
         LOGGER.debug("@Test findAllByDate({}, {}, {}) result: expected({}) - actual({})",
-                null, START_DATE, END_DATE, COUNT_CLIENTS_BY_DATE, countClients);
+                null, START_DATE, END_DATE, COUNT_CLIENTS_BY_DATE_NO_BLOCKED, countClients);
         assertEquals(COUNT_CLIENTS_BLOCKED, countClients);
     }
 
     @Test
     void findAllBeforeDate() {
-        long countClients = clientsDao.findAllByFilter(null,null, END_DATE).count();
+        long countClients = clientsDao.findAllByFilter("false",START_DATE, END_DATE).count();
         LOGGER.debug("@Test findAllBeforeDate({}, {}, {}) result: expected({}) - actual({})",
-                null, null, END_DATE, COUNT_CLIENTS_BEFORE_DATE, countClients);
-        assertEquals(COUNT_CLIENTS_BEFORE_DATE, countClients);
-    }
-
-    @Test
-    void findAllAfterDate() {
-        long countClients = clientsDao.findAllByFilter(null, START_DATE, null).count();
-        LOGGER.debug("@Test findAllAfterDate({}, {}, {}) result: expected({}) - actual({})",
-                null, START_DATE, null, COUNT_CLIENTS_AFTER_DATE, countClients);
-        assertEquals(COUNT_CLIENTS_AFTER_DATE, countClients);
+                null, null, END_DATE, COUNT_CLIENTS_BY_DATE_BLOCKED, countClients);
+        assertEquals(COUNT_CLIENTS_BY_DATE_BLOCKED,
+                countClients);
     }
 
     @Test

@@ -24,7 +24,7 @@ public interface ClientsService {
      * @param endDate last date.
      * @return clients stream filtering.
      */
-    List<Client> findAllByFilter(final Boolean blocking,
+    List<Client> findAllByFilter(final String blocking,
                                  final Date startDate,
                                  final Date endDate);
 

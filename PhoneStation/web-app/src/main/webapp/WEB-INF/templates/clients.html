@@ -68,7 +68,7 @@
                                                     <div id="filter-panel" class="collapse filter-panel">
                                                         <div class="panel panel-default">
                                                             <div class="panel-body">
-                                                                <form class="form-inline" role="form" id="filterForm" th:object="${filter}" th:action="@{/filter}" th:method="@{post}">
+                                                                <form class="form-inline" role="form" id="filterForm" th:action="@{/filter}" th:method="@{post}">
                                                                     <table class="table table-striped table-hover table-bordered">
                                                                         <thead>
                                                                         <tr>
@@ -83,7 +83,7 @@
                                                                                     <tr>
                                                                                         <div class="d-flex">
                                                                                             <div class="form-check">
-                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-all" value="null" checked>
+                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-all" value="null" checked="checked" th:checked="${block} == null">
                                                                                                 <label class="form-check-label" for="show-all">
                                                                                                     All
                                                                                                 </label>
@@ -93,7 +93,7 @@
                                                                                     <tr>
                                                                                         <div class="d-flex">
                                                                                             <div class="form-check">
-                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-blocked" value="true">
+                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-blocked" value="true" th:checked="${block} == true">
                                                                                                 <label class="form-check-label" for="show-blocked">
                                                                                                     Blocked
                                                                                                 </label>
@@ -103,7 +103,7 @@
                                                                                     <tr>
                                                                                         <div class="d-flex">
                                                                                             <div class="form-check">
-                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-no-blocked" value="false">
+                                                                                                <input class="form-check-input" name="blocking" type="radio" id="show-no-blocked" value="false" th:checked="${block} == false">
                                                                                                 <label class="form-check-label" for="show-no-blocked">
                                                                                                     No blocked
                                                                                                 </label>
@@ -121,7 +121,7 @@
                                                                                                 <!--<div class="input-group-prepend bg-white">-->
                                                                                                 <!--<span class="input-group-text border-left-0 rounded-right bg-white"><i class="fa fa-calendar"></i></span>-->
                                                                                                 <!--</div>-->
-                                                                                                <input type="text" class="span2" value="" id="startDate" name="startDate" placeholder="DD.MM.YYYY">
+                                                                                                <input type="text" class="span2" value="" id="startDate" name="startDate" placeholder="DD.MM.YYYY" th:value="${filterOn} ? ${startDate} : ''">
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -132,7 +132,7 @@
                                                                                                 <!--<div class="input-group-prepend bg-white">-->
                                                                                                 <!--<span class="input-group-text border-left-0 rounded-right bg-white"><i class="fa fa-calendar"  onclick="selectDate('startDate')"></i></span>-->
                                                                                                 <!--</div>-->
-                                                                                                <input type="text" class="span2" value="" id="endDate" name="endDate" placeholder="DD.MM.YYY">
+                                                                                                <input type="text" class="span2" value="" id="endDate" name="endDate" placeholder="DD.MM.YYYY" th:value="${filterOn} ? ${endDate} : ''">
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -173,7 +173,7 @@
                                         <td th:text="${client.clientContractId}">1</td>
                                         <td th:text="${client.clientFIO}">Sergey Pupkin</td>
                                         <td th:text="${client.clientAddress}">Lesnaya st.</td>
-                                        <td th:text="${#dates.format(client.clientContractDay_date, 'dd-MM-yyyy')}">02.10.2015</td>
+                                        <td th:text="${#dates.format(client.clientContractDay_date, 'dd.MM.yyyy')}">02.10.2015</td>
                                         <td><input type="checkbox" class="checkthis" th:checked="${client.clientBlocked}" th:id="'lock' + ${client.clientContractId}" th:onclick="'changeLock(' + ${client.clientContractId} + ')'"></td>
                                         <td>
                                             <select size="1" name="select-tariff" th:onclick="'changeTariff(this.value, ' + ${client.clientContractId} + ')'">

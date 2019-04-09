@@ -33,7 +33,7 @@ public interface ClientsDao {
      * @param endDate last date.
      * @return clients stream filtering by date and blocking.
      */
-    Stream<Client> findAllByFilter(final Boolean blocking,
+    Stream<Client> findAllByFilter(final String blocking,
                                    final Date startDate,
                                    final Date endDate);
 

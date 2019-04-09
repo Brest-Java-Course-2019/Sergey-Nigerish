@@ -49,7 +49,6 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
 
     private static final String START_DATE = "startDate";
     private static final String END_DATE = "endDate";
-    private static final String FIRST_DATE = "1970-01-01";
 
     final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -79,21 +78,13 @@ public class ClientsDaoJdbcImpl implements ClientsDao {
      * @return clients stream filtering by date and blocking.
      */
     @Override
-    public Stream<Client> findAllByFilter(Boolean blocking, Date startDate, Date endDate) {
-        LOGGER.debug("findAllByFilter({}, {}, {}) - input default", blocking, startDate, endDate);
-        if (startDate == null) {
-            startDate = Date.valueOf(FIRST_DATE);
-        }
-        if (endDate == null) {
-            endDate = new Date(new java.util.Date().getTime());
-
-        }
-        LOGGER.debug("findAllByFilter({}, {}, {}) - input modified", blocking, startDate, endDate);
+    public Stream<Client> findAllByFilter(String blocking, Date startDate, Date endDate) {
+        LOGGER.debug("findAllByFilter({}, {}, {})", blocking, startDate, endDate);
         MapSqlParameterSource namedParameters = new MapSqlParameterSource(START_DATE, startDate);
         namedParameters.addValue(END_DATE, endDate);
         String QueryToSelect = SELECT_BY_DATE_SQL;
-        if (blocking != null) {
-            namedParameters.addValue(CLIENT_BLOCKED, blocking);
+        if (!blocking.equals("null")) {
+            namedParameters.addValue(CLIENT_BLOCKED, Boolean.parseBoolean(blocking));
             QueryToSelect = SELECT_BY_FILTER;
         }
 

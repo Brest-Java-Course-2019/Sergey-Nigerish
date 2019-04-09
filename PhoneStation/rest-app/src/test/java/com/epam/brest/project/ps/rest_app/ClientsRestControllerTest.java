@@ -80,7 +80,7 @@ class ClientsRestControllerTest {
 
     @Test
     void findAllByFilter() throws Exception {
-        Mockito.when(clientsService.findAllByFilter(false, DATE, DATE)).thenReturn(arrayListClient());
+        Mockito.when(clientsService.findAllByFilter("false", DATE, DATE)).thenReturn(arrayListClient());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/clients/filter/false/" + DATE + "/" + DATE)
@@ -97,7 +97,7 @@ class ClientsRestControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[" + ONE + "].client_to_idTariff", Matchers.is(ONE)))
         ;
 
-        Mockito.verify(clientsService, Mockito.times(ONE)).findAllByFilter(false, DATE, DATE);
+        Mockito.verify(clientsService, Mockito.times(ONE)).findAllByFilter("false", DATE, DATE);
     }
 
     @Test
@@ -105,7 +105,7 @@ class ClientsRestControllerTest {
         Mockito.when(clientsService.findAllByBlocking(true)).thenReturn(arrayListClient());
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/clients/blockingFilter/false")
+                MockMvcRequestBuilders.get("/clients/blockingFilter/true")
                         .accept(MediaType.APPLICATION_JSON_UTF8)
         ).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
