@@ -101,7 +101,7 @@ public class Client {
      *
      * @return clientAddress.
      */
-    public final String getClientAddress() {
+    public String getClientAddress() {
         return clientAddress;
     }
 

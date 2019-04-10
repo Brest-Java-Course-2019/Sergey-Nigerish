@@ -43,7 +43,7 @@ public class Tariff {
      *
      * @return tariffName.
      */
-    public final String getTariffName() {
+    public String getTariffName() {
         return tariffName;
     }
 

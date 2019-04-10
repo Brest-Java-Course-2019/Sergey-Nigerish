@@ -2,7 +2,6 @@ package com.epam.brest.project.ps.web_app;
 
 
 import com.epam.brest.project.ps.model.Client;
-import com.epam.brest.project.ps.model.Filter;
 import com.epam.brest.project.ps.service.ClientsService;
 import com.epam.brest.project.ps.service.TariffsService;
 import com.epam.brest.project.ps.web_app.validators.ClientValidator;
@@ -36,9 +35,6 @@ public class ClientsController {
     @Autowired
     private ClientValidator clientValidator;
 
-//    @Autowired
-//    private FilterValidator filterValidator;
-
     private static final String FIRST_DATE = "1970-01-01";
 
     /**
@@ -63,13 +59,11 @@ public class ClientsController {
      */
     @PostMapping(value = "/filter")
     public final String filteringClients(@RequestParam String blocking,
-                                         @Valid String startDate,
-                                         @Valid String endDate,
-//                                         BindingResult result,
+                                         @RequestParam String startDate,
+                                         @RequestParam String endDate,
                                          Model model) throws ParseException {
         LOGGER.debug("filteringClientsInput({}, {}, {})", blocking, startDate, endDate);
 
-        Filter filterValue = new Filter();
         Boolean block = null;
         Date DateFrom = Date.valueOf(FIRST_DATE);
         Date DateTo = new Date(new java.util.Date().getTime());
@@ -94,10 +88,6 @@ public class ClientsController {
                                     parse(endDate)));
         }
 
-        filterValue.setBlocking(block);
-        filterValue.setStartDate(DateFrom);
-        filterValue.setEndDate(DateFrom);
-
         LOGGER.debug("filteringClientsOutput({}, {}, {})", blocking, DateFrom, DateTo);
 
         model.addAttribute("block", block);
@@ -105,13 +95,7 @@ public class ClientsController {
         model.addAttribute("endDate", endDate);
         model.addAttribute("tariffs", tariffsService.findAll());
         model.addAttribute("filterOn", true);
-
-//        filterValidator.validate(filterValue, result);
-//        if (result.hasErrors()) {
-//            model.addAttribute("clients", clientsService.findAll());
-//        } else {
-            model.addAttribute("clients", clientsService.findAllByFilter(blocking, DateFrom, DateTo));
-//        }
+        model.addAttribute("clients", clientsService.findAllByFilter(blocking, DateFrom, DateTo));
         return "clients";
     }
 

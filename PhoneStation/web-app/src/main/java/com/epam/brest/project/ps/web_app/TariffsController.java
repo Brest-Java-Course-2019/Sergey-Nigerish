@@ -37,7 +37,7 @@ public class TariffsController {
 
         LOGGER.debug("findAllStubs()");
         model.addAttribute("tariffs", tariffsService.findAllStubs());
-        return "tariffs.html";
+        return "tariffs";
     }
 
     /**

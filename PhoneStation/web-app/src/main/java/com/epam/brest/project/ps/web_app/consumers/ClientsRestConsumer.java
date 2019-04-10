@@ -30,7 +30,7 @@ public class ClientsRestConsumer implements ClientsService {
      */
     @Override
     public List<Client> findAll() {
-        LOGGER.debug("findAll()");
+        LOGGER.debug("findAll({})", url);
         ResponseEntity responseEntity = restTemplate.getForEntity(url + "/all", List.class);
         return (List<Client>) responseEntity.getBody();
     }
